@@ -6,8 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faLinkedin,
   faGithub,
-  faYoutube,
-  faSkype,
+  faInstagram,
 } from '@fortawesome/free-brands-svg-icons'
 import {
   faHome,
@@ -65,14 +64,14 @@ const Sidebar = () => {
         <FontAwesomeIcon 
           onClick={() => setShowNav(false)}
           icon={faClose}
-          color="#ffd700"
+          color="#ECA869"
           size="3x"
           className='close-icon' />
       </nav>
       <ul>
         <li>
           <a
-            href="https://www.linkedin.com/in/slobodan-gaji%C4%87-006bb8b8/"
+            href="https://www.linkedin.com/in/mete-han-%C3%A7etiner-3534431a8/"
             target="_blank"
             rel="noreferrer"
           >
@@ -85,7 +84,7 @@ const Sidebar = () => {
         </li>
         <li>
           <a
-            href="https://github.com/bobangajicsm"
+            href="https://github.com/tigerweirdo"
             target="_blank"
             rel="noreferrer"
           >
@@ -98,21 +97,12 @@ const Sidebar = () => {
         </li>
         <li>
           <a
-            href="https://www.youtube.com/channel/UCBu5ulO4d-d47lAVybpRTkw"
+            href="https://www.instagram.com/temmuzcetiner/"
             rel="noreferrer"
             target="_blank"
           >
             <FontAwesomeIcon
-              icon={faYoutube}
-              color="#4d4d4e"
-              className="anchor-icon"
-            />
-          </a>
-        </li>
-        <li>
-          <a href="skype:live:bobangajicsm" rel="noreferrer" target="_blank">
-            <FontAwesomeIcon
-              icon={faSkype}
+              icon={faInstagram}
               color="#4d4d4e"
               className="anchor-icon"
             />
@@ -122,7 +112,7 @@ const Sidebar = () => {
       <FontAwesomeIcon 
           onClick={() => setShowNav(true)}
           icon={faBars}
-          color="#ffd700"
+          color="#ECA869"
           size="3x"
           className='hamburger-icon' />
     </div>
