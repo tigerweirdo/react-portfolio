@@ -9,7 +9,7 @@
     }
   
     h1 {
-      color: #F5F5DC;
+      color: #000000;
       font-size: 56px;
       line-height: 53px;
       margin: 0;
@@ -18,7 +18,7 @@
   
       &:before {
         content: '______________';
-        color: #ECA869;
+        color:  #c3083f;
         font-size: 18px;
         position: absolute;
         margin-top: -40px;
@@ -32,7 +32,7 @@
     }
   
     h2 {
-      color: #F5F5DC;
+      color: #000000;
       margin-top: 20px;
       font-weight: 400;
       font-size: 11px;
@@ -42,22 +42,22 @@
     }
   
     .flat-button {
-      color: #EDE598;
+      color: #c3083f;
       font-size: 13px;
       font-weight: 400;
       letter-spacing: 4px;
       font-family: sans-serif;
       text-decoration: none;
       padding: 10px 18px;
-      border: 1px solid #EDE598;
+      border: 1px solid #c3083f;
       margin-top: 25px;
       float: left;
       animation: fadeInAnimation 1s 1.8s backwards;
       white-space: nowrap;
   
       &:hover {
-        background: #ECA869;
-        color: #333;
+        background: #c3083f;
+        color: #ffffff;
       }
     }
   }

@@ -8,10 +8,10 @@ body {
   color: #444;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: #B08BBB;
+  background: #efefef;
   overflow: hidden;
   display: block;
-}
+} 
 
 .dashboard {
   margin-top: 200px;

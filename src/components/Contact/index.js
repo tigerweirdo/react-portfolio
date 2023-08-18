@@ -4,7 +4,6 @@ import { useRef } from 'react'
 import emailjs from '@emailjs/browser'
 import AnimatedLetters from '../AnimatedLetters'
 import './index.scss'
-import RobotAnimated from "../Animations/Robot"
 
 
 const Contact = () => {
@@ -83,9 +82,6 @@ const Contact = () => {
                 </li>
               </ul>
             </form>
-            <div className="robot">
-    <RobotAnimated /> 
-  </div> 
           </div>
         </div>
         
