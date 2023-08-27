@@ -6,6 +6,7 @@ import {
   faLinkedin,
   faGithub,
   faInstagram,
+
 } from '@fortawesome/free-brands-svg-icons'
 import {
   faHome,
@@ -13,6 +14,7 @@ import {
   faEnvelope,
   faSuitcase,
   faClose,
+  faBars
 } from '@fortawesome/free-solid-svg-icons'
 import { Link, NavLink } from 'react-router-dom'
 
@@ -25,9 +27,16 @@ const Sidebar = () => {
         className="logo"
         to="/"
         onClick={() => setShowNav(false)}>
-        <img className="sub-logo" src={LogoSubtitle} alt="slobodan" />
+        <img className="sub-logo" src={LogoSubtitle} alt="tigerweirdo" />
       </Link>
+      <FontAwesomeIcon 
+        onClick={() => setShowNav(!showNav)} 
+        icon={faBars} 
+        color="#000" 
+        size="2x" 
+        className="hamburger-icon" />
       <nav className={showNav ? 'mobile-show' : ''}>
+        
         <NavLink 
           exact="true"
           activeclassname="active"
@@ -64,7 +73,14 @@ const Sidebar = () => {
           color="#ECA869"
           size="3x"
           className='close-icon' />
+     <FontAwesomeIcon 
+          onClick={() => setShowNav(false)}
+          icon={faClose}
+          color="#ECA869"
+          size="3x"
+          className='close-icon' />
       </nav>
+      <div className={showNav ? 'mobile-show' : ''}>
       <ul>
         <li>
           <a
@@ -106,6 +122,7 @@ const Sidebar = () => {
           </a>
         </li>
       </ul>
+      </div>
     </div>
   )
 }

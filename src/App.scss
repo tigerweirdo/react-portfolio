@@ -37,14 +37,13 @@ textarea {
 
 .loader-active {
   display: block;
-  position: absolute;
-  left: 0;
-  right: 0;
-  margin: auto;
-  top: 0;
-  bottom: 0;
+  position: fixed; // Pozisyonunu 'fixed' olarak değiştirelim ki tüm sayfa üzerinde ortalanabilsin.
+  left: 50%; // Sayfanın yarısına yerleştirir.
+  top: 50%; // Sayfanın yarısına yerleştirir.
+  transform: translate(-50%, -80%); // Bu, Loader'ı tam olarak merkeze alır.
   width: 100px;
   height: 100px;
   animation: fadeOut 1s 1s;
   animation-fill-mode: forwards;
+  z-index: 1000; // Diğer öğelerin üzerinde olmasını sağlar.
 }

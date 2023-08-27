@@ -1,29 +1,29 @@
 .nav-bar {
-    background: #fdc500;
-    width: 60px;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    z-index: 3;
-    min-height: 500px;
-  
-    .logo {
+  background: #fdc500;
+  width: 60px;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  z-index: 3;
+  min-height: 500px;
+
+  .logo {
       display: block;
       padding: 8px 0;
-  
+
       img {
-        display: block;
-        margin: 8px auto;
-        width: 24px;
-        height: auto;
-  
-        &.sub-logo {
-          width: 50px;
-        }
+          display: block;
+          margin: 8px auto;
+          width: 24px;
+          height: auto;
+
+          &.sub-logo {
+              width: 50px;
+          }
       }
-    }
-  
-    nav {
+  }
+
+  nav {
       display: block;
       text-align: center;
       position: absolute;
@@ -31,79 +31,66 @@
       top: 50%;
       margin-top: -120px;
       width: 100%;
-  
+
       a {
-        font-size: 22px;
-        color: #0e8543;
-        display: block;
-        line-height: 51px;
-        height: 51px;
-        position: relative;
-        text-decoration: none;
-  
-        i {
-          transition: all 0.3s ease-out;
-        }
-  
-        &:hover {
+          font-size: 22px;
           color: #0e8543;
-  
-          svg {
-            opacity: 0;
-          }
-  
-          &:after {
-            opacity: 1;
-          }
-        }
-  
-        &:after {
-          content: '';
-          font-size: 9px;
-          letter-spacing: 2px;
-          position: absolute;
-          bottom: 0;
           display: block;
-          width: 100%;
-          text-align: center;
-          opacity: 0;
-          -webkit-transition: all 0.3s ease-out;
-          transition: all 0.3s ease-out;
-        }
-  
-        &:first-child {
-          &:after {
-            content: 'HOME';
+          line-height: 51px;
+          height: 51px;
+          position: relative;
+          text-decoration: none;
+
+          i {
+              transition: all 0.3s ease-out;
           }
-        }
+
+          &:hover {
+              color: #0e8543;
+
+              svg {
+                  opacity: 0;
+              }
+
+              &:after {
+                  opacity: 1;
+              }
+          }
+
+          &:after {
+              content: '';
+              font-size: 9px;
+              letter-spacing: 2px;
+              position: absolute;
+              bottom: 0;
+              display: block;
+              width: 100%;
+              text-align: center;
+              opacity: 0;
+              transition: all 0.3s ease-out;
+          }
       }
-  
-      a.about-link {
-        &:after {
+
+      a.about-link:after {
           content: 'ABOUT';
-        }
       }
-  
-      a.contact-link {
-        &:after {
+
+      a.contact-link:after {
           content: 'CONTACT';
-        }
       }
-  
-      a.portfolio-link {
-        &:after {
+
+      a.portfolio-link:after {
           content: 'PORTFOLIO';
-        }
       }
-  
+
       a.active {
-        svg {
-          color: #0e8543;
-        }
+          svg {
+              color: #0e8543;
+          }
       }
-    }
-  
-    ul {
+  }
+
+  ul {
       position: absolute;
       bottom: 20px;
       width: 100%;
@@ -112,79 +99,96 @@
       list-style: none;
       text-align: center;
       margin: 0;
-  
+
       li {
-        a {
-          padding: 7px 0;
-          display: block;
-          font-size: 15px;
-          line-height: 16px;
-          color: #0e8543;
-        }
-  
-        &:hover {
-          .anchor-icon {
-            color: #0e8543;
+          a {
+              padding: 7px 0;
+              display: block;
+              font-size: 15px;
+              line-height: 16px;
+              color: #0e8543;
           }
-        }
+
+          &:hover {
+              .anchor-icon {
+                  color: #0e8543;
+              }
+          }
       }
-    }
   }
-  
-  .hamburger-icon, .close-icon {
-    display: none;
+
+  .hamburger-icon,
+  .close-icon {
+      display: none;
   }
-  
-  
+
   @media screen and (max-width: 1200px) {
-    .nav-bar { 
       background: transparent;
       position: initial;
       height: auto;
       min-height: auto;
-  
-       ul, nav {
-        display: none;
-       }
-  
-       nav {
-        width: 100%;
-        top: 0;
-        left: 0;
-        background: #0e8543;
-        height: 100%;
-        margin: 0;
-        z-index: 2;
-        position: fixed;
-  
-        &.mobile-show {
-          display: block;
+      ul,
+      nav {
+          display: none;
+      }
+      ul {
+          position: fixed;
+          bottom: 20px;
+          width: 100%;
+          text-align: center;
+          z-index: 3
+      }
+
+      li {
+          display: inline-block;
+          margin: 0 10px;
+      }
+
+      nav {
+          width: 100%;
+          top: 0;
+          left: 0;
+          background: #fdc500;
+          height: 100vh;
+          margin: 0;
+          z-index: 2;
+          position: fixed;
+
+          &.mobile-show {
+              display: block;
+          }
+
+          a {
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              font-size: 40px;
+              margin: 40px;
+          }
+      }
+      ul {
+        list-style: none;
+        padding: 0;
+        display: flex;
+        gap: 20px;
+        align-items: center; // Yatayda ortalamak için
+        justify-content: center;
+    
+        li {
+          .anchor-icon {
+            font-size: 32px;
+            align-items: center; // Yatayda ortalamak için
+            justify-content: center;
+          }
         }
-  
-        a {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
-  
-        a:after {
-          opacity: 1;
-          position: initial;
-          width: auto;
-          margin-left: 10PX;
-        }
-  
-        a svg {
-          opacity: 1 !important;
-        }
-       }
-  
-       .hamburger-icon,
-       .close-icon {
+      }
+
+      .hamburger-icon,
+      .close-icon {
           position: absolute;
           top: 15px;
           right: 15px;
           display: block;
-       }
-    }
+      }
   }
+}

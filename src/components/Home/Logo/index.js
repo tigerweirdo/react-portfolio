@@ -9,10 +9,10 @@ const Logo = () => {
   const outlineLogoRef = useRef()
   const solidLogoRef = useRef()
   const [key, setKey] = useState(0)
-  const [loadComponent, setLoadComponent] = useState(false) // Yeni durumu ekledik.
+  const [loadComponent, setLoadComponent] = useState(false) 
 
   const handleMouseEnter = () => {
-    setKey(prevKey => prevKey + 1); // Mouse üzerine gelindiğinde anahtarı artır
+    setKey(prevKey => prevKey + 1); 
   }
 
   useEffect(() => {
@@ -21,28 +21,19 @@ const Logo = () => {
     gsap
       .timeline()
       .to(bgRef.current, {
-        duration: 1,
+        duration: 1, // 10 saniyeden 1 saniyeye düşürdük
         opacity: 1,
       })
       .from(outlineLogoRef.current, {
-        drawSVG: 1,
-        duration: 15,
+        drawSVG: '0%', // Eksik olan başlangıç değerini ekledik.
+        duration: 2, // 1 saniyeden 2 saniyeye çıkardık.
       })
 
-    gsap.fromTo(
-      solidLogoRef.current,
-      {
-        opacity: 0,
-      },
-      {
-        opacity: 1,
-        delay: 5,
-        duration: 4,
-      }
-    )
-    setTimeout(() => { // Yeni bileşeni yükle
+    
+
+    setTimeout(() => { 
       setLoadComponent(true);
-    }, 1000); // Burada 1 saniye gecikme ekliyoruz
+    }, 2500);
   }, [])
   
 
@@ -53,7 +44,7 @@ const Logo = () => {
         ref={solidLogoRef}
       />
       <div onMouseEnter={handleMouseEnter}>
-        {loadComponent && <NewComponent key={key} />} {/* Yüklemeyi burada kontrol ediyoruz */}
+        {loadComponent && <NewComponent key={key} />} 
       </div>
     </div>
   )
