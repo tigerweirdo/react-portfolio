@@ -95,6 +95,9 @@
       box-sizing: border-box;
       margin: auto;
       left: 0;
+      @media (max-width: 768px) {
+        margin-bottom: 100px; // Örnek olarak 150px verdim, bu değeri ihtiyaçlarınıza göre ayarlayabilirsiniz.
+    }
     }
   
     .logo-container svg {
