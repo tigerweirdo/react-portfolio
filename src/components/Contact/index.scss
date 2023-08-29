@@ -70,6 +70,10 @@
       float: right;
       text-align: center;
       margin-right: 10px;
+      margin-bottom: 130px;
+      @media (max-width: 768px) {
+        margin-bottom: 90px; // Örnek olarak 150px verdim, bu değeri ihtiyaçlarınıza göre ayarlayabilirsiniz.
+    }
     }
     .flat-button:hover {
       background-color: #6f2232;
