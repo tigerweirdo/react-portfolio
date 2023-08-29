@@ -8,7 +8,8 @@ const Home = () => {
   const [letterClass, setLetterClass] = useState('text-animate');
 
   const nameArray = ['  ', 't', 'e', 'm', 'm', 'u', 'z'];
-  const playingArray = [..."playing web stuff "];
+  const playingArray = [..."playing"];
+  const webStuffArray = [..."web stuff"];
 
   useEffect(() => {
     return setTimeout(() => {
@@ -24,6 +25,7 @@ const Home = () => {
             <span className={letterClass}>H</span>
             <span className={`${letterClass} _12`}>e</span>
             <span className={`${letterClass} _13`}>y</span>
+            <span className={`${letterClass} _14`}>,</span>
             <br />
             <span className={`${letterClass} _15`}>I</span>
             <span className={`${letterClass} _16`}> </span>
@@ -36,12 +38,18 @@ const Home = () => {
             />
             <br />
             <AnimatedLetters
-  letterClass={letterClass}
-  strArray={playingArray}
-  idx={20 + nameArray.length}
-  additionalClass="smaller-text"
-/>
-    
+              letterClass={letterClass}
+              strArray={playingArray}
+              idx={20 + nameArray.length}
+              additionalClass="smaller-text"
+            />
+            <br />
+            <AnimatedLetters
+              letterClass={letterClass}
+              strArray={webStuffArray}
+              idx={20 + nameArray.length + playingArray.length}
+              additionalClass="smaller-text"
+            />
           </h1>
           <h2>Full Stack Developer / AI Enthusiast</h2>
           <Link to="/contact" className="flat-button">
