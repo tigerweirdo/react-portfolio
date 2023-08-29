@@ -20,11 +20,11 @@
 
     .image-box {
         position: relative;
-        flex: 1 1 20%;
+        flex: 1 1 40%;
         height: 300px;
         overflow: hidden;
         border-radius: 10px;
-        max-width: calc(25% - 10px);
+        max-width: calc(25% - 20px);
 
         .portfolio-image {
             position: absolute;
@@ -115,4 +115,15 @@
         }
     }
 
+}
+@media screen and (max-width: 1200px) {
+    .image-box {
+        position: relative;
+        flex: 1 1 40%;
+        height: 300px;
+        overflow: hidden;
+        border-radius: 10px;
+        max-width: calc(25% - 20px);
+
+}
 }
