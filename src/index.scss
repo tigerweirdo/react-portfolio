@@ -1,17 +1,15 @@
-html {
-  font-size: 62.5%;
-}
+@import './variables';
 
 body {
   margin: 0;
   font: 300 11px/1.4 'Helvetica Neue', sans-serif;
-  color: #444;
+  color: $secondary-text-color; /* İkincil metin rengi */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: #efefef;
+  background: $background-color; /* Arka plan rengi */
   overflow: hidden;
   display: block;
-} 
+}
 
 .dashboard {
   margin-top: 200px;

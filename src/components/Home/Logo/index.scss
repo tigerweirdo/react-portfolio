@@ -1,21 +1,14 @@
 .logo-container {
-  z-index: 0;
-  width: 424px;
-  height: 588px;
-  position: absolute;
-  top: 35%;
-  right: 15%;
-  bottom: 0;
-  left: auto;
-  margin: auto;
+  position: absolute; // Konumlandırmak için absolute kullanıyoruz
+  bottom: 150px; // Sağ alt köşede 10px boşluk bırakır
+  right: -25px; // Sağ alt köşede 10px boşluk bırakır
+  max-width: 250px; // Konteyner genişliğini sınırlamak için
+  max-height: 250px; // Konteyner yüksekliğini sınırlamak için
+  z-index: 1; // Üstte olmasını sağlar
 }
 
-.logo-container svg {
-  width: 101%;
-  height: auto;
-  bottom: 0;
-  /* transform: rotateZ(30deg) !important; */
+img {
+  max-width: 100%; // Resmin konteyneri taşmasını engeller
+  height: auto; // Oranı korur
+  display: block; // Resmin altında boşluk olmamasını sağlar
 }
-
-
-

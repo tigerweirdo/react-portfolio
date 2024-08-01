@@ -1,93 +1,86 @@
+@import '../../styles/variables';
+
 .contact-form {
-    width: 100%;
-    margin-top: 20px;
-  
-    ul {
+  width: 100%;
+  margin-top: 20px;
+
+  ul {
+    padding: 0;
+    margin: 0;
+
+    li {
       padding: 0;
       margin: 0;
-  
-      li {
-        padding: 0;
-        margin: 0;
-        list-style: none;
-        margin-bottom: 10px;
-        opacity: 0;
-        overflow: hidden;
-        display: block;
-        clear: both;
-        position: relative;
-        animation: fadeInUp 2s 2s;
-        animation-fill-mode: forwards;
-      }
-  
-      li.half {
-        width: 49%;
-        margin-left: 2%;
-        float: left;
-        clear: none;
-  
-        &:first-child {
-          margin-left: 0;
-        }
-      }
+      list-style: none;
+      margin-bottom: 10px;
+      opacity: 0;
+      overflow: hidden;
+      display: block;
+      clear: both;
+      position: relative;
+      animation: fadeInUp 2s 2s;
+      animation-fill-mode: forwards;
     }
-  
-    input[type='text'],
-    input[type='email'] {
-      width: 100%;
-      border: 0;
-      background: #6f2232;
-      height: 50px;
-      font-size: 16px;
-      color: #ffffff;
-      padding: 0 20px;
-      box-sizing: border-box;
-    }
-  
-    textarea {
-      width: 100%;
-      border: 0;
-      background: #6f2232;
-      height: 50px;
-      font-size: 16px;
-      color: #ffffff;
-      padding: 20px;
-      box-sizing: border-box;
-      min-height: 150px;
-    }
-  
-    .flat-button {
-      color: #6f2232;
-      font-size: 11px;
-      letter-spacing: 3px;
-      text-decoration: none;
-      padding: 8px 10px;
-      border: 1px solid #6f2232;
-      float: left;
-      border-radius: 4px;
-      background: 0 0;
-      text-transform: uppercase;
-      float: right;
-      text-align: center;
-      margin-right: 10px;
-      margin-bottom: 130px;
-      @media (max-width: 768px) {
-        margin-bottom: 200px; // Örnek olarak 150px verdim, bu değeri ihtiyaçlarınıza göre ayarlayabilirsiniz.
-    }
-    }
-    .flat-button:hover {
-      background-color: #6f2232;
-      color: #FFFFFF;
-  }
-  
-    
-  }
-  
- 
 
-  
-  
-  
-  
-  
- 
+    li.half {
+      width: 49%;
+      margin-left: 2%;
+      float: left;
+      clear: none;
+
+      &:first-child {
+        margin-left: 0;
+      }
+    }
+  }
+
+  input[type='text'],
+  input[type='email'] {
+    width: 100%;
+    border: 0;
+    background: $accent-color-1; /* Koyu Pembe */
+    height: 50px;
+    font-size: 16px;
+    color: $text-color; /* Beyaz */
+    padding: 0 20px;
+    box-sizing: border-box;
+  }
+
+  textarea {
+    width: 100%;
+    border: 0;
+    background: $accent-color-1; /* Koyu Pembe */
+    height: 50px;
+    font-size: 16px;
+    color: $text-color; /* Beyaz */
+    padding: 20px;
+    box-sizing: border-box;
+    min-height: 150px;
+  }
+
+  .flat-button {
+    color: $accent-color-1; /* Koyu Pembe */
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-decoration: none;
+    padding: 8px 10px;
+    border: 1px solid $accent-color-1; /* Koyu Pembe */
+    float: left;
+    border-radius: 4px;
+    background: 0 0;
+    text-transform: uppercase;
+    float: right;
+    text-align: center;
+    margin-right: 10px;
+    margin-bottom: 130px;
+
+    @media (max-width: 768px) {
+      margin-bottom: 200px; // Örnek olarak 150px verdim, bu değeri ihtiyaçlarınıza göre ayarlayabilirsiniz.
+    }
+  }
+
+  .flat-button:hover {
+    background-color: $accent-color-1; /* Koyu Pembe */
+    color: $text-color; /* Beyaz */
+  }
+}

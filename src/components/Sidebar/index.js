@@ -6,7 +6,6 @@ import {
   faLinkedin,
   faGithub,
   faInstagram,
-
 } from '@fortawesome/free-brands-svg-icons'
 import {
   faHome,
@@ -40,16 +39,17 @@ const Sidebar = () => {
         <NavLink 
           exact="true"
           activeclassname="active"
+          className="home-link"
           to="/"
           onClick={() => setShowNav(false)}>
-          <FontAwesomeIcon icon={faHome} color="#000000" />
+          <FontAwesomeIcon icon={faHome} className="icon" />
         </NavLink>
         <NavLink 
           activeclassname="active"
           className="about-link"
           to="/about"
           onClick={() => setShowNav(false)}>
-          <FontAwesomeIcon icon={faUser} color="#000000" />
+          <FontAwesomeIcon icon={faUser} className="icon" />
         </NavLink>
         <NavLink
           activeclassname="active"
@@ -57,7 +57,7 @@ const Sidebar = () => {
           to="/portfolio"
           onClick={() => setShowNav(false)}
         >
-          <FontAwesomeIcon icon={faSuitcase} color="#000000" />
+          <FontAwesomeIcon icon={faSuitcase} className="icon" />
         </NavLink>
         <NavLink
           activeclassname="active"
@@ -65,20 +65,14 @@ const Sidebar = () => {
           to="/contact"
           onClick={() => setShowNav(false)}
         >
-          <FontAwesomeIcon icon={faEnvelope} color="#000000" />
+          <FontAwesomeIcon icon={faEnvelope} className="icon" />
         </NavLink>
         <FontAwesomeIcon 
           onClick={() => setShowNav(false)}
           icon={faClose}
           color="#ECA869"
           size="3x"
-          className='close-icon' />
-     <FontAwesomeIcon 
-          onClick={() => setShowNav(false)}
-          icon={faClose}
-          color="#ECA869"
-          size="3x"
-          className='close-icon' />
+          className="close-icon" />
       </nav>
       <div className={showNav ? 'mobile-show' : ''}>
       <ul>
@@ -90,8 +84,7 @@ const Sidebar = () => {
           >
             <FontAwesomeIcon
               icon={faLinkedin}
-              color="#000000"
-              className="anchor-icon"
+              className="icon"
             />
           </a>
         </li>
@@ -103,8 +96,7 @@ const Sidebar = () => {
           >
             <FontAwesomeIcon
               icon={faGithub}
-              color="#000000"
-              className="anchor-icon"
+              className="icon"
             />
           </a>
         </li>
@@ -116,8 +108,7 @@ const Sidebar = () => {
           >
             <FontAwesomeIcon
               icon={faInstagram}
-              color="#000000"
-              className="anchor-icon"
+              className="icon"
             />
           </a>
         </li>

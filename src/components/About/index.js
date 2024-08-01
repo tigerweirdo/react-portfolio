@@ -63,7 +63,7 @@ const About = () => {
         <stop offset="1" stop-color="#7F7F7F" />
           </radialGradient>
       <linearGradient id="paint2_linear" x1="163.876" y1="224.41" x2="160.788" y2="109.555" gradientUnits="userSpaceOnUse">
-        <stop stop-color="#0e8543" />
+        <stop stop-color="#4CAF50" />
         <stop offset="1" stop-color="#F7A04D" />
       </linearGradient>
       <linearGradient id="paint3_linear" x1="161.5" y1="129.885" x2="161.5" y2="167" gradientUnits="userSpaceOnUse">

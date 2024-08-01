@@ -1,5 +1,7 @@
+@import '../../variables';
+
 .nav-bar {
-  background: #fdc500;
+  background: $primary-color;
   width: 60px;
   height: 100%;
   position: absolute;
@@ -8,187 +10,287 @@
   min-height: 500px;
 
   .logo {
+    display: block;
+    padding: 8px 0;
+
+    img {
       display: block;
-      padding: 8px 0;
+      margin: 8px auto;
+      width: 24px;
+      height: auto;
 
-      img {
-          display: block;
-          margin: 8px auto;
-          width: 24px;
-          height: auto;
-
-          &.sub-logo {
-              width: 50px;
-          }
+      &.sub-logo {
+        width: 50px;
       }
+    }
   }
 
   nav {
+    display: block;
+    text-align: center;
+    position: absolute;
+    height: 210px;
+    top: 50%;
+    margin-top: -120px;
+    width: 100%;
+
+    a {
+      font-size: 22px;
       display: block;
-      text-align: center;
-      position: absolute;
-      height: 210px;
-      top: 50%;
-      margin-top: -120px;
-      width: 100%;
+      line-height: 51px;
+      height: 51px;
+      position: relative;
+      text-decoration: none;
 
-      a {
-          font-size: 22px;
-          color: #0e8543;
-          display: block;
-          line-height: 51px;
-          height: 51px;
-          position: relative;
-          text-decoration: none;
+      .icon {
+        color: $icon-color; /* İkon rengi */
+        transition: color 0.3s ease-out;
 
-          i {
-              transition: all 0.3s ease-out;
-          }
-
-          &:hover {
-              color: #0e8543;
-
-              svg {
-                  opacity: 0;
-              }
-
-              &:after {
-                  opacity: 1;
-              }
-          }
-
-          &:after {
-              content: '';
-              font-size: 9px;
-              letter-spacing: 2px;
-              position: absolute;
-              bottom: 0;
-              display: block;
-              width: 100%;
-              text-align: center;
-              opacity: 0;
-              transition: all 0.3s ease-out;
-          }
+        &:hover {
+          color: $accent-color-2; /* İkon hover rengi */
+        }
       }
 
-      a.about-link:after {
-          content: 'ABOUT';
+      i {
+        transition: all 0.3s ease-out;
       }
 
-      a.contact-link:after {
-          content: 'CONTACT';
+      &:hover {
+        svg {
+          opacity: 0;
+        }
+
+        &:after {
+          opacity: 1;
+        }
       }
 
-      a.portfolio-link:after {
-          content: 'PORTFOLIO';
+      &:after {
+        content: '';
+        font-size: 8px;
+        letter-spacing: 2px;
+        position: absolute;
+        bottom: 0;
+        display: block;
+        width: 100%;
+        text-align: center;
+        opacity: 0;
+        transition: all 0.3s ease-out;
+        color: $accent-color-2;
       }
+    }
 
-      a.active {
-          svg {
-              color: #0e8543;
-          }
+    a.home-link:after {
+      content: 'HOME';
+    }
+
+    a.about-link:after {
+      content: 'ABOUT';
+    }
+
+    a.contact-link:after {
+      content: 'CONTACT';
+    }
+
+    a.portfolio-link:after {
+      content: 'PORTFOLIO';
+    }
+
+    a.active {
+      svg {
+        color: $accent-color-2; /* İkon aktif rengi */
       }
+    }
   }
 
   ul {
-      position: absolute;
-      bottom: 20px;
-      width: 100%;
-      display: block;
-      padding: 0;
-      list-style: none;
-      text-align: center;
-      margin: 0;
+    position: absolute;
+    bottom: 20px;
+    width: 100%;
+    display: block;
+    padding: 0;
+    list-style: none;
+    text-align: center;
+    margin: 0;
 
-      li {
-          a {
-              padding: 7px 0;
-              display: block;
-              font-size: 15px;
-              line-height: 16px;
-              color: #0e8543;
-          }
+    li {
+      a {
+        padding: 7px 0;
+        display: block;
+        font-size: 15px;
+        line-height: 16px;
+
+        .icon {
+          color: $icon-color; /* İkon rengi */
+          transition: color 0.3s ease-out;
 
           &:hover {
-              .anchor-icon {
-                  color: #0e8543;
-              }
+            color: $accent-color-2; /* İkon hover rengi */
           }
+        }
       }
+    }
   }
 
   .hamburger-icon,
   .close-icon {
-      display: none;
+    display: none;
   }
 
   @media screen and (max-width: 1200px) {
-      background: transparent;
-      position: initial;
-      height: auto;
-      min-height: auto;
-      ul,
-      nav {
-          display: none;
+    background: transparent;
+    position: initial;
+    height: auto;
+    min-height: auto;
+
+    ul, nav {
+      display: none;
+    }
+
+    ul {
+      position: fixed;
+      bottom: 20px;
+      width: 100%;
+      text-align: center;
+      z-index: 3;
+    }
+
+    li {
+      display: inline-block;
+      margin: 0 10px;
+    }
+
+    nav {
+      width: 100%;
+      top: 0;
+      left: 0;
+      background: $primary-color;
+      height: 100vh;
+      margin: 0;
+      z-index: 2;
+      position: fixed;
+
+      &.mobile-show {
+        display: block;
       }
-      ul {
-          position: fixed;
-          bottom: 20px;
-          width: 100%;
-          text-align: center;
-          z-index: 3
+
+      a {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 40px;
+        margin: 40px;
       }
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      justify-content: center;
 
       li {
-          display: inline-block;
-          margin: 0 10px;
-      }
-
-      nav {
-          width: 100%;
-          top: 0;
-          left: 0;
-          background: #fdc500;
-          height: 100vh;
-          margin: 0;
-          z-index: 2;
-          position: fixed;
-
-          &.mobile-show {
-              display: block;
-          }
-
-          a {
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              font-size: 40px;
-              margin: 40px;
-          }
-      }
-      ul {
-        list-style: none;
-        padding: 0;
-        display: flex;
-        gap: 20px;
-        align-items: center; // Yatayda ortalamak için
-        justify-content: center;
-    
-        li {
-          .anchor-icon {
-            font-size: 32px;
-            align-items: center; // Yatayda ortalamak için
-            justify-content: center;
-          }
+        .anchor-icon {
+          font-size: 32px;
+          align-items: center;
+          justify-content: center;
         }
       }
+    }
 
-      .hamburger-icon,
-      .close-icon {
-          position: absolute;
-          top: 15px;
-          right: 15px;
-          display: block;
+    .hamburger-icon,
+    .close-icon {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      display: block;
+    }
+  }
+}
+
+.contact-form {
+  width: 100%;
+  margin-top: 20px;
+
+  ul {
+    padding: 0;
+    margin: 0;
+
+    li {
+      padding: 0;
+      margin: 0;
+      list-style: none;
+      margin-bottom: 10px;
+      opacity: 0;
+      overflow: hidden;
+      display: block;
+      clear: both;
+      position: relative;
+      animation: fadeInUp 2s 2s;
+      animation-fill-mode: forwards;
+    }
+
+    li.half {
+      width: 49%;
+      margin-left: 2%;
+      float: left;
+      clear: none;
+
+      &:first-child {
+        margin-left: 0;
       }
+    }
+  }
+
+  input[type='text'],
+  input[type='email'] {
+    width: 100%;
+    border: 0;
+    background: $accent-color-1; /* Kırmızı */
+    height: 50px;
+    font-size: 16px;
+    color: $text-color; /* Beyaz */
+    padding: 0 20px;
+    box-sizing: border-box;
+  }
+
+  textarea {
+    width: 100%;
+    border: 0;
+    background: $accent-color-1; /* Kırmızı */
+    height: 50px;
+    font-size: 16px;
+    color: $text-color; /* Beyaz */
+    padding: 20px;
+    box-sizing: border-box;
+    min-height: 150px;
+  }
+
+  .flat-button {
+    color: $accent-color-1; /* Kırmızı */
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-decoration: none;
+    padding: 8px 10px;
+    border: 1px solid $accent-color-1; /* Kırmızı */
+    float: left;
+    border-radius: 4px;
+    background: 0 0;
+    text-transform: uppercase;
+    float: right;
+    text-align: center;
+    margin-right: 10px;
+    margin-bottom: 130px;
+
+    @media (max-width: 768px) {
+      margin-bottom: 200px; // Örnek olarak 150px verdim, bu değeri ihtiyaçlarınıza göre ayarlayabilirsiniz.
+    }
+  }
+
+  .flat-button:hover {
+    background-color: $accent-color-1; /* Kırmızı */
+    color: $text-color; /* Beyaz */
   }
 }

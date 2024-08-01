@@ -1,31 +1,13 @@
-import React, { useRef, useState } from 'react'
-import './index.scss'
-import NewComponent from './sign'
+import React from 'react';
+import './index.scss';
+import imagePath from '../../../assets/images/1.png'; // Resim yolunu doğru şekilde ayarlayın
 
 const Logo = () => {
-  const bgRef = useRef()
-  const [key, setKey] = useState(0)
-  const [loadComponent, setLoadComponent] = useState(false) 
-
-  const handleMouseEnter = () => {
-    setKey(prevKey => prevKey + 1); 
-  }
-
-  // Resmi göstermek için animasyon gereksiz olduğundan bu useEffect'i kaldırabiliriz.
-  // Eğer başka bir işlem yapmak isterseniz bu useEffect içerisinde yapabilirsiniz.
-  
-  setTimeout(() => { 
-    setLoadComponent(true);
-  }, 2500);
-
   return (
-    <div className="logo-container" ref={bgRef}>
-      
-      <div onMouseEnter={handleMouseEnter}>
-        {loadComponent && <NewComponent key={key} />} 
-      </div>
+    <div className="logo-container">
+      <img src={imagePath} alt="Dynamic" />
     </div>
-  )
+  );
 }
 
-export default Logo
+export default Logo;
