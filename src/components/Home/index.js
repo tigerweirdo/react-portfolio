@@ -8,8 +8,8 @@ const Home = () => {
   const [letterClass, setLetterClass] = useState('text-animate');
 
   const nameArray = ['  ', 't', 'e', 'm', 'm', 'u', 'z'];
-  const playingArray = [..."playing"];
-  const webStuffArray = [..."web stuff"];
+  const playingArray = [..."creating"];
+  const webStuffArray = [..."digital experiences"];
 
   useEffect(() => {
     return setTimeout(() => {
