@@ -8,17 +8,11 @@ import './App.scss'
 
 const App = () => {
   const [activeSection, setActiveSection] = useState('home')
-  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    // Sayfa yüklendiğinde loading'i kaldır
-    setTimeout(() => {
-      setIsLoading(false)
-    }, 2000)
-
     const handleScroll = () => {
       const sections = document.querySelectorAll('section')
-      const scrollPosition = window.scrollY + window.innerHeight / 2
+      const scrollPosition = window.scrollY
 
       sections.forEach(section => {
         const sectionTop = section.offsetTop
@@ -30,48 +24,29 @@ const App = () => {
       })
     }
 
-    // İlk yüklemede scroll pozisyonunu kontrol et
-    handleScroll()
-
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
   const scrollToSection = (sectionId) => {
     const section = document.getElementById(sectionId)
-    if (section) {
-      const yOffset = -80 // Header yüksekliği kadar offset
-      const y = section.getBoundingClientRect().top + window.pageYOffset + yOffset
-
-      window.scrollTo({
-        top: y,
-        behavior: 'smooth'
-      })
-    }
-  }
-
-  if (isLoading) {
-    return (
-      <div className="loader-active">
-        <div className="loader"></div>
-      </div>
-    )
+    section.scrollIntoView({ behavior: 'smooth' })
   }
 
   return (
     <>
       <Layout activeSection={activeSection} scrollToSection={scrollToSection}>
         <Suspense fallback={<div>Yükleniyor...</div>}>
-          <section id="home" className={`home-section ${activeSection === 'home' ? 'active' : ''}`}>
+          <section id="home" className="home-section">
             <Home />
           </section>
-          <section id="about" className={`about-section ${activeSection === 'about' ? 'active' : ''}`}>
+          <section id="about" className="about-section">
             <About />
           </section>
-          <section id="portfolio" className={`portfolio-section ${activeSection === 'portfolio' ? 'active' : ''}`}>
+          <section id="portfolio" className="portfolio-section">
             <Portfolio />
           </section>
-          <section id="contact" className={`contact-section ${activeSection === 'contact' ? 'active' : ''}`}>
+          <section id="contact" className="contact-section">
             <Contact />
           </section>
         </Suspense>
