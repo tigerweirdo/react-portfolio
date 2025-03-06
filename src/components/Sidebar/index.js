@@ -1,5 +1,5 @@
 import './index.scss'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import LogoSubtitle from '../../assets/images/logo_sub.png'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -16,10 +16,41 @@ import {
   faBars
 } from '@fortawesome/free-solid-svg-icons'
 import { Link, NavLink } from 'react-router-dom'
-import { gsap } from 'gsap'
+import gsap from 'gsap'
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false)
+
+  useEffect(() => {
+    // Logo animasyonu
+    gsap.from('.logo', {
+      duration: 1,
+      y: -50,
+      opacity: 0,
+      ease: 'power3.out',
+      delay: 0.5
+    })
+
+    // Menü linkleri animasyonu
+    gsap.from('.nav-bar nav a', {
+      duration: 0.5,
+      x: -50,
+      opacity: 0,
+      stagger: 0.1,
+      ease: 'power2.out',
+      delay: 1
+    })
+
+    // Sosyal medya ikonları animasyonu
+    gsap.from('.nav-bar ul li', {
+      duration: 0.5,
+      y: 50,
+      opacity: 0,
+      stagger: 0.1,
+      ease: 'power2.out',
+      delay: 1.5
+    })
+  }, [])
 
   const scrollToSection = (sectionId) => {
     const section = document.querySelector(sectionId)
