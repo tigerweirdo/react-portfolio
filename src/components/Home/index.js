@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import AnimatedLetters from '../AnimatedLetters';
 import Logo from './Logo';
 import './index.scss';
@@ -16,6 +15,19 @@ const Home = () => {
       setLetterClass('text-animate-hover');
     }, 10000);
   }, []);
+
+  const scrollToContact = () => {
+    const contactSection = document.getElementById('contact');
+    if (contactSection) {
+      const yOffset = -80; // Header yüksekliği kadar offset
+      const y = contactSection.getBoundingClientRect().top + window.pageYOffset + yOffset;
+
+      window.scrollTo({
+        top: y,
+        behavior: 'smooth'
+      });
+    }
+  };
 
   return (
     <>
@@ -52,9 +64,9 @@ const Home = () => {
             />
           </h1>
           <h2>Full Stack Developer / AI Enthusiast</h2>
-          <Link to="/contact" className="flat-button">
+          <button onClick={scrollToContact} className="flat-button">
             CONTACT ME
-          </Link>
+          </button>
         </div>
         <Logo />
       </div>

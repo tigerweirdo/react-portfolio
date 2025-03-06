@@ -40,14 +40,13 @@
     margin-top: -120px;
     width: 100%;
 
-    a {
+    div {
       font-size: 22px;
       display: block;
       line-height: 51px;
       height: 51px;
       position: relative;
       cursor: pointer;
-      text-decoration: none;
       transition: transform 0.3s ease;
 
       &:hover {
@@ -92,23 +91,23 @@
       }
     }
 
-    a.home-link:after {
+    div.home-link:after {
       content: 'HOME';
     }
 
-    a.about-link:after {
+    div.about-link:after {
       content: 'ABOUT';
     }
 
-    a.contact-link:after {
+    div.contact-link:after {
       content: 'CONTACT';
     }
 
-    a.portfolio-link:after {
+    div.portfolio-link:after {
       content: 'PORTFOLIO';
     }
 
-    a.active {
+    div.active {
       svg {
         color: $accent-color-2;
       }
@@ -191,7 +190,7 @@
         display: block;
       }
 
-      a {
+      div {
         display: flex;
         justify-content: center;
         align-items: center;
@@ -228,90 +227,5 @@
       right: 15px;
       display: block;
     }
-  }
-}
-
-.contact-form {
-  width: 100%;
-  margin-top: 20px;
-
-  ul {
-    padding: 0;
-    margin: 0;
-
-    li {
-      padding: 0;
-      margin: 0;
-      list-style: none;
-      margin-bottom: 10px;
-      opacity: 0;
-      overflow: hidden;
-      display: block;
-      clear: both;
-      position: relative;
-      animation: fadeInUp 2s 2s;
-      animation-fill-mode: forwards;
-    }
-
-    li.half {
-      width: 49%;
-      margin-left: 2%;
-      float: left;
-      clear: none;
-
-      &:first-child {
-        margin-left: 0;
-      }
-    }
-  }
-
-  input[type='text'],
-  input[type='email'] {
-    width: 100%;
-    border: 0;
-    background: $accent-color-1; /* Kırmızı */
-    height: 50px;
-    font-size: 16px;
-    color: $text-color; /* Beyaz */
-    padding: 0 20px;
-    box-sizing: border-box;
-  }
-
-  textarea {
-    width: 100%;
-    border: 0;
-    background: $accent-color-1; /* Kırmızı */
-    height: 50px;
-    font-size: 16px;
-    color: $text-color; /* Beyaz */
-    padding: 20px;
-    box-sizing: border-box;
-    min-height: 150px;
-  }
-
-  .flat-button {
-    color: $accent-color-1; /* Kırmızı */
-    font-size: 11px;
-    letter-spacing: 3px;
-    text-decoration: none;
-    padding: 8px 10px;
-    border: 1px solid $accent-color-1; /* Kırmızı */
-    float: left;
-    border-radius: 4px;
-    background: 0 0;
-    text-transform: uppercase;
-    float: right;
-    text-align: center;
-    margin-right: 10px;
-    margin-bottom: 130px;
-
-    @media (max-width: 768px) {
-      margin-bottom: 200px; // Örnek olarak 150px verdim, bu değeri ihtiyaçlarınıza göre ayarlayabilirsiniz.
-    }
-  }
-
-  .flat-button:hover {
-    background-color: $accent-color-1; /* Kırmızı */
-    color: $text-color; /* Beyaz */
   }
 }

@@ -32,43 +32,55 @@ $text-color: #ffffff;
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 80px; /* Header yüksekliği kadar scroll padding */
+  height: 100%;
+  overflow-y: auto;
 }
 
 body {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
+  overflow-y: auto; /* Bu özelliği auto olarak değiştirdim */
   font-family: 'Helvetica Neue', sans-serif;
   background-color: $background-color;
   color: $text-color;
+  height: 100%;
 }
 
 .App {
   position: relative;
   width: 100%;
   min-height: 100vh;
-  overflow-y: auto;
+  overflow-y: auto; /* Auto olarak tutuyoruz */
   overflow-x: hidden;
 }
 
-section {
+/* Section stilleri */
+.section {
   min-height: 100vh;
   width: 100%;
   position: relative;
-  overflow: hidden;
+  overflow: visible; /* hidden yerine visible yapıyoruz */
   padding: 2rem;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  transition: opacity 0.5s ease-in-out;
 }
 
-.home-section,
-.about-section,
-.portfolio-section,
-.contact-section {
-  background-color: $background-color;
+.section.active {
+  opacity: 1;
+}
+
+/* SPA yapısında sayfa konumlandırma */
+.page {
+  position: relative;
+  margin-left: 60px; /* Sidebar genişliği */
+  height: auto;
+  overflow-y: visible; /* Auto yerine visible yapıyoruz */
 }
 
 .loader-hidden {
@@ -88,7 +100,7 @@ section {
   z-index: 1000;
 }
 
-// Smooth scroll için özel scrollbar
+/* Smooth scroll için özel scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -106,8 +118,36 @@ section {
   background: $accent-color-2;
 }
 
-@media screen and (max-width: 768px) {
-  section {
+/* Animasyonlar */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInAnimation {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Mobil uyarlamalar */
+@media screen and (max-width: 1200px) {
+  .page {
+    margin-left: 0;
+    overflow-y: visible;
+  }
+
+  .section {
     padding: 1rem;
+    overflow: visible;
   }
 }
