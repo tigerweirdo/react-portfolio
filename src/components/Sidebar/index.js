@@ -1,5 +1,6 @@
 import './index.scss'
 import React, { useState } from 'react'
+import { Link, useLocation } from 'react-router-dom'
 import LogoSubtitle from '../../assets/images/logo_sub.png'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -18,19 +19,14 @@ import {
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false)
-
-  const scrollToSection = (sectionId) => {
-    const section = document.getElementById(sectionId)
-    if (section) {
-      section.scrollIntoView({ behavior: 'smooth' })
-      setIsOpen(false)
-    }
-  }
+  const location = useLocation()
 
   return (
     <div className="nav-bar">
-      <div className="logo" onClick={() => scrollToSection('home')}>
-        <img className="sub-logo" src={LogoSubtitle} alt="tigerweirdo" />
+      <div className="logo">
+        <Link to="/">
+          <img className="sub-logo" src={LogoSubtitle} alt="tigerweirdo" />
+        </Link>
       </div>
       <FontAwesomeIcon 
         onClick={() => setIsOpen(!isOpen)} 
@@ -39,18 +35,34 @@ const Sidebar = () => {
         size="2x" 
         className="hamburger-icon" />
       <nav className={isOpen ? 'mobile-show' : ''}>
-        <div className="home-link" onClick={() => scrollToSection('home')}>
+        <Link 
+          onClick={() => setIsOpen(false)}
+          className={`home-link ${location.pathname === '/' ? 'active' : ''}`} 
+          to="/"
+        >
           <FontAwesomeIcon icon={faHome} className="icon" />
-        </div>
-        <div className="about-link" onClick={() => scrollToSection('about')}>
+        </Link>
+        <Link 
+          onClick={() => setIsOpen(false)}
+          className={`about-link ${location.pathname === '/about' ? 'active' : ''}`} 
+          to="/about"
+        >
           <FontAwesomeIcon icon={faUser} className="icon" />
-        </div>
-        <div className="portfolio-link" onClick={() => scrollToSection('portfolio')}>
+        </Link>
+        <Link 
+          onClick={() => setIsOpen(false)}
+          className={`portfolio-link ${location.pathname === '/portfolio' ? 'active' : ''}`} 
+          to="/portfolio"
+        >
           <FontAwesomeIcon icon={faSuitcase} className="icon" />
-        </div>
-        <div className="contact-link" onClick={() => scrollToSection('contact')}>
+        </Link>
+        <Link 
+          onClick={() => setIsOpen(false)}
+          className={`contact-link ${location.pathname === '/contact' ? 'active' : ''}`} 
+          to="/contact"
+        >
           <FontAwesomeIcon icon={faEnvelope} className="icon" />
-        </div>
+        </Link>
         <FontAwesomeIcon 
           onClick={() => setIsOpen(false)}
           icon={faClose}

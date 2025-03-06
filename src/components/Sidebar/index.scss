@@ -40,13 +40,14 @@
     margin-top: -120px;
     width: 100%;
 
-    div {
+    a {
       font-size: 22px;
       display: block;
       line-height: 51px;
       height: 51px;
       position: relative;
       cursor: pointer;
+      text-decoration: none;
       transition: transform 0.3s ease;
 
       &:hover {
@@ -91,23 +92,23 @@
       }
     }
 
-    div.home-link:after {
+    a.home-link:after {
       content: 'HOME';
     }
 
-    div.about-link:after {
+    a.about-link:after {
       content: 'ABOUT';
     }
 
-    div.contact-link:after {
+    a.contact-link:after {
       content: 'CONTACT';
     }
 
-    div.portfolio-link:after {
+    a.portfolio-link:after {
       content: 'PORTFOLIO';
     }
 
-    div.active {
+    a.active {
       svg {
         color: $accent-color-2;
       }
@@ -190,7 +191,7 @@
         display: block;
       }
 
-      div {
+      a {
         display: flex;
         justify-content: center;
         align-items: center;
@@ -213,6 +214,10 @@
           align-items: center;
           justify-content: center;
         }
+      }
+
+      &.mobile-show {
+        display: flex;
       }
     }
 

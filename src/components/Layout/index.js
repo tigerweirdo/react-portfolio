@@ -2,10 +2,10 @@ import React from 'react'
 import Sidebar from '../Sidebar/'
 import './index.scss'
 
-const Layout = ({ children, activeSection, scrollToSection }) => {
+const Layout = ({ children }) => {
   return (
     <div className="App">
-      <Sidebar activeSection={activeSection} scrollToSection={scrollToSection} />
+      <Sidebar />
       <div className="page">
         {children}
       </div>
