@@ -1,20 +1,39 @@
 import { Route, Routes } from 'react-router-dom'
-import Home from './components/Home'
-import About from './components/About'
-import Contact from './components/Contact'
+import React, { Suspense, lazy } from 'react'
 import Layout from './components/Layout'
-import Portfolio from './components/Portfolio'
 import './App.scss'
+
+// Lazy load components
+const Home = lazy(() => import('./components/Home'))
+const About = lazy(() => import('./components/About'))
+const Contact = lazy(() => import('./components/Contact'))
+const Portfolio = lazy(() => import('./components/Portfolio'))
 
 function App() {
   return (
     <>
       <Routes>
         <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} />
-          <Route path="about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/portfolio" element={<Portfolio />} />
+          <Route index element={
+            <Suspense fallback={<div>Yükleniyor...</div>}>
+              <Home />
+            </Suspense>
+          } />
+          <Route path="about" element={
+            <Suspense fallback={<div>Yükleniyor...</div>}>
+              <About />
+            </Suspense>
+          } />
+          <Route path="/contact" element={
+            <Suspense fallback={<div>Yükleniyor...</div>}>
+              <Contact />
+            </Suspense>
+          } />
+          <Route path="/portfolio" element={
+            <Suspense fallback={<div>Yükleniyor...</div>}>
+              <Portfolio />
+            </Suspense>
+          } />
         </Route>
       </Routes>
     </>

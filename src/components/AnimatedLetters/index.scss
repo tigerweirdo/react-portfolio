@@ -8,12 +8,20 @@
   animation-delay: 1s;
   animation-fill-mode: forwards;
   min-width: 10px;
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  contain: content;
 }
 
 .text-animate-hover {
   min-width: 10px;
   display: inline-block;
   animation-fill-mode: both;
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  contain: content;
 
   &:hover {
     animation: rubberBand 0.8s;

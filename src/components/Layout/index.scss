@@ -4,8 +4,8 @@
   width: 100%;
   height: 100%;
   position: absolute;
+  contain: layout;
 }
-
 
 .container {
   width: 100%;
@@ -20,54 +20,62 @@
   transform-style: preserve-3d;
   animation: fadeIn 1s forwards;
   animation-delay: 1s;
-}
+  contain: layout style;
+  backface-visibility: hidden;
+  transform: translateZ(0);
 
-.container.contact-page,
-.container.about-page,
-.container.portfolio-page {
-  h1 {
-    font-size: 53px;
-    font-family: 'Coolvetica';
-    color: $secondary-text-color;
-    font-weight: 400;
-    margin-top: 0;
-    position: relative;
-    margin-bottom: 40px;
-    left: -10px;
-  }
-
-  p {
-    font-size: 13px;
-    color: $secondary-text-color;
-    font-family: sans-serif;
-    font-weight: 300;
-    max-width: fit-content;
-    animation: pulse 1s;
-    &:nth-of-type(1) {
-      animation-delay: 1.1s;
+  &.contact-page,
+  &.about-page,
+  &.portfolio-page {
+    h1 {
+      font-size: 53px;
+      font-family: 'Coolvetica';
+      color: $secondary-text-color;
+      font-weight: 400;
+      margin-top: 0;
+      position: relative;
+      margin-bottom: 40px;
+      left: -10px;
+      will-change: transform;
     }
-    &:nth-of-type(2) {
-      animation-delay: 1.2s;
-    }
-    &:nth-of-type(3) {
-      animation-delay: 1.3s;
-    }
-  }
 
-  .text-zone {
-    position: absolute;
-    left: 10%;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 35%;
-    vertical-align: middle;
-    display: table-cell;
-    max-height: 90%;
-  }
+    p {
+      font-size: 13px;
+      color: $secondary-text-color;
+      font-family: sans-serif;
+      font-weight: 300;
+      max-width: fit-content;
+      animation: pulse 1s;
+      will-change: transform, opacity;
+      backface-visibility: hidden;
 
-  .text-animate-hover {
-    &:hover {
-      color: $accent-color-2; /* Mavi */
+      &:nth-of-type(1) {
+        animation-delay: 1.1s;
+      }
+      &:nth-of-type(2) {
+        animation-delay: 1.2s;
+      }
+      &:nth-of-type(3) {
+        animation-delay: 1.3s;
+      }
+    }
+
+    .text-zone {
+      position: absolute;
+      left: 10%;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 35%;
+      vertical-align: middle;
+      display: table-cell;
+      max-height: 90%;
+      contain: layout;
+    }
+
+    .text-animate-hover {
+      &:hover {
+        color: $accent-color-2;
+      }
     }
   }
 }
