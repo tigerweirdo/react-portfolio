@@ -20,9 +20,17 @@ import { Link } from 'react-router-dom'
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false)
 
+  const scrollToSection = (sectionId) => {
+    const section = document.getElementById(sectionId)
+    if (section) {
+      section.scrollIntoView({ behavior: 'smooth' })
+      setIsOpen(false)
+    }
+  }
+
   return (
     <div className="nav-bar">
-      <div className="logo">
+      <div className="logo" onClick={() => scrollToSection('home')}>
         <Link to="/">
           <img className="sub-logo" src={LogoSubtitle} alt="tigerweirdo" />
         </Link>
@@ -34,25 +42,17 @@ const Sidebar = () => {
         size="2x" 
         className="hamburger-icon" />
       <nav className={isOpen ? 'mobile-show' : ''}>
-        <div className="home-link">
-          <Link to="/">
-            <FontAwesomeIcon icon={faHome} className="icon" />
-          </Link>
+        <div className="home-link" onClick={() => scrollToSection('home')}>
+          <FontAwesomeIcon icon={faHome} className="icon" />
         </div>
-        <div className="about-link">
-          <Link to="/about">
-            <FontAwesomeIcon icon={faUser} className="icon" />
-          </Link>
+        <div className="about-link" onClick={() => scrollToSection('about')}>
+          <FontAwesomeIcon icon={faUser} className="icon" />
         </div>
-        <div className="portfolio-link">
-          <Link to="/portfolio">
-            <FontAwesomeIcon icon={faSuitcase} className="icon" />
-          </Link>
+        <div className="portfolio-link" onClick={() => scrollToSection('portfolio')}>
+          <FontAwesomeIcon icon={faSuitcase} className="icon" />
         </div>
-        <div className="contact-link">
-          <Link to="/contact">
-            <FontAwesomeIcon icon={faEnvelope} className="icon" />
-          </Link>
+        <div className="contact-link" onClick={() => scrollToSection('contact')}>
+          <FontAwesomeIcon icon={faEnvelope} className="icon" />
         </div>
         <FontAwesomeIcon 
           onClick={() => setIsOpen(false)}
