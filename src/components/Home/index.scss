@@ -8,15 +8,18 @@
     transform: translateY(-50%);
     width: 40%;
     max-height: 90%;
+    overflow: visible;
   }
 
   h1 {
     color: $secondary-text-color;
     font-size: 56px;
-    line-height: 65px;
+    line-height: 75px;
     margin: 0;
+    padding-bottom: 10px;
     font-family: 'Coolvetica';
     font-weight: 400;
+    overflow: visible;
 
     &:before {
       content: '______________';
@@ -93,6 +96,11 @@ img {
     transform: none;
     padding: 10px;
     box-sizing: border-box;
+    overflow: visible;
+  }
+
+  .home-page h1 {
+    line-height: 70px;
   }
 
   .home-page .flat-button {
