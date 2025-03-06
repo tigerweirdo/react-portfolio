@@ -1,5 +1,5 @@
 import './index.scss'
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import LogoSubtitle from '../../assets/images/logo_sub.png'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -15,41 +15,9 @@ import {
   faClose,
   faBars
 } from '@fortawesome/free-solid-svg-icons'
-import gsap from 'gsap'
 
 const Sidebar = ({ activeSection, scrollToSection }) => {
   const [isOpen, setIsOpen] = useState(false)
-
-  useEffect(() => {
-    // Logo animasyonu
-    gsap.from('.logo', {
-      duration: 1,
-      y: -50,
-      opacity: 0,
-      ease: 'power3.out',
-      delay: 0.5
-    })
-
-    // Menü linkleri animasyonu
-    gsap.from('.nav-bar nav a', {
-      duration: 0.5,
-      x: -50,
-      opacity: 0,
-      stagger: 0.1,
-      ease: 'power2.out',
-      delay: 1
-    })
-
-    // Sosyal medya ikonları animasyonu
-    gsap.from('.nav-bar ul li', {
-      duration: 0.5,
-      y: 50,
-      opacity: 0,
-      stagger: 0.1,
-      ease: 'power2.out',
-      delay: 1.5
-    })
-  }, [])
 
   return (
     <div className="nav-bar">
@@ -65,22 +33,34 @@ const Sidebar = ({ activeSection, scrollToSection }) => {
       <nav className={isOpen ? 'mobile-show' : ''}>
         <div 
           className={`home-link ${activeSection === 'home' ? 'active' : ''}`}
-          onClick={() => scrollToSection('home')}>
+          onClick={() => {
+            scrollToSection('home')
+            setIsOpen(false)
+          }}>
           <FontAwesomeIcon icon={faHome} className="icon" />
         </div>
         <div 
           className={`about-link ${activeSection === 'about' ? 'active' : ''}`}
-          onClick={() => scrollToSection('about')}>
+          onClick={() => {
+            scrollToSection('about')
+            setIsOpen(false)
+          }}>
           <FontAwesomeIcon icon={faUser} className="icon" />
         </div>
         <div
           className={`portfolio-link ${activeSection === 'portfolio' ? 'active' : ''}`}
-          onClick={() => scrollToSection('portfolio')}>
+          onClick={() => {
+            scrollToSection('portfolio')
+            setIsOpen(false)
+          }}>
           <FontAwesomeIcon icon={faSuitcase} className="icon" />
         </div>
         <div
           className={`contact-link ${activeSection === 'contact' ? 'active' : ''}`}
-          onClick={() => scrollToSection('contact')}>
+          onClick={() => {
+            scrollToSection('contact')
+            setIsOpen(false)
+          }}>
           <FontAwesomeIcon icon={faEnvelope} className="icon" />
         </div>
         <FontAwesomeIcon 

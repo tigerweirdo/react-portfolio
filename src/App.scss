@@ -9,7 +9,7 @@ $text-color: #ffffff;
 
 @font-face {
   font-family: 'Helvetica Neue';
-  src: url('./assets/fonts/helvetica-neu.ttf') format('ttf');//
+  src: url('./assets/fonts/helvetica-neu.ttf') format('ttf');
   font-weight: normal;
   font-style: normal;
 }
@@ -39,6 +39,8 @@ body {
   padding: 0;
   overflow-x: hidden;
   font-family: 'Helvetica Neue', sans-serif;
+  background-color: $background-color;
+  color: $text-color;
 }
 
 .App {
@@ -48,8 +50,6 @@ body {
   overflow-y: auto;
   overflow-x: hidden;
   scroll-snap-type: y mandatory;
-  background-color: $background-color;
-  color: $text-color;
 }
 
 section {
@@ -58,23 +58,22 @@ section {
   scroll-snap-align: start;
   position: relative;
   overflow: hidden;
+  padding: 2rem;
+  box-sizing: border-box;
   opacity: 0;
   transform: translateY(20px);
   transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-  padding: 2rem;
-  box-sizing: border-box;
+}
 
-  &.active {
-    opacity: 1;
-    transform: translateY(0);
-  }
+section.active {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .home-section,
 .about-section,
 .portfolio-section,
 .contact-section {
-  background: $background-color;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -87,15 +86,15 @@ section {
 
 .loader-active {
   display: block;
-  position: fixed; // Pozisyonunu 'fixed' olarak değiştirelim ki tüm sayfa üzerinde ortalanabilsin.
-  left: 50%; // Sayfanın yarısına yerleştirir.
-  top: 50%; // Sayfanın yarısına yerleştirir.
-  transform: translate(-50%, -80%); // Bu, Loader'ı tam olarak merkeze alır.
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -80%);
   width: 100px;
   height: 100px;
   animation: fadeOut 1s 1s;
   animation-fill-mode: forwards;
-  z-index: 1000; // Diğer öğelerin üzerinde olmasını sağlar.
+  z-index: 1000;
 }
 
 // Smooth scroll için özel scrollbar
