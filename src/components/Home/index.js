@@ -7,17 +7,14 @@ import './index.scss';
 const Home = () => {
   const [letterClass, setLetterClass] = useState('text-animate');
 
-  const hiArray = ['H', 'i', ','];
-  const iAmArray = ['I', ' ', 'a', 'm'];
-  const nameArray = ['T', 'e', 'm', 'm', 'u', 'z'];
-  const jobTitleArray = ['F', 'u', 'l', 'l', ' ', 'S', 't', 'a', 'c', 'k', ' ', 'D', 'e', 'v', 'e', 'l', 'o', 'p', 'e', 'r'];
+  const nameArray = ['  ', 't', 'e', 'm', 'm', 'u', 'z'];
+  const playingArray = [..."creating"];
+  const webStuffArray = [..."digital experiences"];
 
   useEffect(() => {
-    const timer = setTimeout(() => {
+    return setTimeout(() => {
       setLetterClass('text-animate-hover');
-    }, 4000);
-
-    return () => clearTimeout(timer);
+    }, 10000);
   }, []);
 
   return (
@@ -25,33 +22,38 @@ const Home = () => {
       <div className="container home-page">
         <div className="text-zone">
           <h1>
-            <AnimatedLetters
-              letterClass={letterClass}
-              strArray={hiArray}
-              idx={1}
-            />
+            <span className={letterClass}>H</span>
+            <span className={`${letterClass} _12`}>e</span>
+            <span className={`${letterClass} _13`}>y</span>
+            <span className={`${letterClass} _14`}>,</span>
             <br />
-            <AnimatedLetters
-              letterClass={letterClass}
-              strArray={iAmArray}
-              idx={4}
-            />
+            <span className={`${letterClass} _15`}>I</span>
+            <span className={`${letterClass} _16`}> </span>
+            <span className={`${letterClass} _17`}>a</span>
+            <span className={`${letterClass} _18`}>m</span>
             <AnimatedLetters
               letterClass={letterClass}
               strArray={nameArray}
-              idx={8}
+              idx={19}
             />
             <br />
             <AnimatedLetters
               letterClass={letterClass}
-              strArray={jobTitleArray}
-              idx={14}
+              strArray={playingArray}
+              idx={20 + nameArray.length}
+              additionalClass="smaller-text"
+            />
+            <br />
+            <AnimatedLetters
+              letterClass={letterClass}
+              strArray={webStuffArray}
+              idx={20 + nameArray.length + playingArray.length}
               additionalClass="smaller-text"
             />
           </h1>
-          <h2>Yazılım Geliştirici / AI Meraklısı / Teknoloji Tutkunu</h2>
+          <h2>Full Stack Developer / AI Enthusiast</h2>
           <Link to="/contact" className="flat-button">
-            İLETİŞİME GEÇ
+            CONTACT ME
           </Link>
         </div>
         <Logo />
