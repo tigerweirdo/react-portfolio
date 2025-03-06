@@ -1,41 +1,94 @@
-import { Route, Routes } from 'react-router-dom'
-import React, { Suspense, lazy } from 'react'
+import React, { Suspense, useEffect } from 'react'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Layout from './components/Layout'
+import Home from './components/Home'
+import About from './components/About'
+import Portfolio from './components/Portfolio'
+import Contact from './components/Contact'
 import './App.scss'
 
-// Lazy load components
-const Home = lazy(() => import('./components/Home'))
-const About = lazy(() => import('./components/About'))
-const Contact = lazy(() => import('./components/Contact'))
-const Portfolio = lazy(() => import('./components/Portfolio'))
+// GSAP ScrollTrigger'ı kaydet
+gsap.registerPlugin(ScrollTrigger)
 
-function App() {
+const App = () => {
+  useEffect(() => {
+    // Smooth scrolling için
+    const sections = document.querySelectorAll('section')
+    
+    sections.forEach(section => {
+      ScrollTrigger.create({
+        trigger: section,
+        start: 'top center',
+        end: 'bottom center',
+        toggleClass: 'active',
+        markers: false
+      })
+    })
+
+    // Scroll animasyonları
+    gsap.from('.home-section', {
+      duration: 1,
+      opacity: 0,
+      y: 50,
+      ease: 'power3.out'
+    })
+
+    gsap.from('.about-section', {
+      duration: 1,
+      opacity: 0,
+      y: 50,
+      ease: 'power3.out',
+      scrollTrigger: {
+        trigger: '.about-section',
+        start: 'top 80%',
+        toggleActions: 'play none none reverse'
+      }
+    })
+
+    gsap.from('.portfolio-section', {
+      duration: 1,
+      opacity: 0,
+      y: 50,
+      ease: 'power3.out',
+      scrollTrigger: {
+        trigger: '.portfolio-section',
+        start: 'top 80%',
+        toggleActions: 'play none none reverse'
+      }
+    })
+
+    gsap.from('.contact-section', {
+      duration: 1,
+      opacity: 0,
+      y: 50,
+      ease: 'power3.out',
+      scrollTrigger: {
+        trigger: '.contact-section',
+        start: 'top 80%',
+        toggleActions: 'play none none reverse'
+      }
+    })
+  }, [])
+
   return (
     <>
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={
-            <Suspense fallback={<div>Yükleniyor...</div>}>
-              <Home />
-            </Suspense>
-          } />
-          <Route path="about" element={
-            <Suspense fallback={<div>Yükleniyor...</div>}>
-              <About />
-            </Suspense>
-          } />
-          <Route path="/contact" element={
-            <Suspense fallback={<div>Yükleniyor...</div>}>
-              <Contact />
-            </Suspense>
-          } />
-          <Route path="/portfolio" element={
-            <Suspense fallback={<div>Yükleniyor...</div>}>
-              <Portfolio />
-            </Suspense>
-          } />
-        </Route>
-      </Routes>
+      <Layout>
+        <Suspense fallback={<div>Yükleniyor...</div>}>
+          <section className="home-section">
+            <Home />
+          </section>
+          <section className="about-section">
+            <About />
+          </section>
+          <section className="portfolio-section">
+            <Portfolio />
+          </section>
+          <section className="contact-section">
+            <Contact />
+          </section>
+        </Suspense>
+      </Layout>
     </>
   )
 }

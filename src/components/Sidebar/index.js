@@ -1,5 +1,5 @@
 import './index.scss'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import LogoSubtitle from '../../assets/images/logo_sub.png'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -16,65 +16,69 @@ import {
   faBars
 } from '@fortawesome/free-solid-svg-icons'
 import { Link, NavLink } from 'react-router-dom'
+import { gsap } from 'gsap'
 
 const Sidebar = () => {
-  const [showNav, setShowNav] = useState(false);
+  const [isOpen, setIsOpen] = useState(false)
+
+  const scrollToSection = (sectionId) => {
+    const section = document.querySelector(sectionId)
+    if (section) {
+      section.scrollIntoView({ behavior: 'smooth' })
+      setIsOpen(false)
+    }
+  }
 
   return (
     <div className="nav-bar">
-      <Link 
-        className="logo"
-        to="/"
-        onClick={() => setShowNav(false)}>
+      <Link className="logo" to="/" onClick={() => scrollToSection('.home-section')}>
         <img className="sub-logo" src={LogoSubtitle} alt="tigerweirdo" />
       </Link>
       <FontAwesomeIcon 
-        onClick={() => setShowNav(!showNav)} 
+        onClick={() => setIsOpen(!isOpen)} 
         icon={faBars} 
         color="#000" 
         size="2x" 
         className="hamburger-icon" />
-      <nav className={showNav ? 'mobile-show' : ''}>
+      <nav className={isOpen ? 'mobile-show' : ''}>
         
         <NavLink 
           exact="true"
           activeclassname="active"
           className="home-link"
           to="/"
-          onClick={() => setShowNav(false)}>
+          onClick={() => scrollToSection('.home-section')}>
           <FontAwesomeIcon icon={faHome} className="icon" />
         </NavLink>
         <NavLink 
           activeclassname="active"
           className="about-link"
           to="/about"
-          onClick={() => setShowNav(false)}>
+          onClick={() => scrollToSection('.about-section')}>
           <FontAwesomeIcon icon={faUser} className="icon" />
         </NavLink>
         <NavLink
           activeclassname="active"
           className="portfolio-link"
           to="/portfolio"
-          onClick={() => setShowNav(false)}
-        >
+          onClick={() => scrollToSection('.portfolio-section')}>
           <FontAwesomeIcon icon={faSuitcase} className="icon" />
         </NavLink>
         <NavLink
           activeclassname="active"
           className="contact-link"
           to="/contact"
-          onClick={() => setShowNav(false)}
-        >
+          onClick={() => scrollToSection('.contact-section')}>
           <FontAwesomeIcon icon={faEnvelope} className="icon" />
         </NavLink>
         <FontAwesomeIcon 
-          onClick={() => setShowNav(false)}
+          onClick={() => setIsOpen(false)}
           icon={faClose}
           color="#ECA869"
           size="3x"
           className="close-icon" />
       </nav>
-      <div className={showNav ? 'mobile-show' : ''}>
+      <div className={isOpen ? 'mobile-show' : ''}>
       <ul>
         <li>
           <a
