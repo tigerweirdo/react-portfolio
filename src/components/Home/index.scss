@@ -12,7 +12,7 @@
 
   h1 {
     color: $secondary-text-color;
-    font-size: 65px;
+    font-size: 56px;
     line-height: 65px;
     margin: 0;
     font-family: 'Coolvetica';
@@ -115,6 +115,26 @@ img {
 
   .logo-container svg {
     position: fixed;
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInAnimation {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
