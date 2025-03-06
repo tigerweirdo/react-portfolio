@@ -1,5 +1,5 @@
 import React from 'react'
-import ReactDOM from 'react-dom/client'
+import ReactDOM from 'react-dom'
 import reportWebVitals from './reportWebVitals'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import App from './App'
@@ -9,8 +9,7 @@ import Portfolio from './components/Portfolio'
 import Contact from './components/Contact'
 import './index.scss'
 
-const root = ReactDOM.createRoot(document.getElementById('root'))
-root.render(
+ReactDOM.render(
   <React.StrictMode>
     <Router>
       <Routes>
@@ -22,7 +21,8 @@ root.render(
         </Route>
       </Routes>
     </Router>
-  </React.StrictMode>
+  </React.StrictMode>,
+  document.getElementById('root')
 )
 
 // If you want to start measuring performance in your app, pass a function

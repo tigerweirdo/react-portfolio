@@ -1,9 +1,6 @@
 import React, { Suspense } from 'react'
 import Layout from './components/Layout'
-import Home from './components/Home'
-import About from './components/About'
-import Portfolio from './components/Portfolio'
-import Contact from './components/Contact'
+import { Outlet } from 'react-router-dom'
 import './App.scss'
 
 const App = () => {
@@ -12,10 +9,7 @@ const App = () => {
       <Layout>
         <Suspense fallback={<div>Yükleniyor...</div>}>
           <div className="content">
-            <Home />
-            <About />
-            <Portfolio />
-            <Contact />
+            <Outlet />
           </div>
         </Suspense>
       </Layout>
