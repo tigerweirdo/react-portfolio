@@ -8,8 +8,14 @@ import './App.scss'
 
 const App = () => {
   const [activeSection, setActiveSection] = useState('home')
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
+    // Sayfa yüklendiğinde loading'i kaldır
+    setTimeout(() => {
+      setIsLoading(false)
+    }, 2000)
+
     const handleScroll = () => {
       const sections = document.querySelectorAll('section')
       const scrollPosition = window.scrollY
@@ -33,20 +39,28 @@ const App = () => {
     section.scrollIntoView({ behavior: 'smooth' })
   }
 
+  if (isLoading) {
+    return (
+      <div className="loader-active">
+        <div className="loader"></div>
+      </div>
+    )
+  }
+
   return (
     <>
       <Layout activeSection={activeSection} scrollToSection={scrollToSection}>
         <Suspense fallback={<div>Yükleniyor...</div>}>
-          <section id="home" className="home-section">
+          <section id="home" className={`home-section ${activeSection === 'home' ? 'active' : ''}`}>
             <Home />
           </section>
-          <section id="about" className="about-section">
+          <section id="about" className={`about-section ${activeSection === 'about' ? 'active' : ''}`}>
             <About />
           </section>
-          <section id="portfolio" className="portfolio-section">
+          <section id="portfolio" className={`portfolio-section ${activeSection === 'portfolio' ? 'active' : ''}`}>
             <Portfolio />
           </section>
-          <section id="contact" className="contact-section">
+          <section id="contact" className={`contact-section ${activeSection === 'contact' ? 'active' : ''}`}>
             <Contact />
           </section>
         </Suspense>
