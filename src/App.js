@@ -18,7 +18,7 @@ const App = () => {
 
     const handleScroll = () => {
       const sections = document.querySelectorAll('section')
-      const scrollPosition = window.scrollY
+      const scrollPosition = window.scrollY + window.innerHeight / 2
 
       sections.forEach(section => {
         const sectionTop = section.offsetTop
@@ -30,13 +30,24 @@ const App = () => {
       })
     }
 
+    // İlk yüklemede scroll pozisyonunu kontrol et
+    handleScroll()
+
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
   const scrollToSection = (sectionId) => {
     const section = document.getElementById(sectionId)
-    section.scrollIntoView({ behavior: 'smooth' })
+    if (section) {
+      const yOffset = -80 // Header yüksekliği kadar offset
+      const y = section.getBoundingClientRect().top + window.pageYOffset + yOffset
+
+      window.scrollTo({
+        top: y,
+        behavior: 'smooth'
+      })
+    }
   }
 
   if (isLoading) {
