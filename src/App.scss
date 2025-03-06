@@ -30,10 +30,6 @@ $text-color: #ffffff;
   font-style: normal;
 }
 
-html {
-  scroll-behavior: smooth;
-}
-
 body {
   margin: 0;
   padding: 0;
@@ -51,24 +47,10 @@ body {
   overflow-x: hidden;
 }
 
-section {
-  min-height: 100vh;
-  width: 100%;
-  position: relative;
-  overflow: hidden;
+.content {
+  margin-left: 60px; // Sidebar genişliği kadar margin
   padding: 2rem;
   box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.home-section,
-.about-section,
-.portfolio-section,
-.contact-section {
-  background-color: $background-color;
 }
 
 .loader-hidden {
@@ -107,7 +89,8 @@ section {
 }
 
 @media screen and (max-width: 768px) {
-  section {
+  .content {
+    margin-left: 0;
     padding: 1rem;
   }
 }

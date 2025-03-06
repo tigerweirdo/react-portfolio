@@ -15,14 +15,17 @@ import {
   faClose,
   faBars
 } from '@fortawesome/free-solid-svg-icons'
+import { Link } from 'react-router-dom'
 
-const Sidebar = ({ activeSection, scrollToSection }) => {
+const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false)
 
   return (
     <div className="nav-bar">
-      <div className="logo" onClick={() => scrollToSection('home')}>
-        <img className="sub-logo" src={LogoSubtitle} alt="tigerweirdo" />
+      <div className="logo">
+        <Link to="/">
+          <img className="sub-logo" src={LogoSubtitle} alt="tigerweirdo" />
+        </Link>
       </div>
       <FontAwesomeIcon 
         onClick={() => setIsOpen(!isOpen)} 
@@ -31,37 +34,25 @@ const Sidebar = ({ activeSection, scrollToSection }) => {
         size="2x" 
         className="hamburger-icon" />
       <nav className={isOpen ? 'mobile-show' : ''}>
-        <div 
-          className={`home-link ${activeSection === 'home' ? 'active' : ''}`}
-          onClick={() => {
-            scrollToSection('home')
-            setIsOpen(false)
-          }}>
-          <FontAwesomeIcon icon={faHome} className="icon" />
+        <div className="home-link">
+          <Link to="/">
+            <FontAwesomeIcon icon={faHome} className="icon" />
+          </Link>
         </div>
-        <div 
-          className={`about-link ${activeSection === 'about' ? 'active' : ''}`}
-          onClick={() => {
-            scrollToSection('about')
-            setIsOpen(false)
-          }}>
-          <FontAwesomeIcon icon={faUser} className="icon" />
+        <div className="about-link">
+          <Link to="/about">
+            <FontAwesomeIcon icon={faUser} className="icon" />
+          </Link>
         </div>
-        <div
-          className={`portfolio-link ${activeSection === 'portfolio' ? 'active' : ''}`}
-          onClick={() => {
-            scrollToSection('portfolio')
-            setIsOpen(false)
-          }}>
-          <FontAwesomeIcon icon={faSuitcase} className="icon" />
+        <div className="portfolio-link">
+          <Link to="/portfolio">
+            <FontAwesomeIcon icon={faSuitcase} className="icon" />
+          </Link>
         </div>
-        <div
-          className={`contact-link ${activeSection === 'contact' ? 'active' : ''}`}
-          onClick={() => {
-            scrollToSection('contact')
-            setIsOpen(false)
-          }}>
-          <FontAwesomeIcon icon={faEnvelope} className="icon" />
+        <div className="contact-link">
+          <Link to="/contact">
+            <FontAwesomeIcon icon={faEnvelope} className="icon" />
+          </Link>
         </div>
         <FontAwesomeIcon 
           onClick={() => setIsOpen(false)}
