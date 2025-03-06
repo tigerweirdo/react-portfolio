@@ -15,10 +15,9 @@ import {
   faClose,
   faBars
 } from '@fortawesome/free-solid-svg-icons'
-import { Link, NavLink } from 'react-router-dom'
 import gsap from 'gsap'
 
-const Sidebar = () => {
+const Sidebar = ({ activeSection, scrollToSection }) => {
   const [isOpen, setIsOpen] = useState(false)
 
   useEffect(() => {
@@ -52,102 +51,84 @@ const Sidebar = () => {
     })
   }, [])
 
-  const scrollToSection = (sectionId) => {
-    const section = document.querySelector(sectionId)
-    if (section) {
-      section.scrollIntoView({ behavior: 'smooth' })
-      setIsOpen(false)
-    }
-  }
-
   return (
     <div className="nav-bar">
-      <Link className="logo" to="/" onClick={() => scrollToSection('.home-section')}>
+      <div className="logo" onClick={() => scrollToSection('home')}>
         <img className="sub-logo" src={LogoSubtitle} alt="tigerweirdo" />
-      </Link>
+      </div>
       <FontAwesomeIcon 
         onClick={() => setIsOpen(!isOpen)} 
         icon={faBars} 
-        color="#000" 
+        color="#ffd700" 
         size="2x" 
         className="hamburger-icon" />
       <nav className={isOpen ? 'mobile-show' : ''}>
-        
-        <NavLink 
-          exact="true"
-          activeclassname="active"
-          className="home-link"
-          to="/"
-          onClick={() => scrollToSection('.home-section')}>
+        <div 
+          className={`home-link ${activeSection === 'home' ? 'active' : ''}`}
+          onClick={() => scrollToSection('home')}>
           <FontAwesomeIcon icon={faHome} className="icon" />
-        </NavLink>
-        <NavLink 
-          activeclassname="active"
-          className="about-link"
-          to="/about"
-          onClick={() => scrollToSection('.about-section')}>
+        </div>
+        <div 
+          className={`about-link ${activeSection === 'about' ? 'active' : ''}`}
+          onClick={() => scrollToSection('about')}>
           <FontAwesomeIcon icon={faUser} className="icon" />
-        </NavLink>
-        <NavLink
-          activeclassname="active"
-          className="portfolio-link"
-          to="/portfolio"
-          onClick={() => scrollToSection('.portfolio-section')}>
+        </div>
+        <div
+          className={`portfolio-link ${activeSection === 'portfolio' ? 'active' : ''}`}
+          onClick={() => scrollToSection('portfolio')}>
           <FontAwesomeIcon icon={faSuitcase} className="icon" />
-        </NavLink>
-        <NavLink
-          activeclassname="active"
-          className="contact-link"
-          to="/contact"
-          onClick={() => scrollToSection('.contact-section')}>
+        </div>
+        <div
+          className={`contact-link ${activeSection === 'contact' ? 'active' : ''}`}
+          onClick={() => scrollToSection('contact')}>
           <FontAwesomeIcon icon={faEnvelope} className="icon" />
-        </NavLink>
+        </div>
         <FontAwesomeIcon 
           onClick={() => setIsOpen(false)}
           icon={faClose}
-          color="#ECA869"
+          color="#ffd700"
           size="3x"
           className="close-icon" />
       </nav>
       <div className={isOpen ? 'mobile-show' : ''}>
-      <ul>
-        <li>
-          <a
-            href="https://www.linkedin.com/in/mete-han-%C3%A7etiner-3534431a8/"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <FontAwesomeIcon
-              icon={faLinkedin}
-              className="icon"
-            />
-          </a>
-        </li>
-        <li>
-          <a
-            href="https://github.com/tigerweirdo"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <FontAwesomeIcon
-              icon={faGithub}
-              className="icon"
-            />
-          </a>
-        </li>
-        <li>
-          <a
-            href="https://www.instagram.com/temmuzcetiner/"
-            rel="noreferrer"
-            target="_blank"
-          >
-            <FontAwesomeIcon
-              icon={faInstagram}
-              className="icon"
-            />
-          </a>
-        </li>
-      </ul>
+        <ul>
+          <li>
+            <a
+              href="https://www.linkedin.com/in/mete-han-%C3%A7etiner-3534431a8/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <FontAwesomeIcon
+                icon={faLinkedin}
+                className="icon"
+              />
+            </a>
+          </li>
+          <li>
+            <a
+              href="https://github.com/tigerweirdo"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <FontAwesomeIcon
+                icon={faGithub}
+                className="icon"
+              />
+            </a>
+          </li>
+          <li>
+            <a
+              href="https://www.instagram.com/temmuzcetiner/"
+              rel="noreferrer"
+              target="_blank"
+            >
+              <FontAwesomeIcon
+                icon={faInstagram}
+                className="icon"
+              />
+            </a>
+          </li>
+        </ul>
       </div>
     </div>
   )

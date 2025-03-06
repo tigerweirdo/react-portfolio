@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect } from 'react'
+import React, { Suspense, useEffect, useState } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Layout from './components/Layout'
@@ -12,6 +12,8 @@ import './App.scss'
 gsap.registerPlugin(ScrollTrigger)
 
 const App = () => {
+  const [activeSection, setActiveSection] = useState('home')
+
   useEffect(() => {
     // Smooth scrolling için
     const sections = document.querySelectorAll('section')
@@ -21,6 +23,10 @@ const App = () => {
         trigger: section,
         start: 'top center',
         end: 'bottom center',
+        onEnter: () => {
+          const sectionId = section.id
+          setActiveSection(sectionId)
+        },
         toggleClass: 'active',
         markers: false
       })
@@ -71,20 +77,25 @@ const App = () => {
     })
   }, [])
 
+  const scrollToSection = (sectionId) => {
+    const section = document.getElementById(sectionId)
+    section.scrollIntoView({ behavior: 'smooth' })
+  }
+
   return (
     <>
-      <Layout>
+      <Layout activeSection={activeSection} scrollToSection={scrollToSection}>
         <Suspense fallback={<div>Yükleniyor...</div>}>
-          <section className="home-section">
+          <section id="home" className="home-section">
             <Home />
           </section>
-          <section className="about-section">
+          <section id="about" className="about-section">
             <About />
           </section>
-          <section className="portfolio-section">
+          <section id="portfolio" className="portfolio-section">
             <Portfolio />
           </section>
-          <section className="contact-section">
+          <section id="contact" className="contact-section">
             <Contact />
           </section>
         </Suspense>

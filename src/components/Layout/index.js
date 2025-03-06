@@ -1,13 +1,13 @@
-import { Outlet } from 'react-router-dom'
+import React from 'react'
 import Sidebar from '../Sidebar/'
 import './index.scss'
 
-const Layout = () => {
+const Layout = ({ children, activeSection, scrollToSection }) => {
   return (
     <div className="App">
-      <Sidebar />
+      <Sidebar activeSection={activeSection} scrollToSection={scrollToSection} />
       <div className="page">
-        <Outlet />
+        {children}
       </div>
     </div>
   )

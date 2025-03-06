@@ -4,7 +4,7 @@
   background: $primary-color;
   width: 60px;
   height: 100%;
-  position: absolute;
+  position: fixed;
   top: 0;
   z-index: 3;
   min-height: 500px;
@@ -12,6 +12,7 @@
   .logo {
     display: block;
     padding: 8px 0;
+    cursor: pointer;
 
     img {
       display: block;
@@ -34,20 +35,20 @@
     margin-top: -120px;
     width: 100%;
 
-    a {
+    div {
       font-size: 22px;
       display: block;
       line-height: 51px;
       height: 51px;
       position: relative;
-      text-decoration: none;
+      cursor: pointer;
 
       .icon {
-        color: $icon-color; /* İkon rengi */
+        color: $icon-color;
         transition: color 0.3s ease-out;
 
         &:hover {
-          color: $accent-color-2; /* İkon hover rengi */
+          color: $accent-color-2;
         }
       }
 
@@ -80,25 +81,25 @@
       }
     }
 
-    a.home-link:after {
+    div.home-link:after {
       content: 'HOME';
     }
 
-    a.about-link:after {
+    div.about-link:after {
       content: 'ABOUT';
     }
 
-    a.contact-link:after {
+    div.contact-link:after {
       content: 'CONTACT';
     }
 
-    a.portfolio-link:after {
+    div.portfolio-link:after {
       content: 'PORTFOLIO';
     }
 
-    a.active {
+    div.active {
       svg {
-        color: $accent-color-2; /* İkon aktif rengi */
+        color: $accent-color-2;
       }
     }
   }
@@ -121,11 +122,11 @@
         line-height: 16px;
 
         .icon {
-          color: $icon-color; /* İkon rengi */
+          color: $icon-color;
           transition: color 0.3s ease-out;
 
           &:hover {
-            color: $accent-color-2; /* İkon hover rengi */
+            color: $accent-color-2;
           }
         }
       }
@@ -174,7 +175,7 @@
         display: block;
       }
 
-      a {
+      div {
         display: flex;
         justify-content: center;
         align-items: center;
