@@ -13,6 +13,11 @@
     display: block;
     padding: 8px 0;
     cursor: pointer;
+    transition: transform 0.3s ease;
+
+    &:hover {
+      transform: scale(1.1);
+    }
 
     img {
       display: block;
@@ -42,6 +47,11 @@
       height: 51px;
       position: relative;
       cursor: pointer;
+      transition: transform 0.3s ease;
+
+      &:hover {
+        transform: scale(1.1);
+      }
 
       .icon {
         color: $icon-color;
@@ -120,6 +130,11 @@
         display: block;
         font-size: 15px;
         line-height: 16px;
+        transition: transform 0.3s ease;
+
+        &:hover {
+          transform: scale(1.1);
+        }
 
         .icon {
           color: $icon-color;
