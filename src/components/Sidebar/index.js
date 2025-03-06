@@ -15,7 +15,6 @@ import {
   faClose,
   faBars
 } from '@fortawesome/free-solid-svg-icons'
-import { Link } from 'react-router-dom'
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -31,9 +30,7 @@ const Sidebar = () => {
   return (
     <div className="nav-bar">
       <div className="logo" onClick={() => scrollToSection('home')}>
-        <Link to="/">
-          <img className="sub-logo" src={LogoSubtitle} alt="tigerweirdo" />
-        </Link>
+        <img className="sub-logo" src={LogoSubtitle} alt="tigerweirdo" />
       </div>
       <FontAwesomeIcon 
         onClick={() => setIsOpen(!isOpen)} 
