@@ -1,44 +1,28 @@
-import React, { Suspense, useEffect } from 'react'
+import React, { Suspense } from 'react'
 import Layout from './components/Layout'
 import Home from './components/Home'
 import About from './components/About'
 import Portfolio from './components/Portfolio'
 import Contact from './components/Contact'
-import { Outlet, useLocation } from 'react-router-dom'
 import './App.scss'
 
 const App = () => {
-  const location = useLocation()
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const section = document.getElementById(location.pathname.slice(1) || 'home')
-      if (section) {
-        section.scrollIntoView({ behavior: 'smooth' })
-      }
-    }
-
-    handleScroll()
-  }, [location])
-
   return (
     <>
       <Layout>
         <Suspense fallback={<div>Yükleniyor...</div>}>
-          <div className="content">
-            <div id="home">
-              <Home />
-            </div>
-            <div id="about">
-              <About />
-            </div>
-            <div id="portfolio">
-              <Portfolio />
-            </div>
-            <div id="contact">
-              <Contact />
-            </div>
-          </div>
+          <section id="home" className="home-section">
+            <Home />
+          </section>
+          <section id="about" className="about-section">
+            <About />
+          </section>
+          <section id="portfolio" className="portfolio-section">
+            <Portfolio />
+          </section>
+          <section id="contact" className="contact-section">
+            <Contact />
+          </section>
         </Suspense>
       </Layout>
     </>
