@@ -10,6 +10,9 @@ const App = () => {
   const [activeSection, setActiveSection] = useState('home')
 
   useEffect(() => {
+    // İlk yüklemede home section'ı aktif et
+    setActiveSection('home')
+
     const handleScroll = () => {
       const sections = document.querySelectorAll('section')
       const scrollPosition = window.scrollY
@@ -37,16 +40,16 @@ const App = () => {
     <>
       <Layout activeSection={activeSection} scrollToSection={scrollToSection}>
         <Suspense fallback={<div>Yükleniyor...</div>}>
-          <section id="home" className="home-section">
+          <section id="home" className={`home-section ${activeSection === 'home' ? 'active' : ''}`}>
             <Home />
           </section>
-          <section id="about" className="about-section">
+          <section id="about" className={`about-section ${activeSection === 'about' ? 'active' : ''}`}>
             <About />
           </section>
-          <section id="portfolio" className="portfolio-section">
+          <section id="portfolio" className={`portfolio-section ${activeSection === 'portfolio' ? 'active' : ''}`}>
             <Portfolio />
           </section>
-          <section id="contact" className="contact-section">
+          <section id="contact" className={`contact-section ${activeSection === 'contact' ? 'active' : ''}`}>
             <Contact />
           </section>
         </Suspense>
