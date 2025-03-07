@@ -1,220 +1,151 @@
-import React, { useEffect, useState, useMemo, useCallback } from "react";
-import AnimatedLetters from "../AnimatedLetters";
+import React, { useState, useEffect, useCallback } from "react";
 import { getDocs, collection } from 'firebase/firestore';
 import { db } from '../../firebase';
 import "./index.scss";
 
 const Portfolio = () => {
-    const [letterClass, setLetterClass] = useState('text-animate');
     const [portfolio, setPortfolio] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [activeFilter, setActiveFilter] = useState('all');
-    const [filteredPortfolio, setFilteredPortfolio] = useState([]);
+    const [activeCategory, setActiveCategory] = useState('all');
     
-    // Animasyon için timer
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setLetterClass('text-animate-hover');
-        }, 3000);
-        
-        return () => clearTimeout(timer);
-    }, []);
-    
-    // Firestore'dan veri çekme
-    const getPortfolio = useCallback(async () => {
+    // Firestore'dan portfolio verilerini çekme
+    const fetchPortfolio = useCallback(async () => {
         try {
+            setLoading(true);
             setError(null);
             const querySnapshot = await getDocs(collection(db, 'portfolio'));
-            const portfolioData = querySnapshot.docs.map((doc) => ({
+            const data = querySnapshot.docs.map((doc) => ({
                 ...doc.data(),
                 id: doc.id,
-                tags: doc.data().tags || ['Genel'] // Eğer etiket yoksa varsayılan "Genel" ekle
+                category: doc.data().category || 'other'
             }));
-            setPortfolio(portfolioData);
-            setFilteredPortfolio(portfolioData);
-        } catch (error) {
-            console.error('Portfolio verisi alınırken hata oluştu:', error);
-            setError('Portfolio verileri yüklenirken bir hata oluştu.');
+            setPortfolio(data);
+        } catch (err) {
+            console.error("Veriler yüklenirken hata oluştu:", err);
+            setError("Portfolio projeleri yüklenirken bir hata oluştu. Lütfen daha sonra tekrar deneyin.");
         } finally {
             setLoading(false);
         }
     }, []);
     
     useEffect(() => {
-        getPortfolio();
-    }, [getPortfolio]);
+        fetchPortfolio();
+    }, [fetchPortfolio]);
     
-    // Filtreleme fonksiyonu
-    useEffect(() => {
-        if (activeFilter === 'all') {
-            setFilteredPortfolio(portfolio);
-        } else {
-            setFilteredPortfolio(
-                portfolio.filter(item => 
-                    item.tags && item.tags.includes(activeFilter)
-                )
-            );
-        }
-    }, [portfolio, activeFilter]);
-    
-    // Benzersiz etiketleri al
-    const uniqueTags = useMemo(() => {
-        const tags = new Set();
-        portfolio.forEach(item => {
-            if (item.tags && Array.isArray(item.tags)) {
-                item.tags.forEach(tag => tags.add(tag));
-            }
-        });
-        return Array.from(tags);
+    // Kategorileri oluştur
+    const categories = React.useMemo(() => {
+        const categorySet = new Set(portfolio.map(item => item.category));
+        return ['all', ...Array.from(categorySet)];
     }, [portfolio]);
     
-    // Link tıklaması
-    const handlePortfolioClick = useCallback((url) => {
-        window.open(url, '_blank', 'noopener,noreferrer');
+    // Filtrelenmiş projeleri al
+    const filteredProjects = React.useMemo(() => {
+        if (activeCategory === 'all') {
+            return portfolio;
+        }
+        return portfolio.filter(item => item.category === activeCategory);
+    }, [portfolio, activeCategory]);
+    
+    // Link tıklama işleyicisi
+    const handleProjectClick = useCallback((url) => {
+        if (url) {
+            window.open(url, '_blank', 'noopener,noreferrer');
+        }
     }, []);
     
-    // Resim yükleme hatası
-    const handleImageError = useCallback((e) => {
-        e.target.src = '/placeholder-image.jpg';
+    // Kategori değiştirme işleyicisi
+    const handleCategoryChange = useCallback((category) => {
+        setActiveCategory(category);
     }, []);
-    
-    // Yeniden deneme
-    const handleRetry = useCallback(() => {
-        setLoading(true);
-        getPortfolio();
-    }, [getPortfolio]);
-    
-    // Filtre değiştirme
-    const handleFilterChange = useCallback((filter) => {
-        setActiveFilter(filter);
-    }, []);
-    
-    // UI Render Fonksiyonları
-    const renderFilterButtons = useMemo(() => (
-        <div className="filter-container">
-            <button 
-                className={`filter-button ${activeFilter === 'all' ? 'active' : ''}`}
-                onClick={() => handleFilterChange('all')}
-            >
-                Tümü
-            </button>
-            {uniqueTags.map(tag => (
-                <button 
-                    key={tag}
-                    className={`filter-button ${activeFilter === tag ? 'active' : ''}`}
-                    onClick={() => handleFilterChange(tag)}
-                >
-                    {tag}
-                </button>
-            ))}
-        </div>
-    ), [uniqueTags, activeFilter, handleFilterChange]);
-    
-    const renderPortfolio = useMemo(() => {
-        if (loading) {
-            return (
-                <div className="loading">
-                    <div className="spinner"></div>
-                </div>
-            );
-        }
-        
-        if (error) {
-            return (
-                <div className="error">
-                    <div>
-                        <p>{error}</p>
-                        <button className="retry-button" onClick={handleRetry}>
-                            Yeniden Dene
-                        </button>
-                    </div>
-                </div>
-            );
-        }
-        
-        if (filteredPortfolio.length === 0) {
-            return (
-                <div className="error">
-                    <p>Bu filtreye uygun proje bulunamadı.</p>
-                </div>
-            );
-        }
-        
-        return (
-            <div className="portfolio-grid">
-                {filteredPortfolio.map((port) => (
-                    <div className="portfolio-item" key={port.id}>
-                        <div className="portfolio-image-container">
-                            <img
-                                src={port.image}
-                                className="portfolio-image"
-                                alt={port.name}
-                                loading="lazy"
-                                decoding="async"
-                                onError={handleImageError}
-                            />
-                        </div>
-                        
-                        {port.tags && port.tags.length > 0 && (
-                            <div className="tags">
-                                {port.tags.slice(0, 2).map(tag => (
-                                    <span className="tag" key={tag}>{tag}</span>
-                                ))}
-                            </div>
-                        )}
-                        
-                        <div className="content">
-                            <h3 className="title">{port.name}</h3>
-                            <p className="description">{port.description}</p>
-                            <div className="button-container">
-                                <button
-                                    className="btn primary"
-                                    onClick={() => handlePortfolioClick(port.url)}
-                                >
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-                                        <polyline points="15 3 21 3 21 9"></polyline>
-                                        <line x1="10" y1="14" x2="21" y2="3"></line>
-                                    </svg>
-                                    Görüntüle
-                                </button>
-                                {port.sourceCode && (
-                                    <button
-                                        className="btn secondary"
-                                        onClick={() => handlePortfolioClick(port.sourceCode)}
-                                    >
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                            <polyline points="16 18 22 12 16 6"></polyline>
-                                            <polyline points="8 6 2 12 8 18"></polyline>
-                                        </svg>
-                                        Kaynak Kodu
-                                    </button>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-                ))}
-            </div>
-        );
-    }, [filteredPortfolio, loading, error, handlePortfolioClick, handleImageError, handleRetry]);
     
     return (
-        <div className="portfolio-page">
-            <div className="container">
-                <div className="page-header">
-                    <h1 className="page-title">
-                        <AnimatedLetters
-                            letterClass={letterClass}
-                            strArray={"Portfolio".split("")}
-                            idx={15}
-                        />
-                    </h1>
-                </div>
-                
-                {renderFilterButtons}
-                {renderPortfolio}
+        <div className="portfolio-container">
+            <div className="portfolio-header">
+                <h1>Portfolio</h1>
+                <p>Oluşturduğum projelerden bazı örnekler</p>
             </div>
+            
+            <div className="portfolio-categories">
+                {categories.map(category => (
+                    <button 
+                        key={category}
+                        className={`category-btn ${activeCategory === category ? 'active' : ''}`}
+                        onClick={() => handleCategoryChange(category)}
+                    >
+                        {category === 'all' ? 'Tümü' : category}
+                    </button>
+                ))}
+            </div>
+            
+            {loading && (
+                <div className="portfolio-loading">
+                    <div className="loader"></div>
+                    <p>Projeler yükleniyor...</p>
+                </div>
+            )}
+            
+            {error && (
+                <div className="portfolio-error">
+                    <p>{error}</p>
+                    <button onClick={fetchPortfolio}>Tekrar Dene</button>
+                </div>
+            )}
+            
+            {!loading && !error && (
+                <>
+                    {filteredProjects.length === 0 ? (
+                        <div className="no-projects">
+                            <p>Bu kategoride henüz proje bulunmuyor.</p>
+                        </div>
+                    ) : (
+                        <div className="portfolio-grid">
+                            {filteredProjects.map(project => (
+                                <div className="portfolio-card" key={project.id}>
+                                    <div className="card-image">
+                                        <img 
+                                            src={project.image} 
+                                            alt={project.title} 
+                                            onError={(e) => {
+                                                e.target.onerror = null;
+                                                e.target.src = '/images/placeholder.jpg';
+                                            }}
+                                        />
+                                        {project.category && (
+                                            <span className="project-category">{project.category}</span>
+                                        )}
+                                    </div>
+                                    <div className="card-content">
+                                        <h3>{project.title || project.name}</h3>
+                                        <p>{project.description}</p>
+                                        <div className="card-actions">
+                                            {project.url && (
+                                                <button 
+                                                    className="view-project"
+                                                    onClick={() => handleProjectClick(project.url)}
+                                                >
+                                                    Projeyi Görüntüle
+                                                </button>
+                                            )}
+                                            {project.github && (
+                                                <button 
+                                                    className="view-source"
+                                                    onClick={() => handleProjectClick(project.github)}
+                                                >
+                                                    <svg viewBox="0 0 24 24" fill="currentColor" height="20" width="20">
+                                                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+                                                    </svg>
+                                                    Kaynak Kodu
+                                                </button>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </>
+            )}
         </div>
     );
 };
