@@ -1,9 +1,8 @@
 @import '../../variables';
 
 .portfolio-page {
-    padding-left: 20px;
-    padding-right: 50px;
-    width: calc(100% - 150px);
+    padding: 40px 60px;
+    width: 100%;
     position: initial;
     height: 100%;
     overflow: auto;
@@ -12,40 +11,58 @@
     contain: content;
 
     h1.page-title {
-        margin-left: 100px;
-        margin-top: 95px;
+        margin: 0 0 40px 0;
+        text-align: center;
+        font-size: 53px;
     }
 
     .loading {
         display: flex;
         justify-content: center;
         align-items: center;
+        height: 400px;
+        font-size: 1.5rem;
+        color: $secondary-text-color;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 10px;
+        margin: 20px 0;
+    }
+
+    .error {
+        display: flex;
+        justify-content: center;
+        align-items: center;
         height: 200px;
         font-size: 1.2rem;
-        color: $secondary-text-color;
+        color: #ff4444;
+        background: rgba(255, 68, 68, 0.1);
+        border-radius: 10px;
+        margin: 20px 0;
     }
 
     .images-container {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: 15px;
-        padding-bottom: 100px;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 30px;
+        padding: 20px 0;
         contain: layout;
     }
 
     .image-box {
         position: relative;
-        height: 300px;
+        height: 350px;
         overflow: hidden;
-        border-radius: 10px;
+        border-radius: 15px;
         background-color: #f5f5f5;
         transform: translateZ(0);
         will-change: transform;
-        transition: transform 0.3s ease;
+        transition: all 0.4s cubic-bezier(0.645, 0.045, 0.355, 1);
         contain: layout style;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 
         &:hover {
-            transform: translateY(-5px);
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
         }
 
         .portfolio-image {
@@ -57,63 +74,66 @@
             transform: translateZ(0);
             will-change: transform;
             backface-visibility: hidden;
+            transition: transform 0.4s ease;
         }
 
         .content {
             position: absolute;
-            width: 92%;
+            width: 100%;
             z-index: 3;
-            padding: 10px 20px;
-            transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+            padding: 20px;
+            transition: all 0.4s cubic-bezier(0.645, 0.045, 0.355, 1);
             background: linear-gradient(
                 180deg,
                 rgba(0, 0, 0, 0.2) 0,
-                rgba(0, 0, 0, 1)
+                rgba(0, 0, 0, 0.9)
             );
-            bottom: -70px;
+            bottom: -100%;
             transform: translateZ(0);
             will-change: transform;
             backface-visibility: hidden;
         }
 
         .title {
-            margin: 0;
+            margin: 0 0 10px 0;
             color: #fff;
-            font-size: 24px;
-            font-weight: 500;
-            line-height: 24px;
+            font-size: 28px;
+            font-weight: 600;
+            line-height: 1.2;
         }
 
         .description {
-            font-size: 12px;
-            margin-bottom: 5px;
-            color: #fff;
-            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 20px;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 400;
+            line-height: 1.5;
             display: none;
         }
 
         .btn {
-            margin-top: 30px;
-            margin-bottom: 10px;
-            padding: 0 23px;
-            height: 40px;
-            line-height: 34px;
+            margin-top: 20px;
+            padding: 12px 30px;
+            height: 45px;
+            line-height: 21px;
             border: 2px solid $accent-color-1;
-            border-radius: 4px;
-            font-size: 14px;
+            border-radius: 8px;
+            font-size: 15px;
             color: #fff;
             background: transparent;
             text-transform: uppercase;
-            font-weight: 700;
+            font-weight: 600;
             transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
             cursor: pointer;
             transform: translateZ(0);
             will-change: transform;
             backface-visibility: hidden;
+            letter-spacing: 1px;
 
             &:hover {
                 transform: translateY(-3px);
                 background: $accent-color-1;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
             }
         }
 
@@ -123,18 +143,22 @@
             position: absolute;
             inset: 0;
             z-index: 2;
-            transition: opacity 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+            transition: opacity 0.4s cubic-bezier(0.645, 0.045, 0.355, 1);
             opacity: 0;
             backface-visibility: hidden;
         }
 
         &:hover:after {
-            opacity: 0.85;
+            opacity: 0.9;
         }
 
         &:hover .content {
             bottom: 0;
-            background: transparent;
+            background: linear-gradient(
+                180deg,
+                rgba(0, 0, 0, 0.2) 0,
+                rgba(0, 0, 0, 0.95)
+            );
         }
 
         &:hover .description {
@@ -145,17 +169,40 @@
 
 @media screen and (max-width: 1200px) {
     .portfolio-page {
-        width: 100%;
         padding: 20px;
         box-sizing: border-box;
 
         h1.page-title {
-            margin-left: 20px;
-            margin-top: 20px;
+            font-size: 40px;
+            margin-bottom: 30px;
+        }
+
+        .images-container {
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
         }
 
         .image-box {
-            height: 200px;
+            height: 300px;
+        }
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .portfolio-page {
+        padding: 15px;
+
+        h1.page-title {
+            font-size: 32px;
+            margin-bottom: 25px;
+        }
+
+        .images-container {
+            grid-template-columns: 1fr;
+        }
+
+        .image-box {
+            height: 250px;
         }
     }
 }
