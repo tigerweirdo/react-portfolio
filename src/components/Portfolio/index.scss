@@ -42,7 +42,7 @@
 
     .images-container {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        grid-template-columns: repeat(3, 1fr);
         gap: 30px;
         padding: 20px 0;
         contain: layout;
@@ -50,7 +50,7 @@
 
     .image-box {
         position: relative;
-        height: 350px;
+        height: 300px;
         overflow: hidden;
         border-radius: 15px;
         background-color: #f5f5f5;
@@ -59,6 +59,7 @@
         transition: all 0.4s cubic-bezier(0.645, 0.045, 0.355, 1);
         contain: layout style;
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        aspect-ratio: 16/9;
 
         &:hover {
             transform: translateY(-10px);
@@ -178,12 +179,12 @@
         }
 
         .images-container {
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(2, 1fr);
             gap: 20px;
         }
 
         .image-box {
-            height: 300px;
+            height: 280px;
         }
     }
 }
@@ -198,11 +199,20 @@
         }
 
         .images-container {
-            grid-template-columns: 1fr;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
         }
 
         .image-box {
-            height: 250px;
+            height: 200px;
+        }
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .portfolio-page {
+        .images-container {
+            grid-template-columns: 1fr;
         }
     }
 }
