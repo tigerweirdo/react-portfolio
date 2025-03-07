@@ -1,311 +1,154 @@
-// Ana renkler
-$background-color: #121212;
-$card-bg-color: #1e1e1e;
-$primary-color: #2d88ff;
-$text-color: #ffffff;
-$text-secondary: rgba(255, 255, 255, 0.7);
-$accent-color: #ff3366;
-$border-radius: 12px;
+@import '../../variables';
 
-.portfolio-container {
-  width: 100%;
-  max-width: 1440px;
-  margin: 0 auto;
-  padding: 40px 20px;
-  background-color: $background-color;
-  min-height: 100vh;
-  color: $text-color;
-  
-  // Header
-  .portfolio-header {
-    text-align: center;
-    margin-bottom: 50px;
-    
-    h1 {
-      font-size: 42px;
-      font-weight: 600;
-      margin-bottom: 10px;
-      background: linear-gradient(90deg, $primary-color, $accent-color);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      display: inline-block;
+.portfolio-page {
+    padding-left: 100px;
+    padding-right: 50px;
+    width: calc(100% - 150px);
+    position: initial;
+    height: 100%;
+    overflow: auto;
+    will-change: transform;
+    transform: translateZ(0);
+
+    h1.page-title {
+        margin-left: 100px;
+        margin-top: 95px;
     }
-    
-    p {
-      font-size: 18px;
-      color: $text-secondary;
-      max-width: 600px;
-      margin: 0 auto;
-    }
-  }
-  
-  // Kategoriler
-  .portfolio-categories {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-bottom: 40px;
-    
-    .category-btn {
-      padding: 8px 16px;
-      background-color: rgba(255, 255, 255, 0.1);
-      border: none;
-      border-radius: 30px;
-      color: $text-color;
-      font-size: 14px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      
-      &:hover {
-        background-color: rgba(255, 255, 255, 0.15);
-        transform: translateY(-2px);
-      }
-      
-      &.active {
-        background-color: $primary-color;
-        box-shadow: 0 0 15px rgba($primary-color, 0.4);
-      }
-    }
-  }
-  
-  // Yükleme
-  .portfolio-loading {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 300px;
-    
-    .loader {
-      width: 40px;
-      height: 40px;
-      border: 3px solid rgba(255, 255, 255, 0.2);
-      border-radius: 50%;
-      border-top-color: $primary-color;
-      animation: spin 1s ease-in-out infinite;
-      margin-bottom: 15px;
-    }
-    
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
-    
-    p {
-      color: $text-secondary;
-    }
-  }
-  
-  // Hata
-  .portfolio-error, .no-projects {
-    background-color: rgba(255, 80, 80, 0.1);
-    padding: 30px;
-    border-radius: $border-radius;
-    text-align: center;
-    max-width: 600px;
-    margin: 40px auto;
-    
-    p {
-      margin-bottom: 15px;
-    }
-    
-    button {
-      padding: 10px 20px;
-      background-color: rgba(255, 255, 255, 0.1);
-      border: none;
-      border-radius: 8px;
-      color: $text-color;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      
-      &:hover {
-        background-color: rgba(255, 255, 255, 0.2);
-      }
-    }
-  }
-  
-  .no-projects {
-    background-color: rgba(255, 255, 255, 0.05);
-  }
-  
-  // Proje grid
-  .portfolio-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 30px;
-    
-    .portfolio-card {
-      background-color: $card-bg-color;
-      border-radius: $border-radius;
-      overflow: hidden;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-      transition: transform 0.4s ease, box-shadow 0.4s ease;
-      
-      &:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
-        
-        .card-image img {
-          transform: scale(1.05);
-        }
-      }
-      
-      .card-image {
-        position: relative;
+
+    .loading {
+        display: flex;
+        justify-content: center;
+        align-items: center;
         height: 200px;
+        font-size: 1.2rem;
+        color: $secondary-text-color;
+    }
+
+    .images-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 15px;
+        padding-bottom: 100px;
+    }
+
+    .image-box {
+        position: relative;
+        height: 300px;
         overflow: hidden;
-        
-        img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          transition: transform 0.6s ease;
+        border-radius: 10px;
+        background-color: #f5f5f5;
+        transform: translateZ(0);
+        will-change: transform;
+        transition: transform 0.3s ease;
+
+        &:hover {
+            transform: translateY(-5px);
         }
-        
-        .project-category {
-          position: absolute;
-          top: 15px;
-          right: 15px;
-          background-color: rgba(0, 0, 0, 0.6);
-          backdrop-filter: blur(10px);
-          color: $text-color;
-          padding: 5px 12px;
-          border-radius: 20px;
-          font-size: 12px;
-          text-transform: capitalize;
+
+        .portfolio-image {
+            position: absolute;
+            z-index: 2;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: translateZ(0);
+            will-change: transform;
         }
-      }
-      
-      .card-content {
-        padding: 20px;
-        
-        h3 {
-          font-size: 20px;
-          margin-bottom: 10px;
-          color: $text-color;
+
+        .content {
+            position: absolute;
+            width: 92%;
+            z-index: 3;
+            padding: 10px 20px;
+            transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+            background: linear-gradient(
+                180deg,
+                rgba(0, 0, 0, 0.2) 0,
+                rgba(0, 0, 0, 1)
+            );
+            bottom: -70px;
+            transform: translateZ(0);
+            will-change: transform;
         }
-        
-        p {
-          color: $text-secondary;
-          font-size: 14px;
-          line-height: 1.5;
-          margin-bottom: 20px;
-          display: -webkit-box;
-          -webkit-line-clamp: 3;
-          -webkit-box-orient: vertical;
-          overflow: hidden;
-        }
-        
-        .card-actions {
-          display: flex;
-          gap: 10px;
-          flex-wrap: wrap;
-          
-          button {
-            flex: 1;
-            min-width: 130px;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
+
+        .title {
+            margin: 0;
+            color: #fff;
+            font-size: 24px;
             font-weight: 500;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            transition: all 0.3s ease;
-          }
-          
-          .view-project {
-            background-color: $primary-color;
-            color: white;
-            
-            &:hover {
-              background-color: darken($primary-color, 10%);
-              transform: translateY(-3px);
-            }
-          }
-          
-          .view-source {
-            background-color: rgba(255, 255, 255, 0.1);
-            color: $text-color;
-            
-            &:hover {
-              background-color: rgba(255, 255, 255, 0.15);
-              transform: translateY(-3px);
-            }
-            
-            svg {
-              transition: transform 0.3s ease;
-            }
-            
-            &:hover svg {
-              transform: rotate(5deg);
-            }
-          }
+            line-height: 24px;
         }
-      }
+
+        .description {
+            font-size: 12px;
+            margin-bottom: 5px;
+            color: #fff;
+            font-weight: 700;
+            display: none;
+        }
+
+        .btn {
+            margin-top: 30px;
+            margin-bottom: 10px;
+            padding: 0 23px;
+            height: 40px;
+            line-height: 34px;
+            border: 2px solid $accent-color-1;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #fff;
+            background: transparent;
+            text-transform: uppercase;
+            font-weight: 700;
+            transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+            cursor: pointer;
+            transform: translateZ(0);
+            will-change: transform;
+
+            &:hover {
+                transform: translateY(-3px);
+                background: $accent-color-1;
+            }
+        }
+
+        &:after {
+            content: "";
+            background: $accent-color-3;
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            transition: opacity 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+            opacity: 0;
+        }
+
+        &:hover:after {
+            opacity: 0.85;
+        }
+
+        &:hover .content {
+            bottom: 0;
+            background: transparent;
+        }
+
+        &:hover .description {
+            display: block;
+        }
     }
-  }
 }
 
-// Responsive
-@media (max-width: 768px) {
-  .portfolio-container {
-    padding: 30px 15px;
-    
-    .portfolio-header {
-      margin-bottom: 30px;
-      
-      h1 {
-        font-size: 32px;
-      }
-      
-      p {
-        font-size: 16px;
-      }
-    }
-    
-    .portfolio-grid {
-      gap: 20px;
-    }
-  }
-}
+@media screen and (max-width: 1200px) {
+    .portfolio-page {
+        width: 100%;
+        padding: 20px;
+        box-sizing: border-box;
 
-@media (max-width: 480px) {
-  .portfolio-container {
-    .portfolio-header {
-      h1 {
-        font-size: 28px;
-      }
-    }
-    
-    .portfolio-categories {
-      .category-btn {
-        font-size: 13px;
-        padding: 6px 12px;
-      }
-    }
-    
-    .portfolio-grid {
-      .portfolio-card {
-        .card-content {
-          h3 {
-            font-size: 18px;
-          }
-          
-          .card-actions {
-            flex-direction: column;
-            
-            button {
-              width: 100%;
-            }
-          }
+        h1.page-title {
+            margin-left: 20px;
+            margin-top: 20px;
         }
-      }
+
+        .image-box {
+            height: 200px;
+        }
     }
-  }
 }
