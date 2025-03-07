@@ -13,7 +13,6 @@ const Portfolio = () => {
         const timer = setTimeout(() => {
             setLetterClass('text-animate-hover');
         }, 3000);
-
         return () => clearTimeout(timer);
     }, []);
 
@@ -36,7 +35,6 @@ const Portfolio = () => {
         if (loading) {
             return <div className="loading">Yükleniyor...</div>;
         }
-
         return (
             <div className="images-container">
                 {portfolio.map((port, idx) => (
