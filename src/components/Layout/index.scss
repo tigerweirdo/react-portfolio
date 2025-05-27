@@ -163,3 +163,18 @@
     overflow: visible;
   }
 }
+
+@media screen and (max-width: 768px) {
+  .container.about-page {
+    flex-direction: column;
+    align-items: center; /* İçeriği ortalamak için */
+    padding: 20px; /* Daha iyi boşluk için */
+
+    .text-zone {
+      width: 100%;
+      max-width: 100%; /* text-zone'un genişliğini %100 yap */
+      text-align: center; /* Metni ortala */
+      margin-bottom: 30px; /* Robot ile arasında boşluk bırak */
+    }
+  }
+}

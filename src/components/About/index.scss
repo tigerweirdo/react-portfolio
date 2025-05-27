@@ -15,12 +15,18 @@
   }
   .Rolly {
     animation: RollAround 5s ease-in-out infinite;
+    max-width: 100%;
+    height: auto;
+    display: block;
   }
   .Shaddow {
     animation: MoveShaddow 5s ease-in-out infinite;
     position: relative;
     top: -12px;
     z-index: -1;
+    max-width: 100%;
+    height: auto;
+    display: block;
   }
   @keyframes blink {
     0% {
@@ -66,9 +72,12 @@
 @media (max-width: 1200px) {
     .robot123 {
         top:0;
-        margin-bottom:200px; /* Burada da bottom değerini margin-bottom olarak değiştirin */
+        margin-bottom: 50px;
         left: 50%;
         transform: translateX(-50%);
+        position: relative;
+        width: 535px;
+        max-width: 100%;
     }
 
 }

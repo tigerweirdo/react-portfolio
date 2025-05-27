@@ -37,50 +37,74 @@
   input[type='text'],
   input[type='email'] {
     width: 100%;
-    border: 0;
-    background: $accent-color-1; /* Koyu Pembe */
+    border: 1px solid $btn-border-color;
+    background: $background-color;
     height: 50px;
-    font-size: 16px;
-    color: $text-color; /* Beyaz */
-    padding: 0 20px;
+    font-size: 15px;
+    color: $text-color;
+    padding: 0 15px;
     box-sizing: border-box;
+    border-radius: 4px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+    &::placeholder {
+        color: lighten($secondary-text-color, 15%);
+        opacity: 1;
+    }
+
+    &:focus {
+        border-color: $accent-color-1;
+        box-shadow: 0 0 0 2px rgba($accent-color-1, 0.2);
+        outline: none;
+    }
   }
 
   textarea {
     width: 100%;
-    border: 0;
-    background: $accent-color-1; /* Koyu Pembe */
-    height: 50px;
-    font-size: 16px;
-    color: $text-color; /* Beyaz */
-    padding: 20px;
+    border: 1px solid $btn-border-color;
+    background: $background-color;
+    font-size: 15px;
+    color: $text-color;
+    padding: 15px;
     box-sizing: border-box;
     min-height: 150px;
-  }
-
-  .flat-button {
-    color: $accent-color-1; /* Koyu Pembe */
-    font-size: 11px;
-    letter-spacing: 3px;
-    text-decoration: none;
-    padding: 8px 10px;
-    border: 1px solid $accent-color-1; /* Koyu Pembe */
-    float: left;
     border-radius: 4px;
-    background: 0 0;
-    text-transform: uppercase;
-    float: right;
-    text-align: center;
-    margin-right: 10px;
-    margin-bottom: 130px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    line-height: 1.5;
 
-    @media (max-width: 768px) {
-      margin-bottom: 200px; // Örnek olarak 150px verdim, bu değeri ihtiyaçlarınıza göre ayarlayabilirsiniz.
+    &::placeholder {
+        color: lighten($secondary-text-color, 15%);
+        opacity: 1;
+    }
+
+    &:focus {
+        border-color: $accent-color-1;
+        box-shadow: 0 0 0 2px rgba($accent-color-1, 0.2);
+        outline: none;
     }
   }
+}
 
-  .flat-button:hover {
-    background-color: $accent-color-1; /* Koyu Pembe */
-    color: $text-color; /* Beyaz */
+// Home sayfasındaki .flat-button stilleri buraya eklendi
+.flat-button {
+  color: $accent-color-1;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  font-family: 'Arial Black', sans-serif;
+  text-decoration: none;
+  padding: 10px 18px;
+  border: 1px solid $accent-color-1;
+  margin-top: 25px; // Bu margin-top değeri Contact formunda farklı olabilir, duruma göre ayarlanmalı
+  background-color: transparent;
+  outline: none;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+
+  &:hover {
+    background: $accent-color-1;
+    color: $text-color;
   }
 }

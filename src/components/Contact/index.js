@@ -1,14 +1,17 @@
-import { useEffect, useState, useCallback } from 'react'
-import { useRef } from 'react'
+import { useEffect, useState, useCallback, useRef } from 'react'
 import emailjs from '@emailjs/browser'
 import AnimatedLetters from '../AnimatedLetters'
 import './index.scss'
+import useScrollAnimation from '../../hooks/useScrollAnimation'
 
 const Contact = () => {
   const [letterClass, setLetterClass] = useState('text-animate')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState(null)
   const form = useRef()
+
+  const pRef = useRef(null)
+  const contactFormContainerRef = useRef(null)
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -17,6 +20,8 @@ const Contact = () => {
 
     return () => clearTimeout(timer)
   }, [])
+
+  useScrollAnimation([pRef, contactFormContainerRef])
 
   const sendEmail = useCallback(async (e) => {
     e.preventDefault()
@@ -44,7 +49,7 @@ const Contact = () => {
     if (isSubmitting) {
       return <input type="submit" className="flat-button" value="Gönderiliyor..." disabled />
     }
-    return <input type="submit" className="flat-button" value="Gönder" />
+    return <input type="submit" className="flat-button" value="Send" />
   }
 
   const renderStatusMessage = () => {
@@ -70,12 +75,12 @@ const Contact = () => {
               idx={15}
             />
           </h1>
-          <p>
+          <p ref={pRef} className="scroll-animate">
             I am interested in freelance opportunities - especially on ambitious
             or large projects. However, if you have any other requests or
             questions, don't hesitate to contact me using below form either.
           </p>
-          <div className="contact-form">
+          <div ref={contactFormContainerRef} className="contact-form scroll-animate-from-left">
             <form ref={form} onSubmit={sendEmail}>
               <ul>
                 <li className="half">

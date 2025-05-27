@@ -7,8 +7,31 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background: $background-color; /* Arka plan rengi */
-  overflow: hidden;
-  display: block;
+
+  // For WebKit browsers (Chrome, Safari, newer Edge)
+  &::-webkit-scrollbar {
+    width: 8px; // Scrollbar genişliği
+    height: 8px; // Yatay scrollbar yüksekliği
+  }
+
+  &::-webkit-scrollbar-track {
+    background: $accent-color-3; // Scrollbar arkası (neredeyse beyaz)
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: $accent-color-2; // Scrollbar çubuğu (çok açık gri)
+    border-radius: 4px;
+    border: 2px solid $accent-color-3; // Çubuk etrafında track renginde ince bir çerçeve
+
+    &:hover {
+      background-color: darken($accent-color-2, 10%); // Hover'da biraz daha koyu
+    }
+  }
+
+  // For Firefox
+  scrollbar-width: thin; // Firefox için ince scrollbar
+  scrollbar-color: $accent-color-2 $accent-color-3; // thumbColor trackColor
 }
 
 .dashboard {
@@ -16,8 +39,41 @@ body {
   margin-left: 50px;
 }
 
-@media screen and (max-width: 1200px) {
-  body {
-    overflow: visible;
-  }
+// Genel Kaydırma Animasyon Stilleri
+.scroll-animate {
+    opacity: 0;
+    transform: translateY(50px); // Aşağıdan yukarıya doğru gelme efekti için Y ekseninde başlat
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+
+    &.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
+
+// Farklı yönlerden gelme animasyonları için yardımcı sınıflar (isteğe bağlı)
+.scroll-animate-from-left {
+    opacity: 0;
+    transform: translateX(-100px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+
+    &.is-visible {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.scroll-animate-from-right {
+    opacity: 0;
+    transform: translateX(100px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+
+    &.is-visible {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+// Portfolyo öğeleri için de bu genel animasyonu kullanabiliriz.
+// Eğer portfolyo öğelerinin özel bir translateX animasyonu varsa, onu burada ezeriz.
+// Ya da portfolyo için farklı bir animasyon sınıfı tanımlayabiliriz.

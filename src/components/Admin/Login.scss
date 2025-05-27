@@ -1,0 +1,201 @@
+@import '../../variables'; // Global değişkenleri import et
+
+// Spinner Animasyonu
+@keyframes spinner-rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner {
+  animation: spinner-rotation 0.6s linear infinite;
+  width: 1.2em; 
+  height: 1.2em;
+  border: 2px solid rgba($primary-color, 0.3);
+  border-top-color: $primary-color; // Ana renk
+  border-radius: 50%;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 8px; 
+}
+
+.login-page-container { // Eski login-container yerine
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: $background-color; 
+  padding: 20px;
+  box-sizing: border-box;
+  font-family: 'Roboto', sans-serif; // Modern bir font
+}
+
+.login-box {
+  background-color: lighten($background-color, 5%);
+  padding: 40px;
+  border-radius: 12px; // Daha yuvarlak köşeler
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2); // Daha belirgin gölge
+  width: 100%;
+  max-width: 420px; // Biraz daha geniş
+  text-align: center;
+  border-top: 4px solid $primary-color; // Üstte bir vurgu çizgisi
+}
+
+.login-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 30px;
+
+  .header-icon {
+    font-size: 2em; // İkon boyutu
+    color: $primary-color;
+    margin-right: 15px;
+  }
+
+  h2 {
+    color: $primary-color;
+    margin: 0;
+    font-size: 1.8em;
+    font-weight: 600; // Daha kalın font
+  }
+}
+
+.login-form {
+  .input-group {
+    position: relative; // İkonu pozisyonlamak için
+    margin-bottom: 25px;
+
+    .input-icon {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: $secondary-text-color;
+      font-size: 1.1em;
+    }
+
+    input[type="password"] {
+      width: 100%;
+      padding: 12px 15px 12px 45px; // İkon için solda boşluk
+      border: 1px solid $btn-border-color;
+      border-radius: 6px; // Daha yuvarlak
+      background-color: $background-color;
+      color: $text-color;
+      font-size: 1em;
+      box-sizing: border-box;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05) inset;
+
+      &::placeholder {
+        color: lighten($secondary-text-color, 15%);
+        opacity: 1;
+      }
+
+      &:focus {
+        border-color: $primary-color;
+        box-shadow: 0 0 0 3px rgba($primary-color, 0.2);
+        outline: none;
+      }
+
+      &:disabled {
+        background-color: darken($background-color, 5%);
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  .login-button {
+    width: 100%;
+    padding: 12px 20px;
+    background-color: $primary-color;
+    color: $background-color;
+    border: none;
+    border-radius: 6px;
+    font-size: 1.1em;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    display: flex; // İkon ve metni hizalamak için
+    align-items: center;
+    justify-content: center;
+
+    .button-icon {
+      margin-left: 10px;
+      font-size: 1.2em;
+    }
+
+    .spinner {
+      border-top-color: $background-color; // Buton içindeki spinner için farklı renk
+      border-color: rgba($background-color, 0.3);
+      border-top-color: $background-color;
+    }
+
+    &:hover:not(:disabled) {
+      background-color: darken($primary-color, 8%);
+      transform: translateY(-1px); // Hafif yukarı kalkma efekti
+    }
+
+    &:active:not(:disabled) {
+        transform: translateY(0px); // Tıklama anında geri
+    }
+
+    &:disabled {
+      background-color: $accent-color-2;
+      color: darken($accent-color-2, 40%);
+      cursor: not-allowed;
+      .spinner {
+        border-top-color: darken($accent-color-2, 40%);
+        border-color: rgba(darken($accent-color-2, 40%), 0.3);
+        border-top-color: darken($accent-color-2, 40%);
+      }
+    }
+  }
+
+  .error-message {
+    color: #e74c3c; // Daha canlı bir kırmızı
+    background-color: rgba(#e74c3c, 0.1);
+    border: 1px solid rgba(#e74c3c, 0.2);
+    padding: 12px 15px;
+    margin-top: 0; // Input group ile birleşik gibi durması için
+    margin-bottom: 20px;
+    border-radius: 6px;
+    font-size: 0.9em;
+    text-align: left;
+  }
+}
+
+// Medya sorguları
+@media (max-width: 480px) {
+  .login-box {
+    padding: 30px;
+    margin: 0 15px; // Kenarlardan boşluk
+    border-top-width: 3px;
+
+    .login-header {
+      margin-bottom: 25px;
+      .header-icon {
+        font-size: 1.8em;
+        margin-right: 10px;
+      }
+      h2 {
+        font-size: 1.6em;
+      }
+    }
+
+    .login-form {
+      .input-group {
+        input[type="password"] {
+          padding: 10px 12px 10px 40px;
+        }
+      }
+      .login-button {
+        padding: 10px 15px;
+        font-size: 1em;
+      }
+    }
+  }
+} 

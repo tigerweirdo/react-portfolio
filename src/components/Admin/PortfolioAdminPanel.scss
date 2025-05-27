@@ -1,0 +1,516 @@
+@import '../../variables'; // Global değişkenleri import et
+
+$admin-bg-color: #2c2c2c; // Admin paneli ana arka plan rengi
+$admin-header-bg: #1e1e1e;
+$admin-text-color: #f0f0f0;
+$admin-primary-color: #ffd700; // Vurgu rengi (sarı)
+$admin-secondary-color: #4caf50; // İkincil vurgu (yeşil)
+$admin-error-color: #ff4d4d;
+$admin-border-color: #444;
+$admin-input-bg: #3a3a3a;
+$admin-button-hover: #e6bf00;
+
+// Spinner Animasyonu
+@keyframes spinner-rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner {
+  animation: spinner-rotation 1s linear infinite;
+  width: 1.2em; // Buton içleri için daha küçük
+  height: 1.2em;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 5px; // Metinle arasında boşluk
+  .path {
+    stroke: currentColor; // Butonun metin rengini alır
+    stroke-linecap: round;
+    animation: spinner-dash 1.5s ease-in-out infinite;
+  }
+}
+
+// Buton içindeki spinner için özel renk (eğer gerekirse)
+.save-button .spinner .path {
+    stroke: white; // Kaydet butonu için
+}
+.delete-button .spinner .path {
+    stroke: white; // Sil butonu için
+}
+
+@keyframes spinner-dash {
+  0% {
+    stroke-dasharray: 1, 150;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -35;
+  }
+  100% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -124;
+  }
+}
+
+.admin-panel-container {
+    padding: 20px;
+    background-color: $background-color;
+    color: $text-color;
+    min-height: 100vh;
+    box-sizing: border-box;
+
+    .panel-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: lighten($background-color, 5%);
+        padding: 15px 25px;
+        margin: -20px -20px 30px -20px;
+        border-bottom: 2px solid $accent-color-1;
+
+        h1 {
+            color: $accent-color-1;
+            margin: 0;
+            font-size: 1.8em;
+        }
+
+        .logout-button {
+            background-color: $accent-color-3;
+            color: $text-color;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-weight: bold;
+
+            &:hover {
+                background-color: lighten($accent-color-3, 10%);
+            }
+        }
+    }
+
+    .loading-message, .error-message {
+        text-align: center;
+        padding: 20px;
+        font-size: 1.2em;
+        background-color: lighten($background-color, 10%);
+        border-radius: 4px;
+        margin-bottom: 20px;
+    }
+
+    .error-message {
+        color: darken($text-color, 15%);
+        border: 1px solid darken($text-color, 15%);
+    }
+
+    .full-page-loader {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.8);
+        z-index: 2000;
+        .spinner {
+            width: 50px;
+            height: 50px;
+            .path { stroke: $accent-color-1; }
+        }
+        p {
+            margin-top: 15px;
+            font-size: 1.2em;
+            color: $accent-color-1;
+        }
+    }
+
+    .subtle-loader {
+        text-align: center;
+        padding: 10px;
+        font-size: 1em;
+        background-color: lighten($background-color, 8%);
+        border-radius: 4px;
+        margin-bottom: 15px;
+        color: lighten($text-color, 20%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        .spinner {
+            width: 1.5em;
+            height: 1.5em;
+            margin-right: 10px;
+            .path { stroke: $secondary-text-color; }
+        }
+    }
+
+    .add-new-button {
+        background-color: $accent-color-3; // Neredeyse beyaz arka plan
+        color: $primary-color;             // Koyu gri metin
+        padding: 10px 18px;             // Padding ayarı
+        border: 1px solid $btn-border-color; // İnce kenarlık
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 1em;                 // Font boyutu
+        margin-bottom: 30px;
+        transition: background-color 0.2s ease, border-color 0.2s ease; // Yumuşak geçiş
+        font-weight: 500;               // Font ağırlığı
+        display: inline-flex;
+        align-items: center;
+        box-shadow: none; // Gölgeyi kaldır
+
+        .plus-icon {
+            font-size: 1.3em;
+            margin-right: 8px;
+            line-height: 1;
+        }
+
+        &:hover {
+            background-color: darken($accent-color-3, 5%); // Hover'da hafif koyulaşma
+            border-color: darken($btn-border-color, 10%);
+        }
+    }
+
+    .form-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.7);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        padding: 20px;
+        box-sizing: border-box;
+
+        .portfolio-form {
+            background-color: lighten($background-color, 5%);
+            padding: 30px;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+
+            h3 {
+                color: $accent-color-1;
+                margin-top: 0;
+                margin-bottom: 25px;
+                text-align: center;
+            }
+
+            label {
+                display: block;
+                margin-bottom: 8px;
+                font-weight: bold;
+                color: lighten($text-color, 10%);
+            }
+
+            input[type="text"],
+            input[type="url"],
+            input[type="file"],
+            textarea {
+                width: 100%;
+                padding: 10px;
+                margin-bottom: 20px;
+                border: 1px solid $btn-border-color;
+                border-radius: 4px;
+                background-color: $background-color; // Arka planı beyaz yap
+                color: $text-color;
+                box-sizing: border-box;
+                transition: border-color 0.3s ease, box-shadow 0.3s ease; // box-shadow geçişi eklendi
+                 box-shadow: 0 1px 2px rgba(0,0,0,0.05); // Çok hafif iç gölge
+
+                &:focus {
+                    border-color: $accent-color-1; // Vurgu için orta-koyu gri
+                    outline: none;
+                    box-shadow: 0 0 0 2px rgba($accent-color-1, 0.2); // Focus için hafif dış çizgi
+                }
+            }
+
+            textarea {
+                min-height: 100px;
+                resize: vertical;
+            }
+
+            .form-group {
+                margin-bottom: 20px; // Her form grubu arasına boşluk
+            }
+
+            .image-preview-container {
+                margin-top: 8px;
+                margin-bottom: 15px;
+                font-size: 0.9em;
+                color: lighten($text-color, 25%);
+                padding: 10px;
+                background-color: lighten($background-color, 15%);
+                border: 1px dashed $btn-border-color;
+                border-radius: 4px;
+                display: inline-block; // Sadece içerik kadar yer kaplasın
+                max-width: 100%;
+
+                .form-image-preview {
+                    max-width: 150px;
+                    max-height: 150px;
+                    border-radius: 4px;
+                    border: 1px solid $btn-border-color;
+                    margin-left: 10px;
+                    vertical-align: middle;
+                    object-fit: cover;
+                }
+            }
+             input[type="file"] {
+                // Temel stil, daha fazla özelleştirme için label hilesi gerekebilir
+                display: block;
+                padding: 8px;
+                background-color: $background-color;
+                border: 1px solid $btn-border-color;
+                border-radius: 4px;
+                color: lighten($text-color, 10%);
+                cursor: pointer;
+
+                &::file-selector-button {
+                    background-color: $accent-color-1;
+                    color: $background-color;
+                    border: none;
+                    padding: 8px 12px;
+                    border-radius: 3px;
+                    cursor: pointer;
+                    margin-right: 10px;
+                    transition: background-color 0.2s ease;
+                    &:hover {
+                        background-color: lighten($accent-color-1, 10%);
+                    }
+                }
+            }
+
+            .form-actions {
+                display: flex;
+                justify-content: flex-end;
+                gap: 12px; // Butonlar arası boşluk
+                margin-top: 25px;
+
+                button {
+                    padding: 9px 16px; // Padding ayarı
+                    border-radius: 4px;
+                    cursor: pointer;
+                    font-weight: 500; // Font ağırlığı
+                    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+                    border: 1px solid transparent;
+                    box-shadow: none; // Gölgeyi kaldır
+                    font-size: 0.95em;
+
+                    &.save-button {
+                        background-color: $primary-color;    // Koyu gri arka plan
+                        color: $background-color;        // Beyaz metin
+                        border-color: $primary-color;     // Aynı renkte kenarlık
+
+                        &:hover:not(:disabled) {
+                            background-color: lighten($primary-color, 10%);
+                            border-color: lighten($primary-color, 10%);
+                        }
+                    }
+
+                    &.cancel-button {
+                        background-color: transparent;       // Şeffaf arka plan
+                        color: $secondary-text-color;    // Orta gri metin
+                        border: 1px solid $btn-border-color; // Açık gri kenarlık
+
+                        &:hover:not(:disabled) {
+                            background-color: $accent-color-3; // Neredeyse beyaz arka plan
+                            border-color: darken($btn-border-color, 5%);
+                            color: $primary-color;
+                        }
+                    }
+
+                    &:disabled {
+                        background-color: $accent-color-2 !important; // Açık gri (disabled)
+                        color: darken($accent-color-2, 30%) !important;
+                        border-color: $accent-color-2 !important;
+                        cursor: not-allowed;
+                    }
+                }
+            }
+        }
+    }
+
+    .items-list {
+        margin-top: 30px;
+
+        h2 {
+            color: $accent-color-1;
+            border-bottom: 1px solid $btn-border-color;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .portfolio-item-admin {
+            background-color: lighten($background-color, 5%);
+            border: 1px solid $btn-border-color;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+
+            .item-info {
+                display: flex;
+                align-items: center;
+                gap: 15px;
+                flex-grow: 1;
+                min-width: 0; // Flexbox'ta metin taşmasını engellemek için
+
+                .item-thumbnail {
+                    width: 80px;
+                    height: 80px;
+                    object-fit: cover;
+                    border-radius: 4px;
+                    border: 1px solid $btn-border-color;
+                }
+
+                div {
+                  flex-grow: 1;
+                  min-width: 0; // Flexbox'ta metin taşmasını engellemek için
+                    h4 {
+                        margin: 0 0 5px 0;
+                        color: $text-color;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                    }
+                    .desc-preview {
+                        font-size: 0.9em;
+                        color: lighten($text-color, 20%);
+                        margin: 0 0 8px 0;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                    }
+                    a {
+                        color: $accent-color-1;
+                        text-decoration: none;
+                        font-size: 0.9em;
+                        &:hover { text-decoration: underline; }
+                    }
+                }
+
+                .project-link {
+                    color: $accent-color-2; // Proje linkini farklı renkte yap
+                     font-weight: bold;
+                    &:hover { color: lighten($accent-color-2, 10%); }
+                }
+            }
+
+            .item-actions {
+                display: flex;
+                gap: 8px; // Butonlar arası boşluk
+                flex-shrink: 0;
+
+                button {
+                    padding: 7px 12px; // Padding ayarı
+                    border-radius: 4px;
+                    cursor: pointer;
+                    font-weight: 500;
+                    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+                    border: 1px solid transparent;
+                    box-shadow: none; // Gölgeyi kaldır
+                    font-size: 0.9em;
+
+                    &.edit-button {
+                        background-color: $accent-color-3;     // Neredeyse beyaz arka plan
+                        color: $primary-color;            // Koyu gri metin
+                        border: 1px solid $btn-border-color; // Açık gri kenarlık
+
+                        &:hover:not(:disabled) {
+                            background-color: darken($accent-color-3, 5%);
+                            border-color: darken($btn-border-color, 10%);
+                        }
+                    }
+
+                    &.delete-button {
+                        background-color: transparent;       // Şeffaf arka plan
+                        color: $secondary-text-color;    // Orta gri metin (daha az agresif)
+                        border: 1px solid transparent; // Kenarlık yok
+
+                        &:hover:not(:disabled) {
+                            background-color: darken($accent-color-3, 2%);
+                            color: #c94a4a; // Hover'da kırmızıya yakın bir uyarı rengi
+                            // border-color: darken($btn-border-color, 5%);
+                        }
+                    }
+                     &:disabled {
+                        background-color: $accent-color-2 !important;
+                        color: darken($accent-color-2, 30%) !important;
+                        border-color: $accent-color-2 !important;
+                        opacity: 1; // Zaten renklerle disable durumu belirtiliyor
+                        cursor: not-allowed;
+                    }
+                }
+            }
+        }
+    }
+}
+
+// Küçük ekranlar için responsive düzenlemeler
+@media (max-width: 768px) {
+    .admin-panel-container {
+        .panel-header {
+            h1 { font-size: 1.5em; }
+            padding: 15px;
+            margin: -20px -20px 20px -20px;
+        }
+        .add-new-button {
+            font-size: 1em;
+            padding: 10px 15px;
+        }
+        .portfolio-item-admin {
+            flex-direction: column;
+            align-items: stretch;
+
+            .item-info {
+                flex-direction: column;
+                align-items: flex-start;
+                .item-thumbnail {
+                    width: 100%;
+                    height: auto;
+                    max-height: 150px;
+                    margin-bottom: 10px;
+                }
+                div {
+                   h4, .desc-preview {
+                     white-space: normal; // Taşan metinleri alt satıra indir
+                   }
+                }
+            }
+            .item-actions {
+                margin-top: 15px;
+                justify-content: flex-end;
+            }
+        }
+        .form-modal {
+            .portfolio-form {
+                padding: 20px;
+                max-height: 85vh;
+                h3 {font-size: 1.3em;}
+            }
+        }
+    }
+} 

@@ -1,14 +1,30 @@
+// .logo-container sınıfı Home/index.scss içindeki .logo-container-home tarafından yönetildiği için
+// buradaki mutlak konumlandırma stillerini kaldırıyoruz veya yorumluyoruz.
 .logo-container {
-  position: absolute; // Konumlandırmak için absolute kullanıyoruz
-  bottom: 150px; // Sağ alt köşede 10px boşluk bırakır
-  right: -45px; // Sağ alt köşede 10px boşluk bırakır
-  max-width: 250px; // Konteyner genişliğini sınırlamak için
-  max-height: 250px; // Konteyner yüksekliğini sınırlamak için
-  z-index: 1; // Üstte olmasını sağlar
+  // position: absolute; 
+  // bottom: 150px; 
+  // right: -45px; 
+  max-width: 100%; // Logonun kendi container'ı içindeki maksimum genişliği %100 olabilir.
+  max-height: 100%;// Logonun kendi container'ı içindeki maksimum yüksekliği %100 olabilir.
+  z-index: 1; 
+  display: flex; // İçindeki img'yi ortalamak için eklenebilir
+  align-items: center;
+  justify-content: center;
+
+  img {
+    max-width: 100%; 
+    height: auto; 
+    display: block; 
+  }
 }
 
+// Genel img seçicisi yerine daha spesifik bir seçici kullanmak daha iyidir.
+// Ancak Home/index.scss içinde .logo-container-home img için zaten stil mevcut.
+// Bu yüzden aşağıdaki genel img kuralını kaldırabilir veya yorum satırı yapabiliriz.
+/* 
 img {
-  max-width: 100%; // Resmin konteyneri taşmasını engeller
-  height: auto; // Oranı korur
-  display: block; // Resmin altında boşluk olmamasını sağlar
+  max-width: 100%; 
+  height: auto; 
+  display: block; 
 }
+*/

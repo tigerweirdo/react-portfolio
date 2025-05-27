@@ -1,23 +1,34 @@
 import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/Layout';
 import Home from './components/Home';
 import About from './components/About';
 import Portfolio from './components/Portfolio';
 import Contact from './components/Contact';
+import Login from './components/Admin/Login';
+import PortfolioAdminPanel from './components/Admin/PortfolioAdminPanel';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './App.scss';
 
 const App = () => {
   const [activeSection, setActiveSection] = useState('home');
-  const [scrollingEnabled, setScrollingEnabled] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [authChecked, setAuthChecked] = useState(false);
 
   useEffect(() => {
-    // Sayfa kaydırıldığında hangi section'ın görünür olduğunu tespit etme
+    // Sayfa yüklendiğinde localStorage'dan kimlik doğrulama durumunu kontrol et
+    const storedAuth = localStorage.getItem('isAdminAuthenticated');
+    if (storedAuth === 'true') {
+      setIsAuthenticated(true);
+    }
+    setAuthChecked(true); // Kimlik doğrulama kontrolü tamamlandı
+  }, []);
+
+  useEffect(() => {
     const handleScroll = () => {
-      // Eğer scroll yapma programlı olarak kilitlenmişse işlem yapmayalım
-      if (!scrollingEnabled) return;
-      
-      const sections = document.querySelectorAll('section');
-      const scrollPosition = window.scrollY + window.innerHeight / 3; // Ekran yüksekliğinin 1/3'ü kadar offset
+      const sections = document.querySelectorAll('section.main-section'); // Sadece ana bölümdeki section'ları hedefle
+      const scrollPosition = window.scrollY + window.innerHeight / 3;
 
       sections.forEach(section => {
         const sectionTop = section.offsetTop;
@@ -28,62 +39,81 @@ const App = () => {
         }
       });
     };
+    // Sadece ana sayfada scroll dinleyicisini ekle
+    if (window.location.pathname === '/') {
+        window.addEventListener('scroll', handleScroll);
+        // Sayfa yüklendiğinde de bir kez çalıştır
+        handleScroll();
+    }
 
-    // İlk yükleme sırasında scroll pozisyonunu kontrol etme
-    handleScroll();
-
-    // Scroll event listener ekleme
-    window.addEventListener('scroll', handleScroll);
-    
-    // Body overflow özelliğini düzeltelim
-    document.body.style.overflow = 'auto';
-    
-    // Cleanup
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [scrollingEnabled]);
+  }, [window.location.pathname]); // Pathname değiştiğinde useEffect'i yeniden çalıştır
 
-  // Bir section'a scroll yapma fonksiyonu
-  const scrollToSection = (sectionId) => {
-    // Programlı scroll sırasında geçici olarak manuel scroll'u devre dışı bırakalım
-    setScrollingEnabled(false);
-    
-    const section = document.getElementById(sectionId);
-    if (section) {
-      const yOffset = -80; // Header yüksekliği kadar offset
-      const y = section.getBoundingClientRect().top + window.pageYOffset + yOffset;
-
-      window.scrollTo({
-        top: y,
-        behavior: 'smooth'
-      });
-      
-      // Smooth scroll tamamlandıktan sonra scroll'u tekrar aktif hale getirelim
-      setTimeout(() => {
-        setScrollingEnabled(true);
-        setActiveSection(sectionId);
-      }, 1000); // 1 saniye sonra (smooth scroll süresi)
-    }
+  const handleLoginSuccess = () => {
+    setIsAuthenticated(true);
+    localStorage.setItem('isAdminAuthenticated', 'true');
   };
 
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    localStorage.removeItem('isAdminAuthenticated');
+  };
+
+  // Kimlik doğrulama kontrolü tamamlanana kadar hiçbir şey gösterme (veya bir yükleme ekranı)
+  if (!authChecked) {
+    return <div className="loading-auth">Kimlik doğrulama durumu kontrol ediliyor...</div>; // Basit bir yükleme mesajı
+  }
+
   return (
-    <div className="app-container">
-      <Layout activeSection={activeSection} scrollToSection={scrollToSection}>
-        <section id="home" className={`section ${activeSection === 'home' ? 'active' : ''}`}>
-          <Home />
-        </section>
-        <section id="about" className={`section ${activeSection === 'about' ? 'active' : ''}`}>
-          <About />
-        </section>
-        <section id="portfolio" className={`section ${activeSection === 'portfolio' ? 'active' : ''}`}>
-          <Portfolio />
-        </section>
-        <section id="contact" className={`section ${activeSection === 'contact' ? 'active' : ''}`}>
-          <Contact />
-        </section>
-      </Layout>
-    </div>
+    <Router>
+      <ToastContainer 
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
+      <Routes>
+        <Route 
+          path="/"
+          element={(
+            <div className="app-container">
+              <Layout activeSection={activeSection}>
+                <section id="home" className={`section main-section ${activeSection === 'home' ? 'active' : ''}`}>
+                  <Home />
+                </section>
+                <section id="about" className={`section main-section ${activeSection === 'about' ? 'active' : ''}`}>
+                  <About />
+                </section>
+                <section id="portfolio" className={`section main-section ${activeSection === 'portfolio' ? 'active' : ''}`}>
+                  <Portfolio />
+                </section>
+                <section id="contact" className={`section main-section ${activeSection === 'contact' ? 'active' : ''}`}>
+                  <Contact />
+                </section>
+              </Layout>
+            </div>
+          )}
+        />
+        <Route 
+          path="/admin"
+          element={isAuthenticated ? <PortfolioAdminPanel onLogout={handleLogout} /> : <Navigate to="/admin/login" replace />}
+        />
+        <Route 
+          path="/admin/login"
+          element={!isAuthenticated ? <Login onLoginSuccess={handleLoginSuccess} /> : <Navigate to="/admin" replace />}
+        />
+        {/* Diğer rotalar buraya eklenebilir */}
+        <Route path="*" element={<Navigate to="/" replace />} /> {/* Eşleşmeyen yolları anasayfaya yönlendir */}      
+      </Routes>
+    </Router>
   );
 };
 

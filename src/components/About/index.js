@@ -1,15 +1,24 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import AnimatedLetters from '../AnimatedLetters'
 import './index.scss';
+import useScrollAnimation from '../../hooks/useScrollAnimation';
   
 const About = () => {
   const [letterClass, setLetterClass] = useState('text-animate')
 
+  const p1Ref = useRef(null);
+  const p2Ref = useRef(null);
+  const p3Ref = useRef(null);
+  const robotRef = useRef(null);
+
   useEffect(() => {
-    return setTimeout(() => {
+    const timer = setTimeout(() => {
       setLetterClass('text-animate-hover')
     }, 3000)
+    return () => clearTimeout(timer);
   }, [])
+
+  useScrollAnimation([p1Ref, p2Ref, p3Ref, robotRef]);
 
   return (
     <>
@@ -22,24 +31,17 @@ const About = () => {
               idx={15}
             />
           </h1>
-          <p>
-          I'm a full-stack developer on the hunt for a gig at a top-notch, 
-          kick-ass IT company where I can dive into thrilling and mind-bending projects, 
-          while rubbing shoulders with the brightest minds in the industry.
-           I'm craving to be a part of a dynamic and multidisciplinary team that thrives on cutting-edge technologies,
-            pushing boundaries, and turning dreams into digital realities
+          <p ref={p1Ref} className="scroll-animate">
+          I'm a full-stack developer, but I don’t just write code. I enjoy exploring new technologies and trying out different approaches. That’s why I use my personal website as a testing ground. Whenever I learn something new, I try it out here — sometimes it works, sometimes I start over — but I always learn something.
           </p>
-          <p align="LEFT">
-          I'm like a detective, constantly honing my skills and tackling development challenges with gusto,
-           never shying away from a chance to level up my expertise.
-           I'm a problem-solving virtuoso, always striving to elevate my game.
+          <p ref={p2Ref} className="scroll-animate" align="LEFT">
+          I have a particular interest in AI. In my spare time, I build small projects in this area. I’m not an expert yet, but I’m constantly learning and improving.
           </p>
-          <p>
-          I'm a tech trend enthusiast, and when it comes to robotics and artificial intelligence,
-           my curiosity reaches a level of obsession that borders on being downright geeky!
+          <p ref={p3Ref} className="scroll-animate">
+          This site is a personal space where I share what I’ve learned and experiment with new ideas. Hopefully, it’ll be useful to others too.
           </p>
         </div>
-        <div className="robot123">
+        <div ref={robotRef} className="robot123 scroll-animate-from-right">
                 <svg className="Rolly" width="295" height="305" viewBox="0 0 295 305" fill="none" xmlns="http://www.w3.org/2000/svg">
     <circle cx="163" cy="257" r="46" fill="url(#paint1_radial)" />
     <g style={{ mixBlendMode: "multiply" }}>

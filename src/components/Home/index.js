@@ -1,25 +1,35 @@
 import { useEffect, useState } from 'react';
-import AnimatedLetters from '../AnimatedLetters';
+// import AnimatedLetters from '../AnimatedLetters'; // AnimatedLetters kaldırıldı
 import Logo from './Logo';
 import './index.scss';
+// import useScrollAnimation from '../../hooks/useScrollAnimation'; // Bu hook'u şimdilik kaldırıyorum, gerekirse tekrar eklenir.
+// import { FaArrowRight } from 'react-icons/fa'; // İkonlu buton yerine orijinal stile dönüyoruz
 
 const Home = () => {
-  const [letterClass, setLetterClass] = useState('text-animate');
+  // const [letterClass, setLetterClass] = useState('text-animate'); // letterClass state'i kaldırıldı
 
-  const nameArray = ['  ', 't', 'e', 'm', 'm', 'u', 'z'];
-  const playingArray = [..."creating"];
-  const webStuffArray = [..."digital experiences"];
+  const line1Text = "Hey,";
+  const line2Text = "I build"; 
+  const line3Text = "digital things.";
 
-  useEffect(() => {
-    return setTimeout(() => {
-      setLetterClass('text-animate-hover');
-    }, 10000);
-  }, []);
+  // const h2Ref = useRef(null); // Scroll animasyonları kaldırıldığı için ref'ler de kaldırılabilir
+  // const buttonRef = useRef(null);
+  // const logoContainerRef = useRef(null);
+
+  // letterClass ile ilgili useEffect kaldırıldı
+  // useEffect(() => {
+  //   const timer = setTimeout(() => {
+  //     setLetterClass('text-animate-hover');
+  //   }, 3000); 
+  //   return () => clearTimeout(timer);
+  // }, []);
+
+  // useScrollAnimation([h2Ref, buttonRef, logoContainerRef]); // Şimdilik kaldırıldı
 
   const scrollToContact = () => {
     const contactSection = document.getElementById('contact');
     if (contactSection) {
-      const yOffset = -80; // Header yüksekliği kadar offset
+      const yOffset = -80; 
       const y = contactSection.getBoundingClientRect().top + window.pageYOffset + yOffset;
 
       window.scrollTo({
@@ -30,47 +40,27 @@ const Home = () => {
   };
 
   return (
-    <>
-      <div className="container home-page">
-        <div className="text-zone">
-          <h1>
-            <span className={letterClass}>H</span>
-            <span className={`${letterClass} _12`}>e</span>
-            <span className={`${letterClass} _13`}>y</span>
-            <span className={`${letterClass} _14`}>,</span>
-            <br />
-            <span className={`${letterClass} _15`}>I</span>
-            <span className={`${letterClass} _16`}> </span>
-            <span className={`${letterClass} _17`}>a</span>
-            <span className={`${letterClass} _18`}>m</span>
-            <AnimatedLetters
-              letterClass={letterClass}
-              strArray={nameArray}
-              idx={19}
-            />
-            <br />
-            <AnimatedLetters
-              letterClass={letterClass}
-              strArray={playingArray}
-              idx={20 + nameArray.length}
-              additionalClass="smaller-text"
-            />
-            <br />
-            <AnimatedLetters
-              letterClass={letterClass}
-              strArray={webStuffArray}
-              idx={20 + nameArray.length + playingArray.length}
-              additionalClass="smaller-text"
-            />
-          </h1>
-          <h2>Full Stack Developer / AI Enthusiast</h2>
-          <button onClick={scrollToContact} className="flat-button">
-            CONTACT ME
-          </button>
-        </div>
+    <div className="container home-page"> 
+      <div className="text-zone">
+        <h1 className="main-headline"> 
+          {/* AnimatedLetters yerine doğrudan metinler */}
+          {line1Text}
+          <br />
+          {line2Text}
+          <br />
+          {line3Text}
+        </h1>
+        <h2 className="sub-headline"> 
+          Full Stack Developer / AI Enthusiast
+        </h2>
+        <button onClick={scrollToContact} className="flat-button"> 
+          CONTACT ME
+        </button>
+      </div>
+      <div className="logo-container"> 
         <Logo />
       </div>
-    </>
+    </div>
   );
 }
 
