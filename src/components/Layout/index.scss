@@ -62,9 +62,11 @@
 
     .text-zone {
       position: relative;
-      width: 50%;
-      max-height: 90%;
+      width: 60%;
+      max-height: none;
       contain: layout;
+      padding-right: 120px;
+      box-sizing: border-box;
     }
 
     .text-animate-hover {
@@ -76,7 +78,7 @@
   
   /* Portfolio page specific styles */
   &.portfolio-page {
-    display: block; /* This is the critical change */
+    display: block;
     
     h1 {
       font-size: 53px;
@@ -141,17 +143,16 @@
 
     &.portfolio-page {
       width: 100%;
-      padding-right: 120px;
+      padding: 0 20px;
       box-sizing: border-box;
 
       h1.page-title {
-        margin-left: 20px;
-        margin-top: 20px;
+        // margin-left: 20px;
+        // margin-top: 20px;
       }
       
-      /* Remove max-width constraint that's causing layout issues */
       .image-box {
-        height: 200px;
+        // height: 200px;
       }
     }
   }
@@ -167,14 +168,39 @@
 @media screen and (max-width: 768px) {
   .container.about-page {
     flex-direction: column;
-    align-items: center; /* İçeriği ortalamak için */
-    padding: 20px; /* Daha iyi boşluk için */
+    align-items: center;
+    padding: 20px;
 
     .text-zone {
       width: 100%;
-      max-width: 100%; /* text-zone'un genişliğini %100 yap */
-      text-align: center; /* Metni ortala */
-      margin-bottom: 30px; /* Robot ile arasında boşluk bırak */
+      max-width: 100%;
+      text-align: center;
+      margin-bottom: 30px;
+      order: 1;
     }
+
+    .robot123 {
+      order: 2;
+    }
+  }
+
+  .container.contact-page {
+    h1 {
+      text-align: center;
+      font-size: 40px;
+      margin-bottom: 20px;
+    }
+
+    .text-zone {
+      text-align: left;
+      width: 100%;
+      padding: 0 10px;
+    }
+
+    padding: 20px;
+  }
+
+  .container.portfolio-page {
+    // Portfolio sayfası için başlık ortalaması Portfolio/index.scss içinde yapılacak.
   }
 }

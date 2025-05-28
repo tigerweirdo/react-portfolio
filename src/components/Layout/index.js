@@ -1,14 +1,16 @@
 import React from 'react'
+// import { ParallaxProvider } from 'react-scroll-parallax'; // Kaldırıldı
 import './index.scss'
 
 const Layout = ({ children, activeSection, scrollToSection }) => {
   return (
-    <div className="App">
-      {/* Sidebar removed */}
-      <div className="page">
-        {children}
+    // <ParallaxProvider> // Kaldırıldı
+      <div className="App">
+        <div className="page">
+          {children}
+        </div>
       </div>
-    </div>
+    // </ParallaxProvider> // Kaldırıldı
   )
 }
 

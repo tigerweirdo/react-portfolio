@@ -22,11 +22,14 @@
     "react-icons": "^5.5.0",
     "react-leaflet": "^3.2.5",
     "react-loaders": "^3.0.1",
+    "react-masonry-css": "^1.0.16",
     "react-move": "^6.5.0",
+    "react-parallax-tilt": "^1.7.296",
     "react-router-dom": "^6.30.1",
     "react-scripts": "5.0.0",
     "react-toastify": "^9.1.3",
     "sass": "^1.63.4",
+    "smooth-scroll": "^16.1.3",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

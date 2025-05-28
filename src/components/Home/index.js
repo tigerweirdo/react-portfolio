@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
+// import { Parallax } from 'react-scroll-parallax'; // Kaldırıldı
 // import AnimatedLetters from '../AnimatedLetters'; // AnimatedLetters kaldırıldı
 import Logo from './Logo';
 import './index.scss';
 // import useScrollAnimation from '../../hooks/useScrollAnimation'; // Bu hook'u şimdilik kaldırıyorum, gerekirse tekrar eklenir.
 // import { FaArrowRight } from 'react-icons/fa'; // İkonlu buton yerine orijinal stile dönüyoruz
 
-const Home = () => {
+const Home = ({ scrollToSection }) => {
   // const [letterClass, setLetterClass] = useState('text-animate'); // letterClass state'i kaldırıldı
 
   const line1Text = "Hey,";
@@ -26,20 +27,8 @@ const Home = () => {
 
   // useScrollAnimation([h2Ref, buttonRef, logoContainerRef]); // Şimdilik kaldırıldı
 
-  const scrollToContact = () => {
-    const contactSection = document.getElementById('contact');
-    if (contactSection) {
-      const yOffset = -80; 
-      const y = contactSection.getBoundingClientRect().top + window.pageYOffset + yOffset;
-
-      window.scrollTo({
-        top: y,
-        behavior: 'smooth'
-      });
-    }
-  };
-
   return (
+    // <Parallax speed={-10} className="container home-page"> // Kaldırıldı
     <div className="container home-page"> 
       <div className="text-zone">
         <h1 className="main-headline"> 
@@ -53,13 +42,16 @@ const Home = () => {
         <h2 className="sub-headline"> 
           Full Stack Developer / AI Enthusiast
         </h2>
-        <button onClick={scrollToContact} className="flat-button"> 
+        <button onClick={() => scrollToSection('contact')} className="flat-button"> 
           CONTACT ME
         </button>
       </div>
+      {/* <Parallax speed={20} className="logo-container"> */}{/* Kaldırıldı */}
       <div className="logo-container"> 
         <Logo />
       </div>
+      {/* </Parallax> */}{/* Kaldırıldı */}
+    {/* </Parallax> */}{/* Kaldırıldı */}
     </div>
   );
 }

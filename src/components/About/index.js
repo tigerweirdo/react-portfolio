@@ -23,24 +23,6 @@ const About = () => {
   return (
     <>
       <div className="container about-page">
-        <div className="text-zone">
-          <h1>
-            <AnimatedLetters
-              letterClass={letterClass}
-              strArray={['A', 'b', 'o', 'u', 't', ' ', 'm', 'e']}
-              idx={15}
-            />
-          </h1>
-          <p ref={p1Ref} className="scroll-animate">
-          I'm a full-stack developer, but I don’t just write code. I enjoy exploring new technologies and trying out different approaches. That’s why I use my personal website as a testing ground. Whenever I learn something new, I try it out here — sometimes it works, sometimes I start over — but I always learn something.
-          </p>
-          <p ref={p2Ref} className="scroll-animate" align="LEFT">
-          I have a particular interest in AI. In my spare time, I build small projects in this area. I’m not an expert yet, but I’m constantly learning and improving.
-          </p>
-          <p ref={p3Ref} className="scroll-animate">
-          This site is a personal space where I share what I’ve learned and experiment with new ideas. Hopefully, it’ll be useful to others too.
-          </p>
-        </div>
         <div ref={robotRef} className="robot123 scroll-animate-from-right">
                 <svg className="Rolly" width="295" height="305" viewBox="0 0 295 305" fill="none" xmlns="http://www.w3.org/2000/svg">
     <circle cx="163" cy="257" r="46" fill="url(#paint1_radial)" />
@@ -93,6 +75,25 @@ const About = () => {
     </defs>
   </svg>
             </div>
+
+        <div className="text-zone">
+          <h1>
+            <AnimatedLetters
+              letterClass={letterClass}
+              strArray={['A', 'b', 'o', 'u', 't', ' ', 'm', 'e']}
+              idx={15}
+            />
+          </h1>
+          <p ref={p1Ref} className="scroll-animate">
+          I'm a full-stack developer, but I don't just write code. I enjoy exploring new technologies and trying out different approaches. That's why I use my personal website as a testing ground. Whenever I learn something new, I try it out here — sometimes it works, sometimes I start over — but I always learn something.
+          </p>
+          <p ref={p2Ref} className="scroll-animate" align="LEFT">
+          I have a particular interest in AI. In my spare time, I build small projects in this area. I'm not an expert yet, but I'm constantly learning and improving.
+          </p>
+          <p ref={p3Ref} className="scroll-animate">
+          This site is a personal space where I share what I've learned and experiment with new ideas. Hopefully, it'll be useful to others too.
+          </p>
+        </div>
        
       </div>
       

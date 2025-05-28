@@ -30,7 +30,7 @@ const Contact = () => {
 
     try {
       await emailjs.sendForm(
-        'service_u9kudbr',
+        'service_1di4zfn',
         'template_3xz79lm',
         form.current,
         '3stLvJAm6BvTLpIsx'
@@ -38,7 +38,7 @@ const Contact = () => {
       setSubmitStatus('success')
       form.current.reset()
     } catch (error) {
-      console.error('Email gönderilirken hata oluştu:', error)
+      console.error('Error sending email:', error)
       setSubmitStatus('error')
     } finally {
       setIsSubmitting(false)
@@ -47,7 +47,7 @@ const Contact = () => {
 
   const renderSubmitButton = () => {
     if (isSubmitting) {
-      return <input type="submit" className="flat-button" value="Gönderiliyor..." disabled />
+      return <input type="submit" className="flat-button" value="Sending..." disabled />
     }
     return <input type="submit" className="flat-button" value="Send" />
   }
@@ -58,8 +58,8 @@ const Contact = () => {
     return (
       <div className={`status-message ${submitStatus}`}>
         {submitStatus === 'success' 
-          ? 'Mesajınız başarıyla gönderildi!'
-          : 'Mesaj gönderilirken bir hata oluştu. Lütfen tekrar deneyin.'}
+          ? 'Your message has been sent successfully!'
+          : 'An error occurred while sending the message. Please try again.'}
       </div>
     )
   }

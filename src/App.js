@@ -61,6 +61,17 @@ const App = () => {
     localStorage.removeItem('isAdminAuthenticated');
   };
 
+  const scrollToSection = (sectionId) => {
+    const section = document.getElementById(sectionId);
+    if (section) {
+      section.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start'
+      });
+      setActiveSection(sectionId);
+    }
+  };
+
   // Kimlik doğrulama kontrolü tamamlanana kadar hiçbir şey gösterme (veya bir yükleme ekranı)
   if (!authChecked) {
     return <div className="loading-auth">Kimlik doğrulama durumu kontrol ediliyor...</div>; // Basit bir yükleme mesajı
@@ -85,9 +96,9 @@ const App = () => {
           path="/"
           element={(
             <div className="app-container">
-              <Layout activeSection={activeSection}>
+              <Layout activeSection={activeSection} scrollToSection={scrollToSection}>
                 <section id="home" className={`section main-section ${activeSection === 'home' ? 'active' : ''}`}>
-                  <Home />
+                  <Home scrollToSection={scrollToSection} />
                 </section>
                 <section id="about" className={`section main-section ${activeSection === 'about' ? 'active' : ''}`}>
                   <About />

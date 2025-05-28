@@ -1,14 +1,13 @@
 .robot123 {
     position: relative; 
-    display: flex;
-   top: 150px;
-    left: 20%;
     justify-content: center;
     align-items: center;
     overflow: hidden;
     text-align: center;
     display: grid;  
-    width: 100%;
+    flex-basis: 50%;
+    box-sizing: border-box;
+    right: 5%;
 }
   .eyes {
     animation: blink 3s linear infinite;
@@ -73,11 +72,13 @@
     .robot123 {
         top:0;
         margin-bottom: 50px;
-        left: 50%;
+        left: auto;
+        right: auto;
         transform: translateX(-50%);
-        position: relative;
         width: 535px;
         max-width: 100%;
+        flex-basis: auto;
+        margin-left: auto;
+        margin-right: auto;
     }
-
 }
