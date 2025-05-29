@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React from 'react';
 // import { Parallax } from 'react-scroll-parallax'; // Kaldırıldı
 // import AnimatedLetters from '../AnimatedLetters'; // AnimatedLetters kaldırıldı
 import Logo from './Logo';

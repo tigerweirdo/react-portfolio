@@ -1,11 +1,6 @@
 @import 'animate.css';
 @import '~loaders.css/src/animations/ball-scale-ripple-multiple.scss';
-
-// SCSS değişkenleri
-$background-color: #1d1d1d;
-$accent-color-1: #ffd700;
-$accent-color-2: #ffa500;
-$text-color: #ffffff;
+@import './variables';
 
 @font-face {
   font-family: 'Helvetica Neue';
@@ -30,123 +25,183 @@ $text-color: #ffffff;
   font-style: normal;
 }
 
+// Global resets
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 80px; /* Header yüksekliği kadar scroll padding */
   height: 100%;
-  overflow-y: auto;
+  overflow: hidden;
 }
 
 body {
   margin: 0;
   padding: 0;
-  overflow-x: hidden;
-  overflow-y: auto; /* Bu özelliği auto olarak değiştirdim */
+  overflow: hidden;
   font-family: 'Helvetica Neue', sans-serif;
   background-color: $background-color;
   color: $text-color;
   height: 100%;
 }
 
-.App {
+// ONE PAGE APP STRUCTURE
+.one-page-app {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  overflow: hidden;
   position: relative;
-  width: 100%;
-  min-height: 100vh;
-  overflow-y: auto; /* Auto olarak tutuyoruz */
-  overflow-x: hidden;
 }
 
-/* Section stilleri */
-.section {
-  scroll-snap-align: start;
+// SCROLL CONTAINER - optimizasyonlar
+.scroll-container {
+  flex: 1;
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch; // iOS için smooth scroll
+
+  &.scrolling {
+    // scroll-snap-type: none;
+    // pointer-events: none; // Scroll sırasında etkileşimi engelle - Bu da App.js'deki isScrolling ile yönetiliyor, CSS'te gereksiz olabilir
+  }
+
+  // Daha smooth scrollbar
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba($accent-color-1, 0.3);
+    border-radius: 3px;
+    transition: background 0.3s ease;
+    
+    &:hover {
+      background: rgba($primary-color, 0.5);
+    }
+  }
+}
+
+// PAGE SECTIONS - optimizasyonlar
+.page-section {
   min-height: 100vh;
+  height: 100vh;
   width: 100%;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
   position: relative;
-  overflow: visible; /* hidden yerine visible yapıyoruz */
-  padding: 2rem;
-  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  transition: opacity 0.5s ease-in-out;
-}
+  padding: 0;
+  overflow: hidden;
+  
+  // GPU katmanına al (performans)
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 
-.section.active {
-  opacity: 1;
-}
-
-/* SPA yapısında sayfa konumlandırma */
-.page {
-  position: relative;
-  height: auto;
-  overflow-y: visible;
-}
-
-.loader-hidden {
-  display: none;
-}
-
-.loader-active {
-  display: block;
-  position: fixed;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -80%);
-  width: 100px;
-  height: 100px;
-  animation: fadeOut 1s 1s;
-  animation-fill-mode: forwards;
-  z-index: 1000;
-}
-
-/* Smooth scroll için özel scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track {
+  // Tüm section'lar için aynı arka plan
   background: $background-color;
+
+  &.active {
+    .container {
+      animation: sectionFadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+  }
 }
 
-::-webkit-scrollbar-thumb {
-  background: $accent-color-1;
-  border-radius: 4px;
+// Container styles - optimizasyonlar
+.container {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  opacity: 1;
+  
+  // GPU katmanına al
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: $accent-color-2;
+// Loading state
+.loading-auth {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 18px;
+  color: $primary-color;
+  background-color: $background-color;
 }
 
-/* Animasyonlar */
-@keyframes fadeIn {
+// Daha smooth animasyonlar
+@keyframes sectionFadeIn {
   0% {
-    opacity: 0;
+    opacity: 0.8;
+    transform: translate3d(0, 20px, 0);
   }
   100% {
     opacity: 1;
+    transform: translate3d(0, 0, 0);
   }
 }
 
-@keyframes fadeInAnimation {
-  0% {
-    opacity: 0;
-    transform: translateY(20px);
+// RESPONSIVE DESIGN
+@media screen and (max-width: 768px) {
+  .page-section {
+    .container {
+      padding: 1rem;
+    }
   }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
+  
+  // Mobilde scroll snap'i daha yumuşak yap
+  .scroll-container {
+    scroll-snap-type: y proximity;
   }
 }
 
-/* Mobil uyarlamalar */
-@media screen and (max-width: 1200px) {
-  .page {
-    overflow-y: visible;
+@media screen and (max-width: 480px) {
+  .page-section {
+    .container {
+      padding: 0.5rem;
+    }
   }
+}
 
-  .section {
-    padding: 1rem;
-    overflow: visible;
+// Reduced motion için accessibility
+@media (prefers-reduced-motion: reduce) {
+  .scroll-container {
+    scroll-behavior: auto;
+  }
+  
+  .page-section {
+    &.active .container {
+      animation: none;
+    }
+  }
+  
+  @keyframes sectionFadeIn {
+    0%, 100% {
+      opacity: 1;
+      transform: none;
+    }
   }
 }

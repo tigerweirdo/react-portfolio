@@ -1,7 +1,46 @@
 @import '../../variables';
 
+.contact-page {
+  width: 100%;
+  height: 100%;
+  padding: 2rem 5%;
+  box-sizing: border-box;
+  position: relative;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  
+  .text-zone {
+    max-width: 600px;
+    width: 100%;
+    
+    h1 {
+      color: $primary-color;
+      font-size: 48px;
+      font-family: 'Coolvetica';
+      font-weight: 400;
+      margin: 0 0 30px 0;
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    p {
+      color: $text-color;
+      font-size: 16px;
+      line-height: 1.6;
+      margin-bottom: 30px;
+      text-align: center;
+      opacity: 0.9;
+    }
+  }
+}
+
 .contact-form {
   width: 100%;
+  max-width: 600px;
   margin-top: 20px;
 
   ul {
@@ -12,7 +51,7 @@
       padding: 0;
       margin: 0;
       list-style: none;
-      margin-bottom: 10px;
+      margin-bottom: 15px;
       opacity: 0;
       overflow: hidden;
       display: block;
@@ -45,18 +84,17 @@
     padding: 0 15px;
     box-sizing: border-box;
     border-radius: 4px;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    transition: all 0.3s ease;
 
     &::placeholder {
-        color: lighten($secondary-text-color, 15%);
+        color: $secondary-text-color;
         opacity: 1;
     }
 
     &:focus {
         border-color: $accent-color-1;
-        box-shadow: 0 0 0 2px rgba($accent-color-1, 0.2);
         outline: none;
+        background: $accent-color-3;
     }
   }
 
@@ -70,63 +108,78 @@
     box-sizing: border-box;
     min-height: 150px;
     border-radius: 4px;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    transition: all 0.3s ease;
     line-height: 1.5;
+    resize: vertical;
 
     &::placeholder {
-        color: lighten($secondary-text-color, 15%);
+        color: $secondary-text-color;
         opacity: 1;
     }
 
     &:focus {
         border-color: $accent-color-1;
-        box-shadow: 0 0 0 2px rgba($accent-color-1, 0.2);
         outline: none;
+        background: $accent-color-3;
     }
   }
 }
 
-// Home sayfasındaki .flat-button stilleri buraya eklendi
 .flat-button {
-  color: $accent-color-1;
+  color: $primary-color;
   font-size: 13px;
   font-weight: 700;
   letter-spacing: 4px;
   font-family: 'Arial Black', sans-serif;
   text-decoration: none;
-  padding: 10px 18px;
-  border: 1px solid $accent-color-1;
-  margin-top: 25px; // Bu margin-top değeri Contact formunda farklı olabilir, duruma göre ayarlanmalı
+  padding: 12px 24px;
+  border: 2px solid $btn-border-color;
+  margin-top: 25px;
   background-color: transparent;
   outline: none;
+  cursor: pointer;
   transition: all 0.3s ease;
   text-transform: uppercase;
+  border-radius: 4px;
+  display: block;
+  width: 100%;
+  max-width: 200px;
+  margin: 25px 0 0 0;
 
   &:hover {
-    background: $accent-color-1;
-    color: $text-color;
+    background: $btn-hover-bg-color;
+    color: $primary-color;
+    border-color: $accent-color-1;
+  }
+
+  &:active {
+    transform: translateY(0);
   }
 }
 
 .flat-button[disabled] {
   position: relative;
   cursor: wait;
-  color: $accent-color-1; // Ensure text color is consistent
+  color: $secondary-text-color;
+  border-color: $btn-border-color;
+
+  &:hover {
+    background: transparent;
+    color: $secondary-text-color;
+    transform: none;
+    box-shadow: none;
+  }
 
   &::after {
     content: '';
     box-sizing: border-box;
     position: absolute;
     top: 50%;
-    // Adjust right positioning to be next to text, not fixed pixels
-    // This requires knowing the text length or a different approach if text varies a lot.
-    // For a simple spinner, placing it consistently is easier.
-    right: 10px; 
-    margin-top: -8px; // Half of height
+    right: 15px;
+    margin-top: -8px;
     width: 16px;
     height: 16px;
-    border: 2px solid $accent-color-1; // Use a theme color
+    border: 2px solid $accent-color-1;
     border-top-color: transparent;
     border-radius: 50%;
     animation: spin 0.8s linear infinite;
@@ -143,9 +196,9 @@
 }
 
 .status-message {
-  padding: 12px 18px;
+  padding: 15px 20px;
   margin-top: 20px;
-  border-radius: 5px;
+  border-radius: 4px;
   font-size: 0.95rem;
   font-weight: 500;
   opacity: 0;
@@ -156,7 +209,7 @@
   line-height: 1.4;
 
   &::before {
-    margin-right: 10px;
+    margin-right: 12px;
     font-size: 1.3rem; 
     animation: iconPopIn 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55) 0.3s forwards;
     transform: scale(0);
@@ -164,24 +217,24 @@
   }
 
   &.success {
-    background-color: #e8f5e9; // Light Green
-    color: #2e7d32;      // Dark Green
-    border: 1px solid #a5d6a7; // Softer Green Border
+    background-color: rgba(76, 175, 80, 0.1);
+    color: #4caf50;
+    border: 1px solid rgba(76, 175, 80, 0.3);
 
     &::before {
       content: '✓';
-      color: #2e7d32;
+      color: #4caf50;
     }
   }
 
   &.error {
-    background-color: #ffebee; // Light Red
-    color: #c62828;         // Dark Red
-    border: 1px solid #ef9a9a; // Softer Red Border
+    background-color: rgba(244, 67, 54, 0.1);
+    color: #f44336;
+    border: 1px solid rgba(244, 67, 54, 0.3);
 
     &::before {
       content: '✗';
-      color: #c62828;
+      color: #f44336;
     }
   }
 }
@@ -201,5 +254,65 @@
   100% {
     transform: scale(1) rotate(0deg);
     opacity: 1;
+  }
+}
+
+// Responsive design
+@media (max-width: 1200px) {
+  .contact-page {
+    padding: 2rem;
+    
+    .text-zone {
+      h1 {
+        font-size: 40px;
+      }
+      
+      p {
+        font-size: 15px;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .contact-page {
+    padding: 1rem;
+    
+    .text-zone {
+      h1 {
+        font-size: 32px;
+        margin-bottom: 20px;
+      }
+      
+      p {
+        font-size: 14px;
+        margin-bottom: 20px;
+      }
+    }
+  }
+
+  .contact-form {
+    ul li.half {
+      width: 100%;
+      margin-left: 0;
+      float: none;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .contact-page {
+    .text-zone {
+      h1 {
+        font-size: 28px;
+        letter-spacing: 1px;
+      }
+    }
+  }
+
+  .flat-button {
+    font-size: 12px;
+    letter-spacing: 2px;
+    padding: 10px 20px;
   }
 }

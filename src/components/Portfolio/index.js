@@ -1,102 +1,127 @@
-import React, { useEffect, useState, useMemo, useCallback, useRef } from "react";
-// import AnimatedLetters from "../AnimatedLetters"; // Kaldırıldı
+import React, { useEffect, useState, useRef } from "react";
+import { motion } from 'framer-motion';
 import "./index.scss";
 import { getDocs, collection } from 'firebase/firestore';
 import { db } from '../../firebase';
-// import useScrollAnimation from "../../hooks/useScrollAnimation"; // Kaldırıldı
-
-// --- Paketleme Algoritması Başlangıcı ---
-// createGrid, canPlaceItem, placeItem, findCompactPosition, calculateAdjacencyScore, packAllItems fonksiyonları kaldırıldı.
-// --- Paketleme Algoritması Sonu ---
 
 const Portfolio = () => { 
-    // const [letterClass, setLetterClass] = useState('text-animate'); // Kaldırıldı
     const [portfolioData, setPortfolioData] = useState([]);
-    // const [animatedItems, setAnimatedItems] = useState([]); // Kaldırıldı
     const [loading, setLoading] = useState(true);
-    const containerRef = useRef(null); // Grid container için ref kalabilir, ancak boyut hesaplaması için değil.
-    // const [containerDimensions, setContainerDimensions] = useState(null); // Kaldırıldı
-    // const dimensionRetryCount = useRef(0); // Kaldırıldı
-    // const itemRefs = useRef({}); // Kaldırıldı
-
-    // const sizeProfiles = useMemo(() => [ // Kaldırıldı
-    // ...
-    // ], []);
-
-    // useEffect(() => { // letterClass için useEffect kaldırıldı
-    // const timer = setTimeout(() => setLetterClass('text-animate-hover'), 3000);
-    // return () => clearTimeout(timer);
-    // }, []);
+    
+    // Yatay kaydırma için kullanılan ref'ler ve state'ler kaldırıldı
+    // const scrollTrackRef = useRef(null); 
+    // const imagesContainerRef = useRef(null); 
+    // const imagesContainerStickyWrapperRef = useRef(null);
+    // const [imagesContainerScrollWidth, setImagesContainerScrollWidth] = useState(0);
+    // const [stickyWrapperWidth, setStickyWrapperWidth] = useState(0);
 
     useEffect(() => {
         const getPortfolio = async () => {
             console.log("[Portfolio] Fetching portfolio data...");
             setLoading(true);
-        try {
-            const querySnapshot = await getDocs(collection(db, 'portfolio'));
-                const data = querySnapshot.docs.map((doc, index) => ({ ...doc.data(), firestoreId: doc.id || `fallback-${index}` }));
-                console.log("[Portfolio] Portfolio data fetched:", data);
+            try {
+                const querySnapshot = await getDocs(collection(db, 'portfolio'));
+                console.log("[Portfolio] querySnapshot:", querySnapshot);
+                if (querySnapshot.empty) {
+                    console.log("[Portfolio] No documents found in 'portfolio' collection.");
+                }
+                const data = querySnapshot.docs.map((doc, index) => ({
+                    ...doc.data(),
+                    firestoreId: doc.id || `fallback-${index}` // Fallback ID eklendi
+                }));
+                console.log("[Portfolio] Portfolio data fetched and mapped:", data);
                 setPortfolioData(data);
-        } catch (error) {
-                console.error('[Portfolio] Portfolio verisi alınırken hata oluştu:', error);
-                setPortfolioData([]);
-        } finally {
-            setLoading(false);
-        }
+            } catch (error) {
+                console.error('[Portfolio] Error fetching portfolio data:', error);
+                setPortfolioData([]); // Hata durumunda boş dizi ata
+            } finally {
+                setLoading(false);
+                console.log("[Portfolio] Loading state set to false.");
+            }
         };
         getPortfolio();
     }, []);
-    
-    // useEffect(() => { // containerDimensions için useEffect kaldırıldı
-    // ...
-    // }, []);
-    
-    // useEffect(() => { // Başlangıç paketleme için useEffect (animatedItems) kaldırıldı
-    // ...
-    // }, [portfolioData, sizeProfiles, containerDimensions]);
 
-    // useScrollAnimation ile ilgili kısımlar kaldırıldı
-    // const observerTargets = useMemo(() => ... , [animatedItems]);
-    // useScrollAnimation(observerTargets.map(t => t.current));
+    // useScroll, useTransform ve bunlarla ilgili useEffect'ler kaldırıldı
+
+    // Basitleştirilmiş animasyon varyantları
+    const pageVariants = {
+        hidden: {
+            opacity: 0,
+        },
+        visible: {
+            opacity: 1,
+            transition: {
+                duration: 0.5, // Animasyon süresi kısaltıldı
+            }
+        }
+    };
 
     const renderPortfolio = (portfolio) => {
+        console.log("[Portfolio] Rendering portfolio with data:", portfolio);
+        if (!portfolio || portfolio.length === 0) {
+            console.log("[Portfolio] No portfolio data to render.");
+            return <p style={{ textAlign: 'center', width: '100%', color: 'white', marginTop: '20px' }}>No portfolio items to display at the moment.</p>;
+        }
         return (
-            <div className="images-container" ref={containerRef}>
+            <div className="images-container">
                 {
-                    portfolio.map((item, idx) => (
-                        <div 
-                            className="image-box" 
-                            key={item.firestoreId || idx}
-                            onClick={() => window.open(item.url, "_blank")}
-                        >
-                            <img 
-                                src={item.image} 
-                                className="portfolio-image"
-                                alt={item.name}
-                            />
-                        </div>
-                    ))
+                    portfolio.map((item, idx) => {
+                        console.log(`[Portfolio] Rendering item ${idx}:`, item);
+                        if (!item || !item.image || !item.name) {
+                            console.warn(`[Portfolio] Item ${idx} is missing image or name:`, item);
+                            return null; // Eksik verili öğeyi atla
+                        }
+                        return (
+                            <div 
+                                className="image-box" 
+                                key={item.firestoreId || `portfolio-item-${idx}`} // Key iyileştirildi
+                                onClick={() => {
+                                    console.log("[Portfolio] Opening URL:", item.url);
+                                    if (item.url) window.open(item.url, "_blank");
+                                }}
+                            >
+                                <img 
+                                    src={item.image} 
+                                    className="portfolio-image"
+                                    alt={item.name}
+                                    loading="lazy"
+                                    onError={(e) => console.error(`[Portfolio] Error loading image ${item.image} for item ${item.name}:`, e)}
+                                />
+                                {/* Gerekirse öğe adı gibi ek bilgiler eklenebilir */}
+                                {/* <p>{item.name}</p> */}
+                            </div>
+                        );
+                    })
                 }
             </div>
         );
     }
 
+    console.log("[Portfolio] Component rendering. Loading:", loading, "Data length:", portfolioData.length);
+
     return (
         <>
-            <div className="container portfolio-page">
+            <motion.div 
+                className="container portfolio-page"
+                key="portfolio-page"
+                initial="hidden"
+                animate="visible"
+                variants={pageVariants}
+            >
                 <h1 className="page-title">
-                    {/* <AnimatedLetters // Kaldırıldı
-                        letterClass={letterClass}
-                        strArray={"Portfolio".split("")}
-                        idx={15}
-                    /> */}
                     Portfolio
                 </h1>
-                {loading && <p>Loading portfolio...</p>}
-                {!loading && portfolioData.length === 0 && <p>No portfolio items found.</p>}
-                {!loading && portfolioData.length > 0 && renderPortfolio(portfolioData)}
-            </div>
-            {/* <Loader type="pacman" /> // Loader'ı da sadeleştirebilir veya farklı bir yerde yönetebiliriz. Şimdilik kalsın. */}
+                
+                {/* Yatay kaydırma için kullanılan sarmalayıcı div'ler kaldırıldı */}
+                {/* <div ref={scrollTrackRef} className="horizontal-scroll-track"> */}
+                {/*     <div ref={imagesContainerStickyWrapperRef} className="images-container-sticky-wrapper"> */}
+                        {loading && <p style={{ textAlign: 'center', width: '100%', color: 'white', marginTop: '20px' }}>Loading portfolio...</p>}
+                        {!loading && portfolioData.length === 0 && <p style={{ textAlign: 'center', width: '100%', color: 'white', marginTop: '20px' }}>No portfolio items found.</p>}
+                        {!loading && portfolioData.length > 0 && renderPortfolio(portfolioData)}
+                {/*     </div> */}
+                {/* </div> */}
+            </motion.div>
         </>
     );
 }
