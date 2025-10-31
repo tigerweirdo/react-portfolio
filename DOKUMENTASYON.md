@@ -10,3 +10,5 @@
 
 - 2025-01-XX: Contact me basari mesaji genel yapiyi bozmaması icin duzeltildi. Mesaj form icinde, butonun hemen altinda sabit bir alanda (height: 60px) gosteriliyor. Mesaj her zaman render ediliyor (gorunmediginde bos bir alan olarak), bu sayede form hicbir zaman buyuyup kuculmuyor. Height animasyonu kaldirildi, yerine sadece opacity ve y pozisyonu animasyonu kullaniliyor. Bu sayede layout shift olmadan mesaj gosteriliyor ve genel yapi tamamen korunuyor.
 
+- 2025-01-XX: Vercel deployment icin Node.js versiyonu 22.x'e yukseltildi. package.json dosyasina "engines" alani eklendi (node >=22.0.0, npm >=10.0.0) ve .nvmrc dosyasi olusturuldu (22). Bu sayede Vercel otomatik olarak Node.js 22.x kullanacak.
+
