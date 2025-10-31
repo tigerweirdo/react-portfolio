@@ -53,8 +53,8 @@ const Home = memo(({ scrollToSection }) => {
         <motion.h1 
           className="main-headline"
           variants={textVariants}
-          initial=\"hidden\"
-          animate=\"visible\"
+          initial="hidden"
+          animate="visible"
         > 
           {line1Text}
           <br />
