@@ -215,8 +215,8 @@ const Contact = memo(() => {
                   name="email"
                   required
                   disabled={isSubmitting}
-                  whileFocus={{ scale: 1.01 }}
-                  transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
+                  whileFocus={{ scale: 1.005 }}
+                  transition={{ duration: 0.2 }}
                 />
               </motion.li>
               <motion.li variants={inputVariants}>
