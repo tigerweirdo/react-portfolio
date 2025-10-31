@@ -89,29 +89,24 @@ const Portfolio = memo(() => {
 
     const pageVariants = {
         hidden: {
-            opacity: 0,
+            opacity: 0
         },
         visible: {
             opacity: 1,
             transition: {
-                duration: 0.3,
-                ease: [0.4, 0, 0.2, 1]
+                duration: 0.3
             }
         }
     };
 
     const titleVariants = {
         hidden: {
-            opacity: 0,
-            y: -15
+            opacity: 0
         },
         visible: {
             opacity: 1,
-            y: 0,
             transition: {
-                duration: 0.4,
-                delay: 0.1,
-                ease: [0.4, 0, 0.2, 1]
+                duration: 0.4
             }
         }
     };
