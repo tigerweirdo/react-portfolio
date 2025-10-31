@@ -130,7 +130,7 @@ const Contact = memo(() => {
           value="Sending..." 
           disabled
           animate={{ opacity: [1, 0.7, 1] }}
-          transition={{ duration: 1, repeat: Infinity }}
+          transition={{ duration: 1, repeat: Infinity, ease: "easeInOut" }}
         />
       )
     }
@@ -139,8 +139,9 @@ const Contact = memo(() => {
         type="submit" 
         className="flat-button" 
         value="Send"
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
+        whileHover={{ scale: 1.02, y: -2 }}
+        whileTap={{ scale: 0.98, y: 0 }}
+        transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
       />
     )
   }
