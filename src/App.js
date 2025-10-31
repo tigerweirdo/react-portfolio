@@ -45,9 +45,6 @@ const ScrollProgressIndicator = memo(() => {
   );
 });
 
-ScrollProgressIndicator.displayName = 'ScrollProgressIndicator';
-
-// Admin route handler
 const AdminRouteHandler = memo(({ children }) => {
   const location = useLocation();
 
