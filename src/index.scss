@@ -60,9 +60,9 @@ body {
 // Optimize edilmiş scroll animasyonları
 .scroll-animate {
     opacity: 0;
-    transform: translate3d(0, 30px, 0);
-    transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), 
-                transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translate3d(0, 20px, 0);
+    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+                transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     will-change: transform, opacity;
     backface-visibility: hidden;
 
@@ -75,9 +75,9 @@ body {
 // Yön bazlı animasyonlar - optimize
 .scroll-animate-from-left {
     opacity: 0;
-    transform: translate3d(-50px, 0, 0);
-    transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), 
-                transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translate3d(-30px, 0, 0);
+    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+                transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     will-change: transform, opacity;
     backface-visibility: hidden;
 
@@ -89,9 +89,9 @@ body {
 
 .scroll-animate-from-right {
     opacity: 0;
-    transform: translate3d(50px, 0, 0);
-    transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), 
-                transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translate3d(30px, 0, 0);
+    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+                transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     will-change: transform, opacity;
     backface-visibility: hidden;
 
