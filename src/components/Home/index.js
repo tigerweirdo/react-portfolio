@@ -39,9 +39,6 @@ const Home = ({ scrollToSection }) => {
           <br />
           {line3Text}
         </h1>
-        <h2 className="sub-headline"> 
-          Full Stack Developer / AI Enthusiast
-        </h2>
         <button onClick={() => scrollToSection('contact')} className="flat-button"> 
           CONTACT ME
         </button>

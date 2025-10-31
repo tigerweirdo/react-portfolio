@@ -30,17 +30,6 @@
       }
     }
 
-    .sub-headline {
-      color: $secondary-text-color;
-      margin-top: 0;
-      margin-bottom: 30px;
-      font-weight: 700;
-      font-size: clamp(1rem, 2vw, 1.2rem);
-      font-family: 'Arial Black', 'Helvetica Neue', sans-serif;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-    }
-
     .flat-button {
       color: $primary-color;
       font-size: 13px;
