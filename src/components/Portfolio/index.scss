@@ -61,33 +61,16 @@
     align-items: center;
     border: 1px solid $btn-border-color;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    will-change: transform, box-shadow;
-    backface-visibility: hidden;
-    transform: translateZ(0);
-
-    &::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(135deg, transparent 0%, rgba($primary-color, 0.03) 100%);
-        opacity: 0;
-        transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-        pointer-events: none;
-    }
+    transition: all 0.2s ease;
 
     &:hover {
-        box-shadow: 0 12px 24px rgba($primary-color, 0.15);
+        box-shadow: 0 4px 12px rgba($primary-color, 0.12);
         border-color: $accent-color-1;
-
-        &::after {
-            opacity: 1;
-        }
+        transform: translateY(-2px);
     }
 
     &:active {
-        transform: scale(0.98) translateZ(0);
-        transition: transform 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+        transform: translateY(0);
     }
 }
 
