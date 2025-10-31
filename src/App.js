@@ -11,39 +11,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './App.scss';
 
-// Scroll Progress Indicator Component
-const ScrollProgressIndicator = memo(() => {
-  const [scrollProgress, setScrollProgress] = useState(0);
-
-  useEffect(() => {
-    const container = document.querySelector('.scroll-container');
-    if (!container) return;
-
-    const handleScroll = () => {
-      const scrollTop = container.scrollTop;
-      const scrollHeight = container.scrollHeight - container.clientHeight;
-      const progress = (scrollTop / scrollHeight) * 100;
-      setScrollProgress(progress);
-    };
-
-    container.addEventListener('scroll', handleScroll, { passive: true });
-    return () => container.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  return (
-    <motion.div 
-      className="scroll-progress-bar"
-      style={{ 
-        scaleX: scrollProgress / 100,
-        transformOrigin: 'left'
-      }}
-      initial={{ scaleX: 0 }}
-      animate={{ scaleX: scrollProgress / 100 }}
-      transition={{ duration: 0.1, ease: 'linear' }}
-    />
-  );
-});
-
+// Admin route handler
 const AdminRouteHandler = memo(({ children }) => {
   const location = useLocation();
 
