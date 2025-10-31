@@ -69,8 +69,8 @@ const About = memo(() => {
         className="robot123"
         variants={robotVariants}
         whileHover={{ 
-          scale: 1.03,
-          transition: { duration: 0.3, ease: [0.4, 0, 0.2, 1] }
+          scale: 1.01,
+          transition: { duration: 0.3 }
         }}
         style={{ y }}
       >
