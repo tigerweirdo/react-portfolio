@@ -1,11 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, memo } from 'react'
 import { motion, useInView, useAnimation, useScroll, useTransform } from 'framer-motion'
-// import AnimatedLetters from '../AnimatedLetters' // Kaldırıldı
 import './index.scss';
-import { useRef } from 'react';
 
-const About = () => {
-  // const [letterClass, setLetterClass] = useState('text-animate') // Kaldırıldı
+const About = memo(() => {
   const controls = useAnimation();
   const ref = useRef(null);
   const isInView = useInView(ref, { once: false, amount: 0.3 });
@@ -18,8 +15,6 @@ const About = () => {
   const y = useTransform(scrollYProgress, [0, 1], [100, -100]);
   const opacity = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0, 1, 1, 0]);
 
-  // }, []) // letterClass ile ilgili useEffect kaldırıldı
-
   useEffect(() => {
     if (isInView) {
       controls.start("visible");
@@ -31,7 +26,8 @@ const About = () => {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.3
+        staggerChildren: 0.2,
+        delayChildren: 0.1
       }
     }
   };
@@ -39,34 +35,31 @@ const About = () => {
   const textVariants = {
     hidden: { 
       opacity: 0, 
-      y: 50 
+      y: 30 
     },
     visible: {
       opacity: 1,
       y: 0,
       transition: {
-        type: "spring",
-        stiffness: 50,
-        damping: 20
+        duration: 0.5,
+        ease: [0.4, 0, 0.2, 1]
       }
     }
   };
 
   const robotVariants = {
     hidden: { 
-      x: 200, 
+      x: 100, 
       opacity: 0,
-      rotate: -180
+      rotate: -20
     },
     visible: {
       x: 0,
       opacity: 1,
       rotate: 0,
       transition: {
-        type: "spring",
-        stiffness: 40,
-        damping: 15,
-        duration: 1.5
+        duration: 0.8,
+        ease: [0.4, 0, 0.2, 1]
       }
     }
   };
@@ -84,8 +77,8 @@ const About = () => {
         className="robot123"
         variants={robotVariants}
         whileHover={{ 
-          scale: 1.05,
-          transition: { duration: 0.3 }
+          scale: 1.03,
+          transition: { duration: 0.3, ease: [0.4, 0, 0.2, 1] }
         }}
         style={{ y }}
       >
@@ -96,7 +89,7 @@ const About = () => {
             r="46" 
             fill="url(#paint1_radial)"
             animate={{
-              scale: [1, 1.1, 1],
+              scale: [1, 1.05, 1],
               transition: {
                 duration: 2,
                 repeat: Infinity,
@@ -191,11 +184,6 @@ const About = () => {
         variants={containerVariants}
       >
         <motion.h1 variants={textVariants}>
-          {/* <AnimatedLetters
-            letterClass={letterClass}
-            strArray={['A', 'b', 'o', 'u', 't', ' ', 'm', 'e']}
-            idx={15}
-          /> */}
           ABOUT ME
         </motion.h1>
         <motion.p variants={textVariants}>
@@ -210,6 +198,8 @@ const About = () => {
       </motion.div>
     </motion.div>
   )
-}
+});
+
+About.displayName = 'About';
 
 export default About
