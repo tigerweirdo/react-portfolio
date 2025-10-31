@@ -237,4 +237,6 @@ const Portfolio = memo(() => {
     );
 }
 
+Portfolio.displayName = 'Portfolio';
+
 export default Portfolio;
