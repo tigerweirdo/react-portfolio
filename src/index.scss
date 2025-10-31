@@ -3,10 +3,10 @@
 body {
   margin: 0;
   font: 300 11px/1.4 'Helvetica Neue', sans-serif;
-  color: $secondary-text-color; /* İkincil metin rengi */
+  color: $secondary-text-color;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: $background-color; /* Arka plan rengi */
+  background: $background-color;
 
   // Optimized scrollbar styles
   &::-webkit-scrollbar {
@@ -15,24 +15,41 @@ body {
   }
 
   &::-webkit-scrollbar-track {
-    background: rgba($accent-color-3, 0.1);
+    background: rgba($accent-color-3, 0.3);
     border-radius: 4px;
   }
 
   &::-webkit-scrollbar-thumb {
-    background-color: rgba($accent-color-2, 0.5);
+    background-color: rgba($accent-color-1, 0.4);
     border-radius: 4px;
     border: 2px solid transparent;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 
     &:hover {
-      background-color: rgba($accent-color-2, 0.8);
+      background-color: rgba($accent-color-1, 0.7);
+    }
+
+    &:active {
+      background-color: rgba($accent-color-1, 0.9);
     }
   }
 
   // Firefox için optimize
   scrollbar-width: thin;
-  scrollbar-color: rgba($accent-color-2, 0.5) transparent;
+  scrollbar-color: rgba($accent-color-1, 0.4) transparent;
+}
+
+// Global focus styles for accessibility
+*:focus-visible {
+  outline: 2px solid $accent-color-1;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+// Smooth selection
+::selection {
+  background-color: rgba($accent-color-1, 0.2);
+  color: $primary-color;
 }
 
 .dashboard {
