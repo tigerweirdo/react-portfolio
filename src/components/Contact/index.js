@@ -1,10 +1,9 @@
-import { useEffect, useState, useCallback, useRef } from 'react'
-import { motion, useInView, useAnimation, AnimatePresence } from 'framer-motion'
+import { useEffect, useState, useCallback, useRef, memo } from 'react'
+import { motion, useInView, useAnimation } from 'framer-motion'
 import emailjs from '@emailjs/browser'
-// import AnimatedLetters from '../AnimatedLetters'
 import './index.scss'
 
-const Contact = () => {
+const Contact = memo(() => {
   // const [letterClass, setLetterClass] = useState('text-animate')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState(null)
