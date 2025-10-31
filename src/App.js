@@ -14,7 +14,6 @@ import './App.scss';
 // Scroll Progress Indicator Component
 const ScrollProgressIndicator = memo(() => {
   const [scrollProgress, setScrollProgress] = useState(0);
-  const appContainerRef = useRef(null);
 
   useEffect(() => {
     const container = document.querySelector('.scroll-container');
