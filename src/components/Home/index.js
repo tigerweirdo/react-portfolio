@@ -90,6 +90,4 @@ const Home = memo(({ scrollToSection }) => {
   );
 });
 
-Home.displayName = 'Home';
-
 export default Home;
