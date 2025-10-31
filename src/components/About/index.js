@@ -34,32 +34,24 @@ const About = memo(() => {
 
   const textVariants = {
     hidden: { 
-      opacity: 0, 
-      y: 30 
+      opacity: 0
     },
     visible: {
       opacity: 1,
-      y: 0,
       transition: {
-        duration: 0.5,
-        ease: [0.4, 0, 0.2, 1]
+        duration: 0.4
       }
     }
   };
 
   const robotVariants = {
     hidden: { 
-      x: 100, 
-      opacity: 0,
-      rotate: -20
+      opacity: 0
     },
     visible: {
-      x: 0,
       opacity: 1,
-      rotate: 0,
       transition: {
-        duration: 0.8,
-        ease: [0.4, 0, 0.2, 1]
+        duration: 0.6
       }
     }
   };
