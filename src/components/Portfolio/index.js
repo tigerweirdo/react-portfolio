@@ -1,10 +1,10 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, memo, useCallback } from "react";
 import { motion, useInView, useAnimation } from 'framer-motion';
 import "./index.scss";
 import { getDocs, collection } from 'firebase/firestore';
 import { db } from '../../firebase';
 
-const Portfolio = () => { 
+const Portfolio = memo(() => { 
     const [portfolioData, setPortfolioData] = useState([]);
     const [loading, setLoading] = useState(true);
     const containerRef = useRef(null);
