@@ -142,22 +142,19 @@ const Portfolio = memo(() => {
                             <motion.div 
                                 className="image-box" 
                                 key={item.firestoreId || `portfolio-item-${idx}`}
-                                initial={{ opacity: 0, scale: 0.9, y: 20 }}
-                                whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                                initial={{ opacity: 0 }}
+                                whileInView={{ opacity: 1 }}
                                 viewport={{ once: true, amount: 0.3 }}
                                 transition={{
-                                    duration: 0.4,
-                                    delay: idx * 0.05,
-                                    ease: [0.4, 0, 0.2, 1]
+                                    duration: 0.3,
+                                    delay: idx * 0.03
                                 }}
                                 whileHover={{ 
-                                    scale: 1.03,
-                                    y: -4,
-                                    transition: { duration: 0.2, ease: [0.4, 0, 0.2, 1] }
+                                    y: -2,
+                                    transition: { duration: 0.2 }
                                 }}
                                 whileTap={{
-                                    scale: 0.98,
-                                    transition: { duration: 0.1 }
+                                    scale: 0.98
                                 }}
                                 onClick={() => {
                                     console.log("[Portfolio] Opening URL:", item.url);
