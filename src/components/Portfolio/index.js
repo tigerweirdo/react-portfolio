@@ -119,7 +119,7 @@ const Portfolio = memo(() => {
 
 
 
-    const renderPortfolio = (portfolio) => {
+    const renderPortfolio = useCallback((portfolio) => {
         console.log("[Portfolio] Rendering portfolio with data:", portfolio);
         if (!portfolio || portfolio.length === 0) {
             console.log("[Portfolio] No portfolio data to render.");
@@ -142,23 +142,28 @@ const Portfolio = memo(() => {
                         console.log(`[Portfolio] Rendering item ${idx}:`, item);
                         if (!item || !item.image || !item.name) {
                             console.warn(`[Portfolio] Item ${idx} is missing image or name:`, item);
-                            return null; // Eksik verili öğeyi atla
+                            return null;
                         }
                         return (
                             <motion.div 
                                 className="image-box" 
                                 key={item.firestoreId || `portfolio-item-${idx}`}
-                                initial={{ opacity: 0, scale: 0.8, y: 20 }}
+                                initial={{ opacity: 0, scale: 0.9, y: 20 }}
                                 whileInView={{ opacity: 1, scale: 1, y: 0 }}
                                 viewport={{ once: true, amount: 0.3 }}
                                 transition={{
-                                    duration: 0.5,
-                                    delay: idx * 0.08,
-                                    ease: [0.25, 0.46, 0.45, 0.94]
+                                    duration: 0.4,
+                                    delay: idx * 0.05,
+                                    ease: [0.4, 0, 0.2, 1]
                                 }}
                                 whileHover={{ 
-                                    scale: 1.05,
-                                    transition: { duration: 0.2 }
+                                    scale: 1.03,
+                                    y: -4,
+                                    transition: { duration: 0.2, ease: [0.4, 0, 0.2, 1] }
+                                }}
+                                whileTap={{
+                                    scale: 0.98,
+                                    transition: { duration: 0.1 }
                                 }}
                                 onClick={() => {
                                     console.log("[Portfolio] Opening URL:", item.url);
@@ -179,7 +184,7 @@ const Portfolio = memo(() => {
                 </div>
             </div>
         );
-    }
+    }, []);
 
     // Loading skeleton component
     const LoadingSkeleton = () => {
