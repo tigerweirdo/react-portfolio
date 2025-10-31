@@ -235,7 +235,8 @@ const Contact = memo(() => {
                   name="subject"
                   required
                   disabled={isSubmitting}
-                  whileFocus={{ scale: 1.02 }}
+                  whileFocus={{ scale: 1.01 }}
+                  transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
                 />
               </motion.li>
               <motion.li variants={inputVariants}>
@@ -244,7 +245,8 @@ const Contact = memo(() => {
                   name="message"
                   required
                   disabled={isSubmitting}
-                  whileFocus={{ scale: 1.02 }}
+                  whileFocus={{ scale: 1.01 }}
+                  transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
                 ></motion.textarea>
               </motion.li>
               {/* Gizli input: Alıcı e-posta adresi */}
