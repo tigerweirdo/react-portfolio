@@ -62,8 +62,6 @@ const AdminRouteHandler = memo(({ children }) => {
   return <>{children}</>;
 });
 
-AdminRouteHandler.displayName = 'AdminRouteHandler';
-
 // Page transition variants
 const pageTransition = {
   initial: { opacity: 0, y: 20 },
