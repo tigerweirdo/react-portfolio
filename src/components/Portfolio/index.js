@@ -235,8 +235,6 @@ const Portfolio = memo(() => {
             </motion.div>
         </>
     );
-}
-
-Portfolio.displayName = 'Portfolio';
+});
 
 export default Portfolio;
