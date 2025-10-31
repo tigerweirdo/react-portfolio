@@ -299,7 +299,6 @@ const App = () => {
   return (
     <Router>
       <AdminRouteHandler>
-        <ScrollProgressIndicator />
         <ToastContainer 
           position="top-right"
           autoClose={5000}
