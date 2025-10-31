@@ -68,8 +68,8 @@ const Contact = memo(() => {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.3
+        staggerChildren: 0.15,
+        delayChildren: 0.2
       }
     }
   }
@@ -77,38 +77,19 @@ const Contact = memo(() => {
   const itemVariants = {
     hidden: { 
       opacity: 0, 
-      y: 50 
+      y: 30 
     },
     visible: {
       opacity: 1,
       y: 0,
       transition: {
-        type: "spring",
-        stiffness: 80,
-        damping: 20
+        duration: 0.4,
+        ease: [0.4, 0, 0.2, 1]
       }
     }
   }
 
   const formVariants = {
-    hidden: { 
-      opacity: 0, 
-      x: -100 
-    },
-    visible: {
-      opacity: 1,
-      x: 0,
-      transition: {
-        type: "spring",
-        stiffness: 50,
-        damping: 20,
-        staggerChildren: 0.1,
-        delayChildren: 0.5
-      }
-    }
-  }
-
-  const inputVariants = {
     hidden: { 
       opacity: 0, 
       x: -50 
@@ -117,8 +98,25 @@ const Contact = memo(() => {
       opacity: 1,
       x: 0,
       transition: {
-        type: "spring",
-        stiffness: 100
+        duration: 0.5,
+        ease: [0.4, 0, 0.2, 1],
+        staggerChildren: 0.08,
+        delayChildren: 0.3
+      }
+    }
+  }
+
+  const inputVariants = {
+    hidden: { 
+      opacity: 0, 
+      x: -30 
+    },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: {
+        duration: 0.4,
+        ease: [0.4, 0, 0.2, 1]
       }
     }
   }
