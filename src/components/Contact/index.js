@@ -275,8 +275,6 @@ const Contact = memo(() => {
       </div>
     </motion.div>
   )
-}
-
-Contact.displayName = 'Contact';
+});
 
 export default Contact
