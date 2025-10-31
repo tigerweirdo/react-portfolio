@@ -66,10 +66,10 @@ const Home = memo(({ scrollToSection }) => {
           onClick={() => scrollToSection('contact')} 
           className="flat-button"
           variants={buttonVariants}
-          initial=\"hidden\"
-          animate=\"visible\"
-          whileHover=\"hover\"
-          whileTap=\"tap\"
+          initial="hidden"
+          animate="visible"
+          whileHover="hover"
+          whileTap="tap"
         > 
           CONTACT ME
         </motion.button>
