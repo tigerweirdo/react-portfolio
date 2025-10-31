@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Home from './components/Home';
 import About from './components/About';
@@ -10,6 +10,24 @@ import PortfolioAdminPanel from './components/Admin/PortfolioAdminPanel';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './App.scss';
+
+// Admin route değişikliklerini takip eden component
+const AdminRouteHandler = ({ children }) => {
+  const location = useLocation();
+
+  useEffect(() => {
+    const isAdminRoute = location.pathname.startsWith('/admin');
+    if (isAdminRoute) {
+      document.documentElement.classList.add('admin-page');
+      document.body.classList.add('admin-page');
+    } else {
+      document.documentElement.classList.remove('admin-page');
+      document.body.classList.remove('admin-page');
+    }
+  }, [location.pathname]);
+
+  return <>{children}</>;
+};
 
 const App = () => {
   const [activeSection, setActiveSection] = useState('home');
@@ -33,6 +51,7 @@ const App = () => {
     }
     setAuthChecked(true);
   }, []);
+
 
   // Basitleştirilmiş scroll fonksiyonu
   const scrollToSectionByIndex = useCallback((index) => {
@@ -269,19 +288,20 @@ const App = () => {
 
   return (
     <Router>
-      <ToastContainer 
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="colored"
-      />
-      <Routes>
+      <AdminRouteHandler>
+        <ToastContainer 
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="colored"
+        />
+        <Routes>
         <Route 
           path="/"
           element={(
@@ -341,7 +361,8 @@ const App = () => {
             )
           }
         />
-      </Routes>
+        </Routes>
+      </AdminRouteHandler>
     </Router>
   );
 };

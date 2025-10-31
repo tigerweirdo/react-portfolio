@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback, useRef } from 'react'
-import { motion, useInView, useAnimation } from 'framer-motion'
+import { motion, useInView, useAnimation, AnimatePresence } from 'framer-motion'
 import emailjs from '@emailjs/browser'
 // import AnimatedLetters from '../AnimatedLetters'
 import './index.scss'
@@ -13,6 +13,11 @@ const Contact = () => {
   const controls = useAnimation()
   const isInView = useInView(containerRef, { once: false, amount: 0.3 })
 
+  // EmailJS'i initialize et (localhost ve production için)
+  useEffect(() => {
+    emailjs.init('3stLvJAm6BvTLpIsx')
+  }, [])
+
   useEffect(() => {
     if (isInView) {
       controls.start("visible")
@@ -25,16 +30,34 @@ const Contact = () => {
     setSubmitStatus(null)
 
     try {
-      await emailjs.sendForm(
+      console.log('[Contact] Form gönderiliyor...', {
+        serviceId: 'service_1di4zfn',
+        templateId: 'template_3xz79lm',
+        formData: form.current
+      })
+
+      const result = await emailjs.sendForm(
         'service_1di4zfn',
         'template_3xz79lm',
         form.current,
         '3stLvJAm6BvTLpIsx'
       )
+      
+      console.log('[Contact] E-posta başarıyla gönderildi:', result)
       setSubmitStatus('success')
       form.current.reset()
+      
+      // Başarı mesajını 3 saniye sonra kaybet
+      setTimeout(() => {
+        setSubmitStatus(null)
+      }, 3000)
     } catch (error) {
-      console.error('Error sending email:', error)
+      console.error('[Contact] E-posta gönderme hatası:', error)
+      console.error('[Contact] Hata detayları:', {
+        status: error.status,
+        text: error.text,
+        message: error.message
+      })
       setSubmitStatus('error')
     } finally {
       setIsSubmitting(false)
@@ -126,19 +149,27 @@ const Contact = () => {
   }
 
   const renderStatusMessage = () => {
-    if (!submitStatus) return null
-
     return (
       <motion.div 
-        className={`status-message ${submitStatus}`}
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -20 }}
-        transition={{ type: "spring", stiffness: 100 }}
+        className={`status-message ${submitStatus || ''}`}
+        initial={false}
+        animate={{ 
+          opacity: submitStatus ? 1 : 0,
+          y: submitStatus ? 0 : -10
+        }}
+        transition={{ 
+          duration: 0.3,
+          ease: "easeInOut"
+        }}
+        style={{
+          pointerEvents: submitStatus ? 'auto' : 'none'
+        }}
       >
         {submitStatus === 'success' 
           ? 'Your message has been sent successfully!'
-          : 'An error occurred while sending the message. Please try again.'}
+          : submitStatus === 'error'
+          ? 'An error occurred while sending the message. Please try again.'
+          : '\u00A0'}
       </motion.div>
     )
   }
@@ -216,12 +247,28 @@ const Contact = () => {
                   whileFocus={{ scale: 1.02 }}
                 ></motion.textarea>
               </motion.li>
+              {/* Gizli input: Alıcı e-posta adresi */}
+              <input
+                type="hidden"
+                name="to_email"
+                value="temmuzcetiner@gmail.com"
+              />
               <motion.li variants={inputVariants}>
                 {renderSubmitButton()}
               </motion.li>
+              <motion.li 
+                variants={inputVariants} 
+                style={{ 
+                  height: '60px', 
+                  display: 'flex', 
+                  alignItems: 'flex-start',
+                  marginBottom: '15px'
+                }}
+              >
+                {renderStatusMessage()}
+              </motion.li>
             </ul>
           </form>
-          {renderStatusMessage()}
         </motion.div>
       </div>
     </motion.div>

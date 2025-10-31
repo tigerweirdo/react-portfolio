@@ -36,6 +36,11 @@ html {
   scroll-behavior: smooth;
   height: 100%;
   overflow: hidden;
+  
+  // Admin sayfaları için normal scroll
+  &.admin-page {
+    overflow: auto;
+  }
 }
 
 body {
@@ -46,6 +51,13 @@ body {
   background-color: $background-color;
   color: $text-color;
   height: 100%;
+  
+  // Admin sayfaları için normal scroll
+  &.admin-page {
+    overflow: auto;
+    height: auto;
+    min-height: 100vh;
+  }
 }
 
 // ONE PAGE APP STRUCTURE

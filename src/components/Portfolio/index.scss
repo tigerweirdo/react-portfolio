@@ -26,37 +26,46 @@
 
 // .horizontal-scroll-track, .images-container-sticky-wrapper stilleri kaldırıldı.
 
+.horizontal-scroll-wrapper {
+    width: 100%;
+    max-width: 1200px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 15px 0;
+    scrollbar-width: none; // Firefox
+    -ms-overflow-style: none; // IE/Edge
+
+    &::-webkit-scrollbar {
+        display: none; // WebKit
+    }
+}
+
 .images-container {
     display: flex;
-    flex-wrap: wrap; // Öğeler sığmazsa alt satıra geç
-    justify-content: center; // Öğeleri yatayda ortala (veya flex-start)
-    gap: 20px; // Öğeler arası boşluk (hem yatay hem dikey)
-    width: 100%; // Kapsayıcı genişliğine yayıl
-    max-width: 1200px; // İçeriğin çok genişlemesini engelle (isteğe bağlı)
-    padding: 15px; // İçerik etrafında biraz boşluk
-    // background: rgba($accent-color-2, 0.1); // Hafif bir arka plan (isteğe bağlı)
-    // border-radius: 8px;
+    flex-wrap: nowrap;
+    gap: 20px;
+    padding: 0 15px;
 }
 
 .image-box {
     position: relative;
     overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
     cursor: pointer;
     border-radius: 8px;
     background: $background-color;
     flex-shrink: 0; 
-    width: 180px; // Küçük kare boyutu
-    height: 180px; // Küçük kare boyutu
-    // margin-right ve margin-bottom yerine gap kullanıldı images-container'da
+    width: 180px;
+    height: 180px;
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 1px solid $btn-border-color; // Hafif bir sınır
+    border: 1px solid $btn-border-color;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+    will-change: transform;
 
     &:hover {
-        transform: scale(1.05); // Hafif büyüme efekti
-        box-shadow: 0 6px 15px rgba($primary-color, 0.2);
+        box-shadow: 0 8px 20px rgba($primary-color, 0.25);
         border-color: $accent-color-1;
     }
 }
@@ -66,8 +75,45 @@
     height: 100%;
     object-fit: cover;
     display: block;
-    border-radius: 6px; // image-box'tan biraz daha küçük radius
-    transition: transform 0.3s ease-out;
+    border-radius: 6px;
+    user-select: none;
+    pointer-events: none;
+}
+
+// Loading skeleton animasyonu
+.skeleton-box {
+    width: 180px;
+    height: 180px;
+    background: rgba($accent-color-2, 0.1);
+    border-radius: 8px;
+    border: 1px solid rgba($btn-border-color, 0.3);
+    position: relative;
+    overflow: hidden;
+    
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+            90deg,
+            transparent 0%,
+            rgba($accent-color-2, 0.3) 50%,
+            transparent 100%
+        );
+        animation: skeleton-shimmer 1.5s ease-in-out infinite;
+    }
+}
+
+@keyframes skeleton-shimmer {
+    0% {
+        left: -100%;
+    }
+    100% {
+        left: 100%;
+    }
 }
 
 .content {
@@ -83,12 +129,22 @@
             margin-bottom: 30px;
         }
     }
+    .horizontal-scroll-wrapper {
+        padding: 10px 0;
+    }
+
+    .images-container {
+        gap: 15px;
+        padding: 0 10px;
+    }
+
     .image-box {
         width: 150px;
         height: 150px;
     }
-    .images-container {
-        gap: 15px;
+    .skeleton-box {
+        width: 150px;
+        height: 150px;
     }
 }
 
@@ -97,13 +153,18 @@
         font-size: 28px;
         margin-bottom: 20px;
     }
+    .images-container {
+        gap: 10px;
+        padding: 0 8px;
+    }
+
     .image-box {
         // width: calc(50% - 10px); // İki sütunlu görünüm için örnek (gap'i hesaba kat)
         width: 120px; // Daha da küçük
         height: 120px;
     }
-     .images-container {
-        gap: 10px;
-        justify-content: space-around; // Daha iyi dağılım için
+    .skeleton-box {
+        width: 120px;
+        height: 120px;
     }
 }

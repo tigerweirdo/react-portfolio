@@ -31,6 +31,10 @@
   padding: 20px;
   box-sizing: border-box;
   font-family: 'Roboto', sans-serif; // Modern bir font
+  width: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
 }
 
 .login-box {
