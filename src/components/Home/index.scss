@@ -43,13 +43,24 @@
       background-color: transparent;
       outline: none;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: all 0.2s ease;
       text-transform: uppercase;
 
       &:hover {
         background: $btn-hover-bg-color;
         color: $primary-color;
         border-color: $accent-color-1;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba($primary-color, 0.1);
+      }
+
+      &:active {
+        transform: translateY(0);
+      }
+
+      &:focus-visible {
+        outline: 2px solid $accent-color-1;
+        outline-offset: 2px;
       }
     }
   }

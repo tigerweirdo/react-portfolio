@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, memo } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Home from './components/Home';
@@ -11,8 +11,8 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './App.scss';
 
-// Admin route değişikliklerini takip eden component
-const AdminRouteHandler = ({ children }) => {
+// Admin route handler
+const AdminRouteHandler = memo(({ children }) => {
   const location = useLocation();
 
   useEffect(() => {
@@ -27,6 +27,20 @@ const AdminRouteHandler = ({ children }) => {
   }, [location.pathname]);
 
   return <>{children}</>;
+});
+
+// Page transition variants - very subtle
+const pageTransition = {
+  initial: { opacity: 1 },
+  animate: { 
+    opacity: 1,
+    transition: {
+      duration: 0.3
+    }
+  },
+  exit: { 
+    opacity: 1
+  }
 };
 
 const App = () => {
@@ -37,9 +51,8 @@ const App = () => {
   const appContainerRef = useRef(null);
   const sectionsRef = useRef(['home', 'about', 'portfolio', 'contact']);
   const scrollTimeoutRef = useRef(null);
-
-  // isScrolling durumunu ref ile takip et
   const isScrollingRef = useRef(isScrolling);
+
   useEffect(() => {
     isScrollingRef.current = isScrolling;
   }, [isScrolling]);
@@ -52,8 +65,6 @@ const App = () => {
     setAuthChecked(true);
   }, []);
 
-
-  // Basitleştirilmiş scroll fonksiyonu
   const scrollToSectionByIndex = useCallback((index) => {
     if (isScrolling || index < 0 || index >= sectionsRef.current.length) {
       return;
@@ -83,7 +94,6 @@ const App = () => {
     }
   }, [isScrolling]);
 
-  // Daha stabil wheel handler
   const handleWheelScroll = useCallback((event) => {
     if (isScrolling) {
       event.preventDefault();
@@ -91,20 +101,18 @@ const App = () => {
     }
 
     const currentIndex = sectionsRef.current.findIndex(section => section === activeSection);
-    const threshold = 50; // Minimum scroll değeri
+    const threshold = 50;
     
     if (Math.abs(event.deltaY) < threshold) {
-      return; // Çok küçük scroll hareketlerini yok say
+      return;
     }
     
     if (event.deltaY > 0) {
-      // Aşağı scroll
       if (currentIndex < sectionsRef.current.length - 1) {
         event.preventDefault();
         scrollToSectionByIndex(currentIndex + 1);
       }
     } else {
-      // Yukarı scroll
       if (currentIndex > 0) {
         event.preventDefault();
         scrollToSectionByIndex(currentIndex - 1);
@@ -112,7 +120,6 @@ const App = () => {
     }
   }, [activeSection, scrollToSectionByIndex, isScrolling]);
 
-  // Daha basit intersection observer
   useEffect(() => {
     const observerOptions = {
       root: appContainerRef.current,
@@ -133,7 +140,6 @@ const App = () => {
     const observer = new IntersectionObserver(observerCallback, observerOptions);
     const currentAppContainer = appContainerRef.current;
 
-    // Kısa bir gecikme ile observer'ı başlat
     const timer = setTimeout(() => {
       if (currentAppContainer) {
         sectionsRef.current.forEach(sectionId => {
@@ -159,7 +165,6 @@ const App = () => {
     };
   }, []);
 
-  // Wheel event listener
   useEffect(() => {
     const currentAppContainer = appContainerRef.current;
 
@@ -174,7 +179,6 @@ const App = () => {
     };
   }, [handleWheelScroll]);
 
-  // Keyboard navigation - basitleştirilmiş
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (window.location.pathname !== '/' || isScrolling) return;
@@ -213,7 +217,6 @@ const App = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [activeSection, scrollToSectionByIndex, isScrolling]);
 
-  // Touch support - basitleştirilmiş
   useEffect(() => {
     let touchStartY = 0;
     let touchEndY = 0;
@@ -234,10 +237,8 @@ const App = () => {
         const currentIndex = sectionsRef.current.findIndex(section => section === activeSection);
         
         if (difference > 0 && currentIndex < sectionsRef.current.length - 1) {
-          // Yukarı swipe (sonraki section)
           scrollToSectionByIndex(currentIndex + 1);
         } else if (difference < 0 && currentIndex > 0) {
-          // Aşağı swipe (önceki section)
           scrollToSectionByIndex(currentIndex - 1);
         }
       }
@@ -256,7 +257,6 @@ const App = () => {
     };
   }, [activeSection, scrollToSectionByIndex, isScrolling]);
 
-  // Cleanup
   useEffect(() => {
     return () => {
       if (scrollTimeoutRef.current) {
@@ -265,25 +265,35 @@ const App = () => {
     };
   }, []);
 
-  const handleLoginSuccess = () => {
+  const handleLoginSuccess = useCallback(() => {
     setIsAuthenticated(true);
     localStorage.setItem('isAdminAuthenticated', 'true');
-  };
+  }, []);
 
-  const handleLogout = () => {
+  const handleLogout = useCallback(() => {
     setIsAuthenticated(false);
     localStorage.removeItem('isAdminAuthenticated');
-  };
+  }, []);
 
-  const scrollToSection = (sectionId) => {
+  const scrollToSection = useCallback((sectionId) => {
     const sectionIndex = sectionsRef.current.findIndex(section => section === sectionId);
     if (sectionIndex !== -1) {
       scrollToSectionByIndex(sectionIndex);
     }
-  };
+  }, [scrollToSectionByIndex]);
 
   if (!authChecked) {
-    return <div className="loading-auth">Kimlik doğrulama durumu kontrol ediliyor...</div>;
+    return (
+      <div className="loading-auth">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.3 }}
+        >
+          Kimlik doğrulama durumu kontrol ediliyor...
+        </motion.div>
+      </div>
+    );
   }
 
   return (
@@ -313,6 +323,7 @@ const App = () => {
                 <motion.section 
                   id="home" 
                   className={`page-section ${activeSection === 'home' ? 'active' : ''}`}
+                  {...pageTransition}
                 >
                   <Home scrollToSection={scrollToSection} />
                 </motion.section>
@@ -320,6 +331,7 @@ const App = () => {
                 <motion.section 
                   id="about" 
                   className={`page-section ${activeSection === 'about' ? 'active' : ''}`}
+                  {...pageTransition}
                 >
                   <About />
                 </motion.section>
@@ -327,6 +339,7 @@ const App = () => {
                 <motion.section 
                   id="portfolio" 
                   className={`page-section ${activeSection === 'portfolio' ? 'active' : ''}`}
+                  {...pageTransition}
                 >
                   <Portfolio />
                 </motion.section>
@@ -334,6 +347,7 @@ const App = () => {
                 <motion.section 
                   id="contact" 
                   className={`page-section ${activeSection === 'contact' ? 'active' : ''}`}
+                  {...pageTransition}
                 >
                   <Contact />
                 </motion.section>

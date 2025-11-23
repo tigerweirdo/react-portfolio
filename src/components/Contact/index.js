@@ -1,10 +1,9 @@
-import { useEffect, useState, useCallback, useRef } from 'react'
-import { motion, useInView, useAnimation, AnimatePresence } from 'framer-motion'
+import { useEffect, useState, useCallback, useRef, memo } from 'react'
+import { motion, useInView, useAnimation } from 'framer-motion'
 import emailjs from '@emailjs/browser'
-// import AnimatedLetters from '../AnimatedLetters'
 import './index.scss'
 
-const Contact = () => {
+const Contact = memo(() => {
   // const [letterClass, setLetterClass] = useState('text-animate')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState(null)
@@ -69,57 +68,46 @@ const Contact = () => {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.3
+        staggerChildren: 0.1,
+        delayChildren: 0.1
       }
     }
   }
 
   const itemVariants = {
     hidden: { 
-      opacity: 0, 
-      y: 50 
+      opacity: 0
     },
     visible: {
       opacity: 1,
-      y: 0,
       transition: {
-        type: "spring",
-        stiffness: 80,
-        damping: 20
+        duration: 0.3
       }
     }
   }
 
   const formVariants = {
     hidden: { 
-      opacity: 0, 
-      x: -100 
+      opacity: 0
     },
     visible: {
       opacity: 1,
-      x: 0,
       transition: {
-        type: "spring",
-        stiffness: 50,
-        damping: 20,
-        staggerChildren: 0.1,
-        delayChildren: 0.5
+        duration: 0.4,
+        staggerChildren: 0.05,
+        delayChildren: 0.2
       }
     }
   }
 
   const inputVariants = {
     hidden: { 
-      opacity: 0, 
-      x: -50 
+      opacity: 0
     },
     visible: {
       opacity: 1,
-      x: 0,
       transition: {
-        type: "spring",
-        stiffness: 100
+        duration: 0.3
       }
     }
   }
@@ -133,7 +121,7 @@ const Contact = () => {
           value="Sending..." 
           disabled
           animate={{ opacity: [1, 0.7, 1] }}
-          transition={{ duration: 1, repeat: Infinity }}
+          transition={{ duration: 1, repeat: Infinity, ease: "easeInOut" }}
         />
       )
     }
@@ -142,8 +130,9 @@ const Contact = () => {
         type="submit" 
         className="flat-button" 
         value="Send"
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
+        whileHover={{ y: -1 }}
+        whileTap={{ scale: 0.98 }}
+        transition={{ duration: 0.2 }}
       />
     )
   }
@@ -212,7 +201,8 @@ const Contact = () => {
                   name="name" 
                   required 
                   disabled={isSubmitting}
-                  whileFocus={{ scale: 1.02 }}
+                  whileFocus={{ scale: 1.005 }}
+                  transition={{ duration: 0.2 }}
                 />
               </motion.li>
               <motion.li 
@@ -225,7 +215,8 @@ const Contact = () => {
                   name="email"
                   required
                   disabled={isSubmitting}
-                  whileFocus={{ scale: 1.02 }}
+                  whileFocus={{ scale: 1.005 }}
+                  transition={{ duration: 0.2 }}
                 />
               </motion.li>
               <motion.li variants={inputVariants}>
@@ -235,7 +226,8 @@ const Contact = () => {
                   name="subject"
                   required
                   disabled={isSubmitting}
-                  whileFocus={{ scale: 1.02 }}
+                  whileFocus={{ scale: 1.005 }}
+                  transition={{ duration: 0.2 }}
                 />
               </motion.li>
               <motion.li variants={inputVariants}>
@@ -244,7 +236,8 @@ const Contact = () => {
                   name="message"
                   required
                   disabled={isSubmitting}
-                  whileFocus={{ scale: 1.02 }}
+                  whileFocus={{ scale: 1.005 }}
+                  transition={{ duration: 0.2 }}
                 ></motion.textarea>
               </motion.li>
               {/* Gizli input: Alıcı e-posta adresi */}
@@ -273,6 +266,6 @@ const Contact = () => {
       </div>
     </motion.div>
   )
-}
+});
 
 export default Contact

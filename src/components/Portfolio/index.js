@@ -1,10 +1,10 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, memo, useCallback } from "react";
 import { motion, useInView, useAnimation } from 'framer-motion';
 import "./index.scss";
 import { getDocs, collection } from 'firebase/firestore';
 import { db } from '../../firebase';
 
-const Portfolio = () => { 
+const Portfolio = memo(() => { 
     const [portfolioData, setPortfolioData] = useState([]);
     const [loading, setLoading] = useState(true);
     const containerRef = useRef(null);
@@ -93,39 +93,33 @@ const Portfolio = () => {
 
     // useScroll, useTransform ve bunlarla ilgili useEffect'ler kaldırıldı
 
-    // Basitleştirilmiş animasyon varyantları
     const pageVariants = {
         hidden: {
-            opacity: 0,
+            opacity: 0
         },
         visible: {
             opacity: 1,
             transition: {
-                duration: 0.4,
-                ease: "easeOut"
+                duration: 0.3
             }
         }
     };
 
     const titleVariants = {
         hidden: {
-            opacity: 0,
-            y: -20
+            opacity: 0
         },
         visible: {
             opacity: 1,
-            y: 0,
             transition: {
-                duration: 0.5,
-                delay: 0.1,
-                ease: [0.25, 0.46, 0.45, 0.94]
+                duration: 0.4
             }
         }
     };
 
 
 
-    const renderPortfolio = (portfolio) => {
+    const renderPortfolio = useCallback((portfolio) => {
         console.log("[Portfolio] Rendering portfolio with data:", portfolio);
         if (!portfolio || portfolio.length === 0) {
             console.log("[Portfolio] No portfolio data to render.");
@@ -148,23 +142,25 @@ const Portfolio = () => {
                         console.log(`[Portfolio] Rendering item ${idx}:`, item);
                         if (!item || !item.image || !item.name) {
                             console.warn(`[Portfolio] Item ${idx} is missing image or name:`, item);
-                            return null; // Eksik verili öğeyi atla
+                            return null;
                         }
                         return (
                             <motion.div 
                                 className="image-box" 
                                 key={item.firestoreId || `portfolio-item-${idx}`}
-                                initial={{ opacity: 0, scale: 0.8, y: 20 }}
-                                whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                                initial={{ opacity: 0 }}
+                                whileInView={{ opacity: 1 }}
                                 viewport={{ once: true, amount: 0.3 }}
                                 transition={{
-                                    duration: 0.5,
-                                    delay: idx * 0.08,
-                                    ease: [0.25, 0.46, 0.45, 0.94]
+                                    duration: 0.3,
+                                    delay: idx * 0.03
                                 }}
                                 whileHover={{ 
-                                    scale: 1.05,
+                                    y: -2,
                                     transition: { duration: 0.2 }
+                                }}
+                                whileTap={{
+                                    scale: 0.98
                                 }}
                                 onClick={() => {
                                     console.log("[Portfolio] Opening URL:", item.url);
@@ -185,7 +181,7 @@ const Portfolio = () => {
                 </div>
             </div>
         );
-    }
+    }, []);
 
     // Loading skeleton component
     const LoadingSkeleton = () => {
@@ -237,6 +233,6 @@ const Portfolio = () => {
             </motion.div>
         </>
     );
-}
+});
 
 export default Portfolio;

@@ -1,56 +1,50 @@
-import React from 'react';
-// import { Parallax } from 'react-scroll-parallax'; // Kaldırıldı
-// import AnimatedLetters from '../AnimatedLetters'; // AnimatedLetters kaldırıldı
+import React, { memo } from 'react';
+import { motion } from 'framer-motion';
 import Logo from './Logo';
 import './index.scss';
-// import useScrollAnimation from '../../hooks/useScrollAnimation'; // Bu hook'u şimdilik kaldırıyorum, gerekirse tekrar eklenir.
-// import { FaArrowRight } from 'react-icons/fa'; // İkonlu buton yerine orijinal stile dönüyoruz
 
-const Home = ({ scrollToSection }) => {
-  // const [letterClass, setLetterClass] = useState('text-animate'); // letterClass state'i kaldırıldı
-
+const Home = memo(({ scrollToSection }) => {
   const line1Text = "Hey,";
   const line2Text = "I build"; 
   const line3Text = "digital things.";
 
-  // const h2Ref = useRef(null); // Scroll animasyonları kaldırıldığı için ref'ler de kaldırılabilir
-  // const buttonRef = useRef(null);
-  // const logoContainerRef = useRef(null);
-
-  // letterClass ile ilgili useEffect kaldırıldı
-  // useEffect(() => {
-  //   const timer = setTimeout(() => {
-  //     setLetterClass('text-animate-hover');
-  //   }, 3000); 
-  //   return () => clearTimeout(timer);
-  // }, []);
-
-  // useScrollAnimation([h2Ref, buttonRef, logoContainerRef]); // Şimdilik kaldırıldı
-
   return (
-    // <Parallax speed={-10} className="container home-page"> // Kaldırıldı
     <div className="container home-page"> 
       <div className="text-zone">
-        <h1 className="main-headline"> 
-          {/* AnimatedLetters yerine doğrudan metinler */}
+        <motion.h1 
+          className="main-headline"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+        > 
           {line1Text}
           <br />
           {line2Text}
           <br />
           {line3Text}
-        </h1>
-        <button onClick={() => scrollToSection('contact')} className="flat-button"> 
+        </motion.h1>
+        <motion.button 
+          onClick={() => scrollToSection('contact')} 
+          className="flat-button"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+        > 
           CONTACT ME
-        </button>
+        </motion.button>
       </div>
-      {/* <Parallax speed={20} className="logo-container"> */}{/* Kaldırıldı */}
-      <div className="logo-container"> 
+      <motion.div 
+        className="logo-container"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.6, delay: 0.3 }}
+      > 
         <Logo />
-      </div>
-      {/* </Parallax> */}{/* Kaldırıldı */}
-    {/* </Parallax> */}{/* Kaldırıldı */}
+      </motion.div>
     </div>
   );
-}
+});
 
 export default Home;
