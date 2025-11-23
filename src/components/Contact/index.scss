@@ -11,11 +11,11 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  
+
   .text-zone {
     max-width: 600px;
     width: 100%;
-    
+
     h1 {
       color: $primary-color;
       font-size: 48px;
@@ -87,19 +87,19 @@
     transition: all 0.2s ease;
 
     &::placeholder {
-        color: $secondary-text-color;
-        opacity: 0.7;
+      color: $secondary-text-color;
+      opacity: 0.7;
     }
 
     &:hover {
-        border-color: rgba($accent-color-1, 0.5);
+      border-color: rgba($accent-color-1, 0.5);
     }
 
     &:focus {
-        border-color: $accent-color-1;
-        outline: none;
-        background: $accent-color-3;
-        box-shadow: 0 0 0 2px rgba($accent-color-1, 0.1);
+      border-color: $accent-color-1;
+      outline: none;
+      background: $accent-color-3;
+      box-shadow: 0 0 0 2px rgba($accent-color-1, 0.1);
     }
   }
 
@@ -118,19 +118,19 @@
     resize: vertical;
 
     &::placeholder {
-        color: $secondary-text-color;
-        opacity: 0.7;
+      color: $secondary-text-color;
+      opacity: 0.7;
     }
 
     &:hover {
-        border-color: rgba($accent-color-1, 0.5);
+      border-color: rgba($accent-color-1, 0.5);
     }
 
     &:focus {
-        border-color: $accent-color-1;
-        outline: none;
-        background: $accent-color-3;
-        box-shadow: 0 0 0 2px rgba($accent-color-1, 0.1);
+      border-color: $accent-color-1;
+      outline: none;
+      background: $accent-color-3;
+      box-shadow: 0 0 0 2px rgba($accent-color-1, 0.1);
     }
   }
 }
@@ -207,6 +207,7 @@
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }
@@ -227,7 +228,7 @@
 
   &::before {
     margin-right: 12px;
-    font-size: 1.3rem; 
+    font-size: 1.3rem;
     animation: iconPopIn 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55) 0.3s forwards;
     transform: scale(0);
     display: inline-block;
@@ -269,6 +270,7 @@
     transform: scale(0) rotate(-45deg);
     opacity: 0;
   }
+
   100% {
     transform: scale(1) rotate(0deg);
     opacity: 1;
@@ -279,12 +281,14 @@
 @media (max-width: 1200px) {
   .contact-page {
     padding: 2rem;
-    
+    height: auto;
+    min-height: 100%;
+
     .text-zone {
       h1 {
         font-size: 40px;
       }
-      
+
       p {
         font-size: 15px;
       }
@@ -295,13 +299,13 @@
 @media (max-width: 768px) {
   .contact-page {
     padding: 1rem;
-    
+
     .text-zone {
       h1 {
         font-size: 32px;
         margin-bottom: 20px;
       }
-      
+
       p {
         font-size: 14px;
         margin-bottom: 20px;
@@ -310,6 +314,9 @@
   }
 
   .contact-form {
+    width: 100%;
+    margin-bottom: 2rem;
+
     ul li.half {
       width: 100%;
       margin-left: 0;
@@ -332,5 +339,6 @@
     font-size: 12px;
     letter-spacing: 2px;
     padding: 10px 20px;
+    margin-top: 15px;
   }
 }

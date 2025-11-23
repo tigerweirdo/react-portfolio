@@ -37,6 +37,12 @@ body {
   // Firefox için optimize
   scrollbar-width: thin;
   scrollbar-color: rgba($accent-color-1, 0.4) transparent;
+
+  @media screen and (max-width: 768px) {
+    overflow: auto; // Mobilde scroll'u aç
+    height: auto;
+    min-height: 100vh;
+  }
 }
 
 // Global focus styles for accessibility

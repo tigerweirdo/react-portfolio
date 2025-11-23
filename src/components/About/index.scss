@@ -15,7 +15,7 @@
     flex: 1;
     max-width: 50%;
     order: 2;
-    
+
     h1 {
       color: $primary-color;
       font-size: 53px;
@@ -33,7 +33,7 @@
       margin-bottom: 20px;
       font-family: 'Helvetica Neue', sans-serif;
       opacity: 0.9;
-      
+
       &:last-child {
         margin-bottom: 0;
       }
@@ -43,7 +43,7 @@
   .robot123 {
     flex: 1.5;
     max-width: 40%;
-    position: relative; 
+    position: relative;
     justify-content: center;
     align-items: center;
     overflow: hidden;
@@ -80,15 +80,19 @@
   0% {
     transform: scale(1, 1);
   }
+
   42% {
     transform: scale(1, 1);
   }
+
   45% {
     transform: scale(1, 0.4) translateY(100px);
   }
+
   48% {
     transform: scale(1, 1);
   }
+
   100% {
     transform: scale(1, 1);
   }
@@ -98,9 +102,11 @@
   0% {
     transform: translateX(-50px) rotateZ(3deg);
   }
+
   50% {
     transform: translateX(50px) rotateZ(-3deg);
   }
+
   100% {
     transform: translateX(-50px) rotateZ(3deg);
   }
@@ -110,9 +116,11 @@
   0% {
     transform: translateX(-60px);
   }
+
   50% {
     transform: translateX(60px);
   }
+
   100% {
     transform: translateX(-60px);
   }
@@ -125,16 +133,19 @@
     text-align: center;
     gap: 2rem;
     padding: 2rem;
+    height: auto;
+    min-height: 100%;
 
     .text-zone {
       max-width: 100%;
-      order: 1;
-      
+      order: 2;
+      flex: none;
+
       h1 {
         font-size: 40px;
-        margin-bottom: 30px;
+        margin-bottom: 20px;
       }
-      
+
       p {
         font-size: 15px;
         margin-bottom: 15px;
@@ -143,8 +154,15 @@
 
     .robot123 {
       max-width: 100%;
-      order: 2;
-      margin-bottom: 0;
+      order: 1;
+      margin-bottom: 20px;
+      flex: none;
+      height: 200px; // Yükseklik sınırla
+
+      .Rolly {
+        height: 100%;
+        width: auto;
+      }
     }
   }
 }
@@ -157,9 +175,9 @@
     .text-zone {
       h1 {
         font-size: 32px;
-        margin-bottom: 20px;
+        margin-bottom: 15px;
       }
-      
+
       p {
         font-size: 14px;
         line-height: 1.5;
@@ -168,6 +186,7 @@
 
     .robot123 {
       transform: scale(0.9);
+      margin-bottom: 10px;
     }
   }
 }

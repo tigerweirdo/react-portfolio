@@ -178,34 +178,42 @@ body {
 
 // RESPONSIVE DESIGN
 @media screen and (max-width: 768px) {
-  .page-section {
-    min-height: auto; // Mobilde içeriğe göre yükseklik
+  .one-page-app {
     height: auto;
-    overflow-y: auto; // İçerik taşarsa scroll edilebilir
+    min-height: 100vh;
+    overflow-y: auto;
+    display: block; // Flex yerine block
+  }
+
+  .scroll-container {
+    height: auto;
+    min-height: 100vh;
+    overflow: visible;
+    scroll-snap-type: none; // Snap'i kapat
+  }
+
+  .page-section {
+    min-height: 100vh; // En az ekran boyu kadar
+    height: auto;
+    overflow: visible;
+    display: flex;
+    flex-direction: column;
     
     .container {
-      padding: 1rem;
-      min-height: auto;
+      padding: 4rem 1.5rem; // Üstten boşluk bırak
+      min-height: 100vh;
       height: auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
-  }
-  
-  // Mobilde scroll snap'i daha yumuşak yap
-  .scroll-container {
-    scroll-snap-type: y proximity;
   }
 }
 
 @media screen and (max-width: 480px) {
   .page-section {
-    min-height: auto;
-    height: auto;
-    overflow-y: auto;
-    
     .container {
-      padding: 0.5rem;
-      min-height: auto;
-      height: auto;
+      padding: 3rem 1rem;
     }
   }
 }
