@@ -37,12 +37,6 @@ body {
   // Firefox için optimize
   scrollbar-width: thin;
   scrollbar-color: rgba($accent-color-1, 0.4) transparent;
-
-  @media screen and (max-width: 768px) {
-    overflow: auto; // Mobilde scroll'u aç
-    height: auto;
-    min-height: 100vh;
-  }
 }
 
 // Global focus styles for accessibility
@@ -65,57 +59,58 @@ body {
 
 // Optimize edilmiş scroll animasyonları
 .scroll-animate {
-    opacity: 0;
-    transform: translate3d(0, 20px, 0);
-    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
-                transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    will-change: transform, opacity;
-    backface-visibility: hidden;
+  opacity: 0;
+  transform: translate3d(0, 20px, 0);
+  transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform, opacity;
+  backface-visibility: hidden;
 
-    &.is-visible {
-        opacity: 1;
-        transform: translate3d(0, 0, 0);
-    }
+  &.is-visible {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
 }
 
 // Yön bazlı animasyonlar - optimize
 .scroll-animate-from-left {
-    opacity: 0;
-    transform: translate3d(-30px, 0, 0);
-    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
-                transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    will-change: transform, opacity;
-    backface-visibility: hidden;
+  opacity: 0;
+  transform: translate3d(-30px, 0, 0);
+  transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform, opacity;
+  backface-visibility: hidden;
 
-    &.is-visible {
-        opacity: 1;
-        transform: translate3d(0, 0, 0);
-    }
+  &.is-visible {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
 }
 
 .scroll-animate-from-right {
-    opacity: 0;
-    transform: translate3d(30px, 0, 0);
-    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
-                transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    will-change: transform, opacity;
-    backface-visibility: hidden;
+  opacity: 0;
+  transform: translate3d(30px, 0, 0);
+  transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform, opacity;
+  backface-visibility: hidden;
 
-    &.is-visible {
-        opacity: 1;
-        transform: translate3d(0, 0, 0);
-    }
+  &.is-visible {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
 }
 
 // Reduced motion support
 @media (prefers-reduced-motion: reduce) {
+
   .scroll-animate,
   .scroll-animate-from-left,
   .scroll-animate-from-right {
     transition: none;
     transform: none;
     opacity: 1;
-    
+
     &.is-visible {
       transform: none;
     }

@@ -17,7 +17,8 @@
     h1.main-headline {
       color: $text-color;
       font-family: 'Impact', 'Arial Black', 'Franklin Gothic Bold', 'Helvetica Neue', sans-serif;
-      font-size: clamp(5.8rem, 15vw, 9.5rem);
+      // Reduced max size and vw factor for better desktop scaling
+      font-size: clamp(4rem, 10vw, 7.5rem);
       line-height: 1;
       font-weight: 900;
       margin: 50px 0 30px 0;
@@ -93,41 +94,42 @@
     text-align: center;
     padding: 2rem 5%;
     height: auto;
-    min-height: 100%;
+    min-height: 100vh;
+    min-height: 100dvh;
 
     .text-zone {
       width: 100%;
       padding-right: 0;
       order: 2;
-      margin-top: 20px;
+      margin-top: 40px;
       position: relative;
       z-index: 12;
 
       h1.main-headline {
         font-size: clamp(3.0rem, 12vw, 5.5rem);
         letter-spacing: -0.03em;
-        line-height: 1;
-        margin: 20px 0;
+        line-height: 1.1;
+        margin: 30px 0;
         -webkit-text-stroke: 0.5px $text-color;
       }
 
       .flat-button {
-        margin: 20px auto 0;
+        margin: 40px auto 0;
         display: block;
         width: fit-content;
       }
     }
 
     .logo-container {
-      position: relative;
-      right: auto;
-      top: auto;
+      position: absolute;
+      right: -20px;
+      top: 15%;
       transform: none;
       width: 180px;
       height: 180px;
       z-index: 10;
-      opacity: 1;
-      margin: 0 auto 20px;
+      opacity: 0.8;
+      margin: 0;
       order: 1;
     }
   }
@@ -148,7 +150,8 @@
     .logo-container {
       width: 150px;
       height: 150px;
-      margin-bottom: 10px;
+      right: 0;
+      top: 15%;
     }
   }
 }

@@ -134,7 +134,8 @@
     gap: 2rem;
     padding: 2rem;
     height: auto;
-    min-height: 100%;
+    min-height: 100vh;
+    min-height: 100dvh;
 
     .text-zone {
       max-width: 100%;
@@ -143,26 +144,22 @@
 
       h1 {
         font-size: 40px;
-        margin-bottom: 20px;
+        margin-bottom: 40px; // Başlık altı boşluk artırıldı
       }
 
       p {
-        font-size: 15px;
-        margin-bottom: 15px;
+        font-size: 16px; // Font boyutu biraz artırıldı
+        margin-bottom: 25px; // Paragraflar arası boşluk artırıldı
+        padding: 0 10px;
+        width: 100%;
+        max-width: none;
+        word-wrap: break-word;
+        line-height: 1.8; // Satır aralığı artırıldı (okunabilirlik)
       }
     }
 
     .robot123 {
-      max-width: 100%;
-      order: 1;
-      margin-bottom: 20px;
-      flex: none;
-      height: 200px; // Yükseklik sınırla
-
-      .Rolly {
-        height: 100%;
-        width: auto;
-      }
+      display: none; // Mobilde robotu gizle
     }
   }
 }
@@ -180,13 +177,13 @@
 
       p {
         font-size: 14px;
-        line-height: 1.5;
+        line-height: 1.6;
+        padding: 0 5px;
       }
     }
 
     .robot123 {
-      transform: scale(0.9);
-      margin-bottom: 10px;
+      display: none;
     }
   }
 }

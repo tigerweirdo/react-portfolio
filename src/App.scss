@@ -36,7 +36,7 @@ html {
   scroll-behavior: smooth;
   height: 100%;
   overflow: hidden;
-  
+
   // Admin sayfaları için normal scroll
   &.admin-page {
     overflow: auto;
@@ -47,11 +47,12 @@ body {
   margin: 0;
   padding: 0;
   overflow: hidden;
+  overflow-x: hidden; // Yatay scrollu kesinlikle engelle
   font-family: 'Helvetica Neue', sans-serif;
   background-color: $background-color;
   color: $text-color;
   height: 100%;
-  
+
   // Admin sayfaları için normal scroll
   &.admin-page {
     overflow: auto;
@@ -97,7 +98,7 @@ body {
     background: rgba($accent-color-1, 0.3);
     border-radius: 3px;
     transition: background 0.3s ease;
-    
+
     &:hover {
       background: rgba($primary-color, 0.5);
     }
@@ -118,7 +119,7 @@ body {
   align-items: center;
   padding: 0;
   overflow: hidden;
-  
+
   // GPU katmanına al (performans)
   will-change: transform;
   transform: translateZ(0);
@@ -146,7 +147,7 @@ body {
   align-items: center;
   position: relative;
   opacity: 1;
-  
+
   // GPU katmanına al
   will-change: transform, opacity;
   transform: translateZ(0);
@@ -170,6 +171,7 @@ body {
     opacity: 0.8;
     transform: translate3d(0, 20px, 0);
   }
+
   100% {
     opacity: 1;
     transform: translate3d(0, 0, 0);
@@ -178,42 +180,37 @@ body {
 
 // RESPONSIVE DESIGN
 @media screen and (max-width: 768px) {
-  .one-page-app {
-    height: auto;
-    min-height: 100vh;
-    overflow-y: auto;
-    display: block; // Flex yerine block
-  }
-
-  .scroll-container {
-    height: auto;
-    min-height: 100vh;
-    overflow: visible;
-    scroll-snap-type: none; // Snap'i kapat
-  }
-
   .page-section {
-    min-height: 100vh; // En az ekran boyu kadar
+    min-height: 100vh;
+    /* Fallback for browsers that do not support dvh */
+    min-height: 100dvh; // Mobilde tam ekran zorunluluğu
     height: auto;
-    overflow: visible;
-    display: flex;
-    flex-direction: column;
-    
+    overflow-y: auto; // İçerik taşarsa scroll edilebilir
+
     .container {
-      padding: 4rem 1.5rem; // Üstten boşluk bırak
-      min-height: 100vh;
+      padding: 4rem 2rem; // Daha fazla boşluk
+      min-height: auto;
       height: auto;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
     }
+  }
+
+  // Mobilde scroll snap'i daha yumuşak yap
+  .scroll-container {
+    scroll-snap-type: y proximity;
   }
 }
 
 @media screen and (max-width: 480px) {
   .page-section {
+    min-height: 100vh;
+    min-height: 100dvh;
+    height: auto;
+    overflow-y: auto;
+
     .container {
-      padding: 3rem 1rem;
+      padding: 3rem 1.5rem; // Küçük ekranlarda da rahat boşluk
+      min-height: auto;
+      height: auto;
     }
   }
 }
@@ -223,15 +220,17 @@ body {
   .scroll-container {
     scroll-behavior: auto;
   }
-  
+
   .page-section {
     &.active .container {
       animation: none;
     }
   }
-  
+
   @keyframes sectionFadeIn {
-    0%, 100% {
+
+    0%,
+    100% {
       opacity: 1;
       transform: none;
     }
