@@ -1,5 +1,7 @@
 # Gorev Kaydi
 
+- 2025-01-XX: Portfolio bolumu mobil responsive duzenlemesi yapildi. Mobilde (768px ve alti) yatay scroll yerine grid layout kullanildi. 768px altinda 2 sutunlu grid, 480px altinda tek sutunlu grid yapisi kullaniliyor. Gorseller artik mobilde alt alta geliyor ve kaybolmuyor. Mobilde yatay scroll wheel event'i devre disi birakildi. Portfolio sayfasinin mobilde overflow sorunlari duzeltildi, sayfa icerige gore yukseklik aliyor ve scroll edilebilir hale getirildi.
+
 - 2025-10-31: Portfolyo bolumunde dikey scroll hareketini yatay kaydirma hijack mantigina donusturmek icin yatay kaydirma dinleyicisi ve stiller eklendi.
 
 - 2025-01-XX: Contact me bolumune mesaj gonderildiginde temmuzcetiner@gmail.com adresine mesaj gitmesi icin gizli input alani eklendi. EmailJS template'inde "To Email" alaninda {{to_email}} degiskeni kullanilmasi gerekiyor. EmailJS init fonksiyonu eklendi ve localhost'tan da test edilebilir hale getirildi. Hata ayiklama icin console.log'lar eklendi.

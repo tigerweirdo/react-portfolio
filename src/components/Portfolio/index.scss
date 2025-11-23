@@ -124,47 +124,78 @@
 @media screen and (max-width: 768px) {
     .portfolio-page {
         padding: 1rem 2%;
+        min-height: auto; // Mobilde içeriğe göre yükseklik
         .page-title {
             font-size: 36px;
             margin-bottom: 30px;
         }
     }
+    
     .horizontal-scroll-wrapper {
         padding: 10px 0;
+        overflow-x: visible; // Mobilde yatay scroll'u kaldır
+        overflow-y: visible;
+        max-width: 100%;
     }
 
     .images-container {
+        display: grid; // Flex yerine grid kullan
+        grid-template-columns: repeat(2, 1fr); // 2 sütunlu grid
         gap: 15px;
         padding: 0 10px;
+        width: 100%;
+        flex-wrap: wrap; // Yedek olarak
     }
 
     .image-box {
-        width: 150px;
-        height: 150px;
+        width: 100%; // Grid içinde tam genişlik
+        height: auto;
+        aspect-ratio: 1; // Kare görünüm koru
+        max-width: 100%;
     }
+    
     .skeleton-box {
-        width: 150px;
-        height: 150px;
+        width: 100%;
+        height: auto;
+        aspect-ratio: 1;
+        max-width: 100%;
     }
 }
 
 @media screen and (max-width: 480px) {
-    .portfolio-page .page-title {
-        font-size: 28px;
-        margin-bottom: 20px;
+    .portfolio-page {
+        padding: 1rem 3%;
+        min-height: auto;
+        
+        .page-title {
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
     }
+    
+    .horizontal-scroll-wrapper {
+        padding: 10px 0;
+        overflow-x: visible;
+        overflow-y: visible;
+    }
+    
     .images-container {
-        gap: 10px;
-        padding: 0 8px;
+        grid-template-columns: 1fr; // Mobilde tek sütun
+        gap: 15px;
+        padding: 0 5px;
     }
 
     .image-box {
-        // width: calc(50% - 10px); // İki sütunlu görünüm için örnek (gap'i hesaba kat)
-        width: 120px; // Daha da küçük
-        height: 120px;
+        width: 100%;
+        height: auto;
+        aspect-ratio: 1;
+        max-width: 100%;
     }
+    
     .skeleton-box {
-        width: 120px;
-        height: 120px;
+        width: 100%;
+        height: auto;
+        aspect-ratio: 1;
+        max-width: 100%;
     }
 }

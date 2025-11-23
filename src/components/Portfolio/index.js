@@ -51,6 +51,12 @@ const Portfolio = () => {
             return;
         }
 
+        // Mobilde yatay scroll'u devre dışı bırak
+        const isMobile = window.innerWidth <= 768;
+        if (isMobile) {
+            return; // Mobilde wheel event'ini ekleme
+        }
+
         const handleWheel = (event) => {
             const horizontalSpace = wrapperEl.scrollWidth - wrapperEl.clientWidth;
 

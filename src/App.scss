@@ -179,8 +179,14 @@ body {
 // RESPONSIVE DESIGN
 @media screen and (max-width: 768px) {
   .page-section {
+    min-height: auto; // Mobilde içeriğe göre yükseklik
+    height: auto;
+    overflow-y: auto; // İçerik taşarsa scroll edilebilir
+    
     .container {
       padding: 1rem;
+      min-height: auto;
+      height: auto;
     }
   }
   
@@ -192,8 +198,14 @@ body {
 
 @media screen and (max-width: 480px) {
   .page-section {
+    min-height: auto;
+    height: auto;
+    overflow-y: auto;
+    
     .container {
       padding: 0.5rem;
+      min-height: auto;
+      height: auto;
     }
   }
 }
