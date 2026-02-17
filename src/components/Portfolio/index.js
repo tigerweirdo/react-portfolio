@@ -4,7 +4,9 @@ import "./index.scss";
 import { getDocs, collection } from 'firebase/firestore';
 import { db } from '../../firebase';
 
-// Static variant objeleri - bileşen dışında tanımlanarak her render'da yeniden oluşturulması engellenir
+// ===========================
+// STATIC VARIANTS (bileşen dışı — her render'da yeniden oluşturulmaz)
+// ===========================
 const pageVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -21,30 +23,74 @@ const titleVariants = {
     }
 };
 
+// Grid container — staggered children giriş animasyonu
+const gridVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: {
+            staggerChildren: 0.08,
+            delayChildren: 0.15
+        }
+    }
+};
+
+// Tek kart giriş animasyonu
+const cardVariants = {
+    hidden: {
+        opacity: 0,
+        y: 30,
+        scale: 0.95
+    },
+    visible: {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        transition: {
+            duration: 0.5,
+            ease: [0.25, 0.46, 0.45, 0.94]
+        }
+    }
+};
+
 const SKELETON_COUNT = 6;
 
-// LoadingSkeleton bileşen dışına taşındı - her render'da yeniden oluşturulması engellenir
-const LoadingSkeleton = ({ scrollWrapperRef }) => (
-    <div className="horizontal-scroll-wrapper" ref={scrollWrapperRef}>
-        <div className="images-container">
-            {Array.from({ length: SKELETON_COUNT }).map((_, idx) => (
-                <div
-                    key={`skeleton-${idx}`}
-                    className="skeleton-box"
-                />
-            ))}
-        </div>
+// Arrow SVG icon bileşeni
+const ArrowIcon = () => (
+    <svg className="arrow-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path
+            d="M3 8h10M9 4l4 4-4 4"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        />
+    </svg>
+);
+
+// LoadingSkeleton — yeni grid layout ile
+const LoadingSkeleton = () => (
+    <div className="portfolio-grid">
+        {Array.from({ length: SKELETON_COUNT }).map((_, idx) => (
+            <div
+                key={`skeleton-${idx}`}
+                className="skeleton-box"
+            />
+        ))}
     </div>
 );
 
+// ===========================
+// PORTFOLIO COMPONENT
+// ===========================
 const Portfolio = memo(() => {
     const [portfolioData, setPortfolioData] = useState([]);
     const [loading, setLoading] = useState(true);
     const containerRef = useRef(null);
-    const scrollWrapperRef = useRef(null);
     const controls = useAnimation();
     const isInView = useInView(containerRef, { once: false, amount: 0.2 });
 
+    // Firebase'den portfolio verilerini çek
     useEffect(() => {
         const getPortfolio = async () => {
             setLoading(true);
@@ -65,58 +111,22 @@ const Portfolio = memo(() => {
         getPortfolio();
     }, []);
 
+    // Görünürlük animasyonu
     useEffect(() => {
         if (isInView) {
             controls.start("visible");
         }
     }, [controls, isInView]);
 
-    useEffect(() => {
-        const wrapperEl = scrollWrapperRef.current;
-        if (!wrapperEl) {
-            return;
-        }
+    // Açıklamayı kırp
+    const truncateDescription = useCallback((text, maxLength = 80) => {
+        if (!text) return '';
+        return text.length > maxLength
+            ? text.substring(0, maxLength) + '...'
+            : text;
+    }, []);
 
-        // Mobilde yatay scroll'u devre dışı bırak
-        const isMobile = window.innerWidth <= 768;
-        if (isMobile) {
-            return;
-        }
-
-        const handleWheel = (event) => {
-            const horizontalSpace = wrapperEl.scrollWidth - wrapperEl.clientWidth;
-
-            if (horizontalSpace <= 0) {
-                return;
-            }
-
-            const dominantDelta = Math.abs(event.deltaY) >= Math.abs(event.deltaX)
-                ? event.deltaY
-                : event.deltaX;
-
-            if (dominantDelta === 0) {
-                return;
-            }
-
-            const maxScrollLeft = horizontalSpace;
-            const currentScrollLeft = wrapperEl.scrollLeft;
-            const nextScrollLeft = currentScrollLeft + dominantDelta;
-
-            if ((dominantDelta < 0 && currentScrollLeft <= 0) || (dominantDelta > 0 && currentScrollLeft >= maxScrollLeft)) {
-                return;
-            }
-
-            event.preventDefault();
-            wrapperEl.scrollLeft = Math.min(Math.max(nextScrollLeft, 0), maxScrollLeft);
-        };
-
-        wrapperEl.addEventListener("wheel", handleWheel, { passive: false });
-
-        return () => {
-            wrapperEl.removeEventListener("wheel", handleWheel);
-        };
-    }, [portfolioData.length, loading]);
-
+    // Portfolio kartlarını render et
     const renderPortfolio = useCallback((portfolio) => {
         if (!portfolio || portfolio.length === 0) {
             return (
@@ -124,56 +134,68 @@ const Portfolio = memo(() => {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.3 }}
-                    style={{ textAlign: 'center', width: '100%', color: 'white', marginTop: '20px' }}
+                    style={{ textAlign: 'center', width: '100%', color: '$primary-color', marginTop: '20px' }}
                 >
                     No portfolio items to display at the moment.
                 </motion.p>
             );
         }
+
         return (
-            <div className="horizontal-scroll-wrapper" ref={scrollWrapperRef}>
-                <div className="images-container">
-                {
-                    portfolio.map((item, idx) => {
-                        if (!item || !item.image || !item.name) {
-                            return null;
-                        }
-                        return (
-                            <motion.div
-                                className="image-box"
-                                key={item.firestoreId || `portfolio-item-${idx}`}
-                                initial={{ opacity: 0 }}
-                                whileInView={{ opacity: 1 }}
-                                viewport={{ once: true, amount: 0.3 }}
-                                transition={{
-                                    duration: 0.3,
-                                    delay: idx * 0.03
-                                }}
-                                whileHover={{
-                                    y: -2,
-                                    transition: { duration: 0.2 }
-                                }}
-                                whileTap={{
-                                    scale: 0.98
-                                }}
-                                onClick={() => {
-                                    if (item.url) window.open(item.url, "_blank");
-                                }}
+            <motion.div
+                className="portfolio-grid"
+                variants={gridVariants}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, amount: 0.1 }}
+            >
+                {portfolio.map((item, idx) => {
+                    if (!item || !item.image || !item.name) {
+                        return null;
+                    }
+
+                    return (
+                        <motion.div
+                            className="portfolio-card"
+                            key={item.firestoreId || `portfolio-item-${idx}`}
+                            variants={cardVariants}
+                            whileTap={{ scale: 0.98 }}
+                        >
+                            <a
+                                href={item.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="card-link"
+                                aria-label={`View project: ${item.name}`}
                             >
-                                <img
-                                    src={item.image}
-                                    className="portfolio-image"
-                                    alt={item.name}
-                                    loading="lazy"
-                                />
-                            </motion.div>
-                        );
-                    })
-                }
-                </div>
-            </div>
+                                <div className="card-image-wrapper">
+                                    <img
+                                        src={item.cover || item.image}
+                                        className="card-image"
+                                        alt={item.name}
+                                        loading="lazy"
+                                    />
+                                    <div className="card-overlay">
+                                        <div className="card-content">
+                                            <h3 className="card-title">{item.name}</h3>
+                                            {item.description && (
+                                                <p className="card-description">
+                                                    {truncateDescription(item.description)}
+                                                </p>
+                                            )}
+                                            <span className="card-cta">
+                                                View Project <ArrowIcon />
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </motion.div>
+                    );
+                })}
+            </motion.div>
         );
-    }, []);
+    }, [truncateDescription]);
 
     return (
         <>
@@ -192,12 +214,12 @@ const Portfolio = memo(() => {
                     Portfolio
                 </motion.h1>
 
-                {loading && <LoadingSkeleton scrollWrapperRef={scrollWrapperRef} />}
+                {loading && <LoadingSkeleton />}
                 {!loading && portfolioData.length === 0 && (
                     <motion.p
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        style={{ textAlign: 'center', width: '100%', color: 'white', marginTop: '20px' }}
+                        style={{ textAlign: 'center', width: '100%', marginTop: '20px' }}
                     >
                         No portfolio items found.
                     </motion.p>

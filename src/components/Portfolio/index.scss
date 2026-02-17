@@ -1,184 +1,381 @@
 @import '../../variables';
 
+// ===========================
+// PORTFOLIO PAGE
+// ===========================
 .portfolio-page {
-    width: 100%;
-    min-height: 100vh;
-    padding: 2rem 5%;
-    box-sizing: border-box;
-    background: transparent;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  width: 100%;
+  min-height: 100vh;
+  padding: 2rem 5%;
+  box-sizing: border-box;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
-    .page-title {
-        margin-top: 30px;
-        margin-bottom: 40px;
-        font-size: 48px;
-        font-family: 'Coolvetica';
-        color: $primary-color;
-        font-weight: normal;
-        text-align: center;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-    }
+  .page-title {
+    margin-top: 30px;
+    margin-bottom: 40px;
+    font-size: 48px;
+    font-family: 'Coolvetica', sans-serif;
+    color: $primary-color;
+    font-weight: normal;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
 }
 
-.horizontal-scroll-wrapper {
-    width: 100%;
-    max-width: 1200px;
-    overflow-x: auto;
-    overflow-y: hidden;
-    padding: 15px 0;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-
-    &::-webkit-scrollbar {
-        display: none;
-    }
+// ===========================
+// PORTFOLIO GRID
+// ===========================
+.portfolio-grid {
+  width: 100%;
+  max-width: 1200px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  padding: 0 15px;
 }
 
-.images-container {
-    display: flex;
-    flex-wrap: nowrap;
-    gap: 20px;
-    padding: 0 15px;
-}
+// ===========================
+// PORTFOLIO CARD
+// ===========================
+.portfolio-card {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  background: $accent-color-3;
+  border: 1px solid $btn-border-color;
+  box-shadow: 0 2px 8px rgba($primary-color, 0.06);
+  transition: box-shadow 0.35s ease,
+              border-color 0.35s ease,
+              transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 
-.image-box {
-    position: relative;
-    overflow: hidden;
-    cursor: pointer;
-    border-radius: 8px;
-    background: $background-color;
-    flex-shrink: 0;
-    width: 180px;
-    height: 180px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: 1px solid $btn-border-color;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    transition: all 0.2s ease;
+  &:hover {
+    transform: translateY(-6px);
+    box-shadow:
+      0 16px 40px rgba($primary-color, 0.12),
+      0 6px 16px rgba($primary-color, 0.08);
+    border-color: $accent-color-1;
 
-    &:hover {
-        box-shadow: 0 4px 12px rgba($primary-color, 0.12);
-        border-color: $accent-color-1;
-        transform: translateY(-2px);
+    .card-image {
+      transform: scale(1.05);
     }
 
-    &:active {
-        transform: translateY(0);
+    .card-overlay {
+      opacity: 1;
     }
+
+    .card-content {
+      transform: translateY(0);
+    }
+
+    .card-title {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .card-description {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .card-cta {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
 }
 
-.portfolio-image {
+.card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+// ===========================
+// CARD IMAGE
+// ===========================
+.card-image-wrapper {
+  position: relative;
+  width: 100%;
+  height: 280px;
+  overflow: hidden;
+}
+
+.card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  user-select: none;
+  pointer-events: none;
+}
+
+// ===========================
+// CARD OVERLAY (hover'da belirir)
+// ===========================
+.card-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba($primary-color, 0.88) 0%,
+    rgba($primary-color, 0.55) 40%,
+    rgba($primary-color, 0.1) 70%,
+    transparent 100%
+  );
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  display: flex;
+  align-items: flex-end;
+  padding: 24px;
+}
+
+.card-content {
+  transform: translateY(12px);
+  transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.card-title {
+  font-family: 'Coolvetica', sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  color: $background-color;
+  margin: 0 0 6px 0;
+  letter-spacing: 0.5px;
+  transform: translateY(8px);
+  opacity: 0;
+  transition:
+    transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.05s,
+    opacity 0.3s ease 0.05s;
+}
+
+.card-description {
+  font-family: 'Helvetica Neue', sans-serif;
+  font-size: 13px;
+  line-height: 1.5;
+  color: $accent-color-2;
+  margin: 0 0 14px 0;
+  transform: translateY(8px);
+  opacity: 0;
+  transition:
+    transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.1s,
+    opacity 0.3s ease 0.1s;
+  // Metin taşmasını engelle
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.card-cta {
+  font-family: 'Helvetica Neue', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: $background-color;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transform: translateY(8px);
+  opacity: 0;
+  transition:
+    transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.15s,
+    opacity 0.3s ease 0.15s;
+
+  .arrow-icon {
+    transition: transform 0.25s ease;
+  }
+}
+
+// ===========================
+// SKELETON LOADING
+// ===========================
+.skeleton-box {
+  width: 100%;
+  height: 280px;
+  background: rgba($accent-color-2, 0.12);
+  border-radius: 12px;
+  border: 1px solid rgba($btn-border-color, 0.3);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    display: block;
-    border-radius: 6px;
-    user-select: none;
-    pointer-events: none;
-}
-
-.skeleton-box {
-    width: 180px;
-    height: 180px;
-    background: rgba($accent-color-2, 0.1);
-    border-radius: 8px;
-    border: 1px solid rgba($btn-border-color, 0.3);
-    position: relative;
-    overflow: hidden;
-
-    &::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg,
-                transparent 0%,
-                rgba($accent-color-2, 0.3) 50%,
-                transparent 100%);
-        animation: skeleton-shimmer 1.5s ease-in-out infinite;
-    }
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba($accent-color-2, 0.3) 50%,
+      transparent 100%
+    );
+    animation: skeleton-shimmer 1.5s ease-in-out infinite;
+  }
 }
 
 @keyframes skeleton-shimmer {
-    0% {
-        left: -100%;
-    }
-
-    100% {
-        left: 100%;
-    }
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
 }
 
-.content {
-    display: none;
+// ===========================
+// RESPONSIVE — Tablet (≤1024px)
+// ===========================
+@media screen and (max-width: 1024px) {
+  .portfolio-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  .card-image-wrapper {
+    height: 260px;
+  }
+
+  .skeleton-box {
+    height: 260px;
+  }
 }
 
-/* Responsive düzenlemeler */
+// ===========================
+// RESPONSIVE — Mobil (≤768px)
+// ===========================
 @media screen and (max-width: 768px) {
-    .portfolio-page {
-        padding: 1rem 2%;
-        min-height: 100vh;
-        min-height: 100dvh;
-        height: auto;
+  .portfolio-page {
+    padding: 1rem 2%;
+    min-height: 100vh;
+    min-height: 100dvh;
+    height: auto;
 
-        .page-title {
-            font-size: 36px;
-            margin-bottom: 40px;
-            margin-top: 20px;
-        }
+    .page-title {
+      font-size: 36px;
+      margin-bottom: 30px;
+      margin-top: 20px;
     }
+  }
 
-    .horizontal-scroll-wrapper {
-        padding: 10px 0;
-        overflow-x: visible;
-        overflow-y: visible;
-        max-width: 100%;
-    }
+  .portfolio-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    padding: 0 10px;
+    margin-bottom: 40px;
+  }
 
-    .images-container {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 25px;
-        padding: 0 10px;
-        width: 100%;
-        flex-wrap: wrap;
-        margin-bottom: 40px;
-    }
+  .card-image-wrapper {
+    height: 240px;
+  }
 
-    .image-box {
-        width: 100%;
-        height: auto;
-        aspect-ratio: 1;
-        max-width: 100%;
-    }
+  .skeleton-box {
+    height: 240px;
+  }
 
-    .skeleton-box {
-        width: 100%;
-        height: auto;
-        aspect-ratio: 1;
-        max-width: 100%;
-    }
+  // Mobilde hover yok — overlay daima görünür
+  .card-overlay {
+    opacity: 1;
+    background: linear-gradient(
+      to top,
+      rgba($primary-color, 0.78) 0%,
+      rgba($primary-color, 0.4) 35%,
+      transparent 65%
+    );
+  }
+
+  .card-content {
+    transform: translateY(0);
+  }
+
+  .card-title,
+  .card-description,
+  .card-cta {
+    transform: translateY(0);
+    opacity: 1;
+    transition: none;
+  }
+
+  .card-title {
+    font-size: 16px;
+  }
+
+  .card-description {
+    font-size: 12px;
+    -webkit-line-clamp: 2;
+  }
+
+  .card-cta {
+    font-size: 11px;
+  }
 }
 
+// ===========================
+// RESPONSIVE — Küçük Mobil (≤480px)
+// ===========================
 @media screen and (max-width: 480px) {
-    .portfolio-page {
-        padding: 1rem 3%;
+  .portfolio-page {
+    padding: 1rem 3%;
 
-        .page-title {
-            font-size: 28px;
-            margin-bottom: 20px;
-        }
+    .page-title {
+      font-size: 28px;
+      margin-bottom: 20px;
     }
+  }
 
-    .images-container {
-        grid-template-columns: 1fr;
-        gap: 25px;
-        padding: 0 5px;
+  .portfolio-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 0 5px;
+  }
+
+  .card-image-wrapper {
+    height: 220px;
+  }
+
+  .skeleton-box {
+    height: 220px;
+  }
+}
+
+// ===========================
+// ACCESSIBILITY — Reduced Motion
+// ===========================
+@media (prefers-reduced-motion: reduce) {
+  .portfolio-card {
+    transition: none;
+
+    &:hover {
+      transform: none;
     }
+  }
+
+  .card-image {
+    transition: none;
+  }
+
+  .card-overlay {
+    transition: none;
+    opacity: 1;
+  }
+
+  .card-content {
+    transition: none;
+    transform: none;
+  }
+
+  .card-title,
+  .card-description,
+  .card-cta {
+    transition: none;
+    transform: none;
+    opacity: 1;
+  }
 }

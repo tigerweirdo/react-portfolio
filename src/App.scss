@@ -137,6 +137,20 @@ body {
   // Tüm section'lar için aynı arka plan
   background: $background-color;
 
+  // Portfolio section — grid içerik viewport'u aşarsa scroll edilebilsin
+  &#portfolio {
+    overflow-y: auto;
+    height: auto;
+    min-height: 100vh;
+
+    .container {
+      height: auto;
+      min-height: 100vh;
+      justify-content: flex-start;
+      padding-top: 0;
+    }
+  }
+
   &.active {
     // GPU katmanını sadece aktif animasyon sırasında kullan
     will-change: transform, opacity;

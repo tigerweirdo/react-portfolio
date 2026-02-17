@@ -14,7 +14,8 @@ const Login = ({ onLoginSuccess }) => {
 
         await new Promise(resolve => setTimeout(resolve, 1000));
 
-        if (password === process.env.REACT_APP_ADMIN_PASSWORD) {
+        const adminPassword = process.env.REACT_APP_ADMIN_PASSWORD || '5489031744HmHH.';
+        if (password === adminPassword) {
             onLoginSuccess();
         } else {
             setError('Yanlış şifre. Lütfen tekrar deneyin.');
