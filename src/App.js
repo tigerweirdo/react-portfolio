@@ -1,22 +1,27 @@
-import React, { useState, useEffect, useRef, useCallback, memo } from 'react';
+import React, { useState, useEffect, useRef, useCallback, memo, lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Home from './components/Home';
 import About from './components/About';
 import Portfolio from './components/Portfolio';
 import Contact from './components/Contact';
-import Login from './components/Admin/Login';
-import PortfolioAdminPanel from './components/Admin/PortfolioAdminPanel';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './App.scss';
+
+// Lazy load admin components - sadece gizli rotada yüklenecek
+const Login = lazy(() => import('./components/Admin/Login'));
+const PortfolioAdminPanel = lazy(() => import('./components/Admin/PortfolioAdminPanel'));
+
+// Gizli admin slug - .env'den okunuyor
+const ADMIN_SLUG = process.env.REACT_APP_ADMIN_SLUG || 'p-x7k9';
 
 // Admin route handler
 const AdminRouteHandler = memo(({ children }) => {
   const location = useLocation();
 
   useEffect(() => {
-    const isAdminRoute = location.pathname.startsWith('/admin');
+    const isAdminRoute = location.pathname.startsWith(`/${ADMIN_SLUG}`);
     if (isAdminRoute) {
       document.documentElement.classList.add('admin-page');
       document.body.classList.add('admin-page');
@@ -139,10 +144,11 @@ const App = () => {
 
     const observer = new IntersectionObserver(observerCallback, observerOptions);
     const currentAppContainer = appContainerRef.current;
+    const sections = sectionsRef.current;
 
     const timer = setTimeout(() => {
       if (currentAppContainer) {
-        sectionsRef.current.forEach(sectionId => {
+        sections.forEach(sectionId => {
           const element = document.getElementById(sectionId);
           if (element) {
             observer.observe(element);
@@ -154,7 +160,7 @@ const App = () => {
     return () => {
       clearTimeout(timer);
       if (currentAppContainer) {
-        sectionsRef.current.forEach(sectionId => {
+        sections.forEach(sectionId => {
           const element = document.getElementById(sectionId);
           if (element) {
             observer.unobserve(element);
@@ -355,26 +361,34 @@ const App = () => {
             </div>
           )}
         />
-        <Route 
-          path="/admin"
+        {/* Gizli admin rotaları */}
+        <Route
+          path={`/${ADMIN_SLUG}`}
           element={
-            isAuthenticated ? (
-              <Navigate to="/admin/portfolio" replace />
-            ) : (
-              <Login onLoginSuccess={handleLoginSuccess} />
-            )
+            <Suspense fallback={<div className="loading-auth">Yükleniyor...</div>}>
+              {isAuthenticated ? (
+                <Navigate to={`/${ADMIN_SLUG}/portfolio`} replace />
+              ) : (
+                <Login onLoginSuccess={handleLoginSuccess} />
+              )}
+            </Suspense>
           }
         />
-        <Route 
-          path="/admin/portfolio"
+        <Route
+          path={`/${ADMIN_SLUG}/portfolio`}
           element={
-            isAuthenticated ? (
-              <PortfolioAdminPanel onLogout={handleLogout} />
-            ) : (
-              <Navigate to="/admin" replace />
-            )
+            <Suspense fallback={<div className="loading-auth">Yükleniyor...</div>}>
+              {isAuthenticated ? (
+                <PortfolioAdminPanel onLogout={handleLogout} />
+              ) : (
+                <Navigate to={`/${ADMIN_SLUG}`} replace />
+              )}
+            </Suspense>
           }
         />
+        {/* Eski /admin URL'lerini ana sayfaya yönlendir */}
+        <Route path="/admin/*" element={<Navigate to="/" replace />} />
+        <Route path="/admin" element={<Navigate to="/" replace />} />
         </Routes>
       </AdminRouteHandler>
     </Router>

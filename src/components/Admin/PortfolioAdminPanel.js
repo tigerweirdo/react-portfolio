@@ -38,7 +38,6 @@ const PortfolioAdminPanel = ({ onLogout }) => {
     const portfolioCollectionRef = collection(db, 'portfolio');
 
     const fetchPortfolioItems = useCallback(async () => {
-        console.log("[AdminPanel] Fetching portfolio items...");
         setIsLoading(true);
         try {
             const data = await getDocs(portfolioCollectionRef);
@@ -52,7 +51,6 @@ const PortfolioAdminPanel = ({ onLogout }) => {
     }, [portfolioCollectionRef]);
 
     useEffect(() => {
-        console.log("[AdminPanel] useEffect for fetchPortfolioItems triggered (ON MOUNT ONLY).");
         fetchPortfolioItems();
         // eslint-disable-next-line react-hooks/exhaustive-deps 
     }, []);
@@ -131,7 +129,6 @@ const PortfolioAdminPanel = ({ onLogout }) => {
                         try {
                             const imageStorageRef = storageRef(storage, itemToDelete.image);
                             await deleteObject(imageStorageRef);
-                            console.log("Image deleted from storage: ", itemToDelete.image);
                         } catch (storageError) {
                             if (storageError.code !== 'storage/object-not-found') {
                                 console.error("Error deleting image from storage: ", storageError);
@@ -142,7 +139,6 @@ const PortfolioAdminPanel = ({ onLogout }) => {
                         try {
                             const coverStorageRef = storageRef(storage, itemToDelete.cover);
                             await deleteObject(coverStorageRef);
-                            console.log("Cover image deleted from storage: ", itemToDelete.cover);
                         } catch (storageError) {
                              if (storageError.code !== 'storage/object-not-found') {
                                 console.error("Error deleting cover image from storage: ", storageError);

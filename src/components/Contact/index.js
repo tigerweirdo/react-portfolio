@@ -3,8 +3,47 @@ import { motion, useInView, useAnimation } from 'framer-motion'
 import emailjs from '@emailjs/browser'
 import './index.scss'
 
+// Static variant objeleri - bileşen dışında tanımlanarak her render'da yeniden oluşturulması engellenir
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.1
+    }
+  }
+}
+
+const itemVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { duration: 0.3 }
+  }
+}
+
+const formVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      duration: 0.4,
+      staggerChildren: 0.05,
+      delayChildren: 0.2
+    }
+  }
+}
+
+const inputVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { duration: 0.3 }
+  }
+}
+
 const Contact = memo(() => {
-  // const [letterClass, setLetterClass] = useState('text-animate')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState(null)
   const form = useRef()
@@ -29,88 +68,27 @@ const Contact = memo(() => {
     setSubmitStatus(null)
 
     try {
-      console.log('[Contact] Form gönderiliyor...', {
-        serviceId: 'service_1di4zfn',
-        templateId: 'template_3xz79lm',
-        formData: form.current
-      })
-
-      const result = await emailjs.sendForm(
+      await emailjs.sendForm(
         'service_1di4zfn',
         'template_3xz79lm',
         form.current,
         '3stLvJAm6BvTLpIsx'
       )
-      
-      console.log('[Contact] E-posta başarıyla gönderildi:', result)
+
       setSubmitStatus('success')
       form.current.reset()
-      
+
       // Başarı mesajını 3 saniye sonra kaybet
       setTimeout(() => {
         setSubmitStatus(null)
       }, 3000)
     } catch (error) {
       console.error('[Contact] E-posta gönderme hatası:', error)
-      console.error('[Contact] Hata detayları:', {
-        status: error.status,
-        text: error.text,
-        message: error.message
-      })
       setSubmitStatus('error')
     } finally {
       setIsSubmitting(false)
     }
   }, [])
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.1
-      }
-    }
-  }
-
-  const itemVariants = {
-    hidden: { 
-      opacity: 0
-    },
-    visible: {
-      opacity: 1,
-      transition: {
-        duration: 0.3
-      }
-    }
-  }
-
-  const formVariants = {
-    hidden: { 
-      opacity: 0
-    },
-    visible: {
-      opacity: 1,
-      transition: {
-        duration: 0.4,
-        staggerChildren: 0.05,
-        delayChildren: 0.2
-      }
-    }
-  }
-
-  const inputVariants = {
-    hidden: { 
-      opacity: 0
-    },
-    visible: {
-      opacity: 1,
-      transition: {
-        duration: 0.3
-      }
-    }
-  }
 
   const renderSubmitButton = () => {
     if (isSubmitting) {

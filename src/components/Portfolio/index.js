@@ -4,36 +4,62 @@ import "./index.scss";
 import { getDocs, collection } from 'firebase/firestore';
 import { db } from '../../firebase';
 
-const Portfolio = memo(() => { 
+// Static variant objeleri - bileşen dışında tanımlanarak her render'da yeniden oluşturulması engellenir
+const pageVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: { duration: 0.3 }
+    }
+};
+
+const titleVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: { duration: 0.4 }
+    }
+};
+
+const SKELETON_COUNT = 6;
+
+// LoadingSkeleton bileşen dışına taşındı - her render'da yeniden oluşturulması engellenir
+const LoadingSkeleton = ({ scrollWrapperRef }) => (
+    <div className="horizontal-scroll-wrapper" ref={scrollWrapperRef}>
+        <div className="images-container">
+            {Array.from({ length: SKELETON_COUNT }).map((_, idx) => (
+                <div
+                    key={`skeleton-${idx}`}
+                    className="skeleton-box"
+                />
+            ))}
+        </div>
+    </div>
+);
+
+const Portfolio = memo(() => {
     const [portfolioData, setPortfolioData] = useState([]);
     const [loading, setLoading] = useState(true);
     const containerRef = useRef(null);
     const scrollWrapperRef = useRef(null);
     const controls = useAnimation();
     const isInView = useInView(containerRef, { once: false, amount: 0.2 });
-    
+
     useEffect(() => {
         const getPortfolio = async () => {
-            console.log("[Portfolio] Fetching portfolio data...");
             setLoading(true);
             try {
                 const querySnapshot = await getDocs(collection(db, 'portfolio'));
-                console.log("[Portfolio] querySnapshot:", querySnapshot);
-                if (querySnapshot.empty) {
-                    console.log("[Portfolio] No documents found in 'portfolio' collection.");
-                }
                 const data = querySnapshot.docs.map((doc, index) => ({
                     ...doc.data(),
-                    firestoreId: doc.id || `fallback-${index}` // Fallback ID eklendi
+                    firestoreId: doc.id || `fallback-${index}`
                 }));
-                console.log("[Portfolio] Portfolio data fetched and mapped:", data);
                 setPortfolioData(data);
             } catch (error) {
                 console.error('[Portfolio] Error fetching portfolio data:', error);
-                setPortfolioData([]); // Hata durumunda boş dizi ata
+                setPortfolioData([]);
             } finally {
                 setLoading(false);
-                console.log("[Portfolio] Loading state set to false.");
             }
         };
         getPortfolio();
@@ -54,7 +80,7 @@ const Portfolio = memo(() => {
         // Mobilde yatay scroll'u devre dışı bırak
         const isMobile = window.innerWidth <= 768;
         if (isMobile) {
-            return; // Mobilde wheel event'ini ekleme
+            return;
         }
 
         const handleWheel = (event) => {
@@ -91,40 +117,10 @@ const Portfolio = memo(() => {
         };
     }, [portfolioData.length, loading]);
 
-    // useScroll, useTransform ve bunlarla ilgili useEffect'ler kaldırıldı
-
-    const pageVariants = {
-        hidden: {
-            opacity: 0
-        },
-        visible: {
-            opacity: 1,
-            transition: {
-                duration: 0.3
-            }
-        }
-    };
-
-    const titleVariants = {
-        hidden: {
-            opacity: 0
-        },
-        visible: {
-            opacity: 1,
-            transition: {
-                duration: 0.4
-            }
-        }
-    };
-
-
-
     const renderPortfolio = useCallback((portfolio) => {
-        console.log("[Portfolio] Rendering portfolio with data:", portfolio);
         if (!portfolio || portfolio.length === 0) {
-            console.log("[Portfolio] No portfolio data to render.");
             return (
-                <motion.p 
+                <motion.p
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.3 }}
@@ -139,14 +135,12 @@ const Portfolio = memo(() => {
                 <div className="images-container">
                 {
                     portfolio.map((item, idx) => {
-                        console.log(`[Portfolio] Rendering item ${idx}:`, item);
                         if (!item || !item.image || !item.name) {
-                            console.warn(`[Portfolio] Item ${idx} is missing image or name:`, item);
                             return null;
                         }
                         return (
-                            <motion.div 
-                                className="image-box" 
+                            <motion.div
+                                className="image-box"
                                 key={item.firestoreId || `portfolio-item-${idx}`}
                                 initial={{ opacity: 0 }}
                                 whileInView={{ opacity: 1 }}
@@ -155,7 +149,7 @@ const Portfolio = memo(() => {
                                     duration: 0.3,
                                     delay: idx * 0.03
                                 }}
-                                whileHover={{ 
+                                whileHover={{
                                     y: -2,
                                     transition: { duration: 0.2 }
                                 }}
@@ -163,16 +157,14 @@ const Portfolio = memo(() => {
                                     scale: 0.98
                                 }}
                                 onClick={() => {
-                                    console.log("[Portfolio] Opening URL:", item.url);
                                     if (item.url) window.open(item.url, "_blank");
                                 }}
                             >
-                                <img 
-                                    src={item.image} 
+                                <img
+                                    src={item.image}
                                     className="portfolio-image"
                                     alt={item.name}
                                     loading="lazy"
-                                    onError={(e) => console.error(`[Portfolio] Error loading image ${item.image} for item ${item.name}:`, e)}
                                 />
                             </motion.div>
                         );
@@ -183,28 +175,9 @@ const Portfolio = memo(() => {
         );
     }, []);
 
-    // Loading skeleton component
-    const LoadingSkeleton = () => {
-        const skeletonCount = 6; // Gösterilecek skeleton sayısı
-        return (
-            <div className="horizontal-scroll-wrapper" ref={scrollWrapperRef}>
-                <div className="images-container">
-                    {Array.from({ length: skeletonCount }).map((_, idx) => (
-                        <div
-                            key={`skeleton-${idx}`}
-                            className="skeleton-box"
-                        />
-                    ))}
-                </div>
-            </div>
-        );
-    };
-
-    console.log("[Portfolio] Component rendering. Loading:", loading, "Data length:", portfolioData.length);
-
     return (
         <>
-            <motion.div 
+            <motion.div
                 ref={containerRef}
                 className="container portfolio-page"
                 key="portfolio-page"
@@ -212,16 +185,16 @@ const Portfolio = memo(() => {
                 animate={controls}
                 variants={pageVariants}
             >
-                <motion.h1 
+                <motion.h1
                     className="page-title"
                     variants={titleVariants}
                 >
                     Portfolio
                 </motion.h1>
-                
-                {loading && <LoadingSkeleton />}
+
+                {loading && <LoadingSkeleton scrollWrapperRef={scrollWrapperRef} />}
                 {!loading && portfolioData.length === 0 && (
-                    <motion.p 
+                    <motion.p
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         style={{ textAlign: 'center', width: '100%', color: 'white', marginTop: '20px' }}

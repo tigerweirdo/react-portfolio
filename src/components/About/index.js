@@ -2,11 +2,39 @@ import { useEffect, useRef, memo } from 'react'
 import { motion, useInView, useAnimation, useScroll, useTransform } from 'framer-motion'
 import './index.scss';
 
+// Static variant objeleri - bileşen dışında tanımlanarak her render'da yeniden oluşturulması engellenir
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2,
+      delayChildren: 0.1
+    }
+  }
+};
+
+const textVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { duration: 0.4 }
+  }
+};
+
+const robotVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { duration: 0.6 }
+  }
+};
+
 const About = memo(() => {
   const controls = useAnimation();
   const ref = useRef(null);
   const isInView = useInView(ref, { once: false, amount: 0.3 });
-  
+
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start end", "end start"]
@@ -20,41 +48,6 @@ const About = memo(() => {
       controls.start("visible");
     }
   }, [controls, isInView]);
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.1
-      }
-    }
-  };
-
-  const textVariants = {
-    hidden: { 
-      opacity: 0
-    },
-    visible: {
-      opacity: 1,
-      transition: {
-        duration: 0.4
-      }
-    }
-  };
-
-  const robotVariants = {
-    hidden: { 
-      opacity: 0
-    },
-    visible: {
-      opacity: 1,
-      transition: {
-        duration: 0.6
-      }
-    }
-  };
 
   return (
     <motion.div 
