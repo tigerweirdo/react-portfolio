@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback, useRef, memo } from 'react'
 import { motion, useInView, useAnimation } from 'framer-motion'
 import emailjs from '@emailjs/browser'
+import LiquidWave from './LiquidWave'
 import './index.scss'
 
 // Static variant objeleri - bileşen dışında tanımlanarak her render'da yeniden oluşturulması engellenir
@@ -242,6 +243,7 @@ const Contact = memo(() => {
           </form>
         </motion.div>
       </div>
+      <LiquidWave />
     </motion.div>
   )
 });

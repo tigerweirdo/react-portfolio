@@ -111,7 +111,7 @@ const ProjectScene = memo(({ item, index }) => {
             whileHover={{ x: 6 }}
             transition={{ duration: 0.2 }}
           >
-            Projeyi Görüntüle <ArrowIcon />
+            View Project <ArrowIcon />
           </motion.a>
         )}
       </motion.div>
@@ -191,7 +191,7 @@ const Portfolio = memo(() => {
           transition={{ duration: 0.6 }}
         >
           <h1 className="portfolio-title">Portfolio</h1>
-          <p className="portfolio-subtitle">Projelerime göz atın</p>
+          <p className="portfolio-subtitle">A selection of my recent work</p>
         </motion.div>
 
         {loading && <LoadingSkeleton />}
@@ -202,7 +202,7 @@ const Portfolio = memo(() => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
           >
-            <p>Henüz portfolyo öğesi bulunmuyor.</p>
+            <p>No portfolio items found.</p>
           </motion.div>
         )}
 

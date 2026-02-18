@@ -225,3 +225,42 @@ src/components/Admin/
 - `src/App.js` (handleLogout)
 - `src/components/Portfolio/index.js` (tamamen yeniden)
 - `src/components/Portfolio/index.scss` (tamamen yeniden)
+
+---
+
+### Görev 7: Contact Bölümü Gradient Dalga Efekti (18 Şubat 2026)
+
+**Amaç:** Contact bölümünün en altında, scroll hızına fiziksel tepki veren canlı bir sıvı/dalga efekti oluşturmak. Canvas tabanlı gradient dalga animasyonu.
+
+**Konsept:**
+- **Durgun:** Çok hafif, neredeyse fark edilmeyen nazik dalgalanma (idle animation)
+- **Yavaş scroll:** Hafif dalgalanma başlar, amplitüd artar
+- **Hızlı scroll:** Belirgin yüksek dalgalar, frekans artar, "sert su" hissi
+- **Scroll durduğunda:** Dalgalar yavaşça söner, tekrar sakin yüzeye döner (damping/friction)
+
+**Oluşturulan Yeni Dosyalar:**
+
+1. **`src/components/Contact/LiquidWave.js`**
+   - HTML5 Canvas API ile 3 katmanlı sine dalga sistemi (ön, orta, arka)
+   - `requestAnimationFrame` döngüsü ile 60fps animasyon
+   - Dalga renkleri: `rgba(232,234,237,0.5)` (açık), `rgba(95,99,104,0.35)` (orta), `rgba(32,33,36,0.55)` (koyu)
+   - Scroll hızı takibi: Ana `.scroll-container`'ı dinleyerek velocity hesaplaması
+   - Fizik simülasyonu: `currentAmplitude` → `targetAmplitude` lerp/damping ile yakınsama
+   - `ResizeObserver` ile parent genişliğine uyum
+   - `devicePixelRatio` ile retina desteği (max 2x)
+
+2. **`src/components/Contact/LiquidWave.scss`**
+   - `.liquid-wave-container`: `position: absolute; bottom: 0` ile sayfanın en altına konumlanma
+   - `pointer-events: none` ile altındaki içerikle etkileşimi engellememe
+   - Responsive yükseklik: 120px (desktop) → 80px (tablet) → 60px (mobil)
+
+**Güncellenen Dosyalar:**
+
+- **`src/components/Contact/index.js`** — `LiquidWave` bileşeni import edilip `.contact-page` div'inin en altına eklendi
+- **`src/components/Contact/index.scss`** — `padding-bottom: 140px` eklendi (dalga için yer açmak), `overflow: hidden` eklendi (dalga taşmasın), responsive media query'lerde padding-bottom ayarları
+
+**Teknik Detaylar:**
+- Dalga parametreleri: Her katmanın farklı frekans (`freq`, `freq2`), hız (`speed`, `speed2`), temel amplitüd (`baseAmp`), ve scroll tepki çarpanı (`scrollBoost`) var
+- Damping faktörü: 0.92 — scroll durduğunda amplitude doğal şekilde söner
+- Lerp hızı: 0.08 — yumuşak geçiş için
+- Velocity ölçekleme: 0.15, max amplitude: 1.0
