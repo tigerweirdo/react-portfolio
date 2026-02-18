@@ -97,3 +97,20 @@ service firebase.storage {
 1. **Authentication > Sign-in method** — "Anonymous" sağlayıcısının **Enabled** olduğunu doğrulayın
 2. **Firestore Database > Rules** — Kuralların güncellendiğini doğrulayın
 3. **Storage > Rules** — Kuralların güncellendiğini doğrulayın
+
+---
+
+### Görev 4: Firebase Kurallarının CLI ile Deploy Edilmesi (18 Şubat 2026)
+
+**Sorun:** Kullanıcı Firebase Console'dan kuralları güncelleyemediği için Storage izin hatası devam ediyordu.
+
+**Yapılan Değişiklikler:**
+1. **`.firebaserc`** oluşturuldu — Varsayılan proje `portfolio-b0e27` olarak ayarlandı
+2. **`firebase.json`** oluşturuldu — Firestore ve Storage kural dosyaları tanımlandı
+3. **`firestore.rules`** oluşturuldu — Anonim auth kullanıcılarına `portfolio` koleksiyonu için okuma/yazma izni
+4. **`storage.rules`** oluşturuldu — Anonim auth kullanıcılarına `portfolio_images/` ve `portfolio_covers/` için yazma izni, herkese okuma izni
+5. `firebase deploy --only firestore:rules,storage` komutu ile kurallar başarıyla deploy edildi
+
+**Deploy Edilen Kurallar:**
+- Firestore: `request.auth != null` koşulu ile okuma/yazma
+- Storage: Herkes okuyabilir (`if true`), yazma için `request.auth != null` gerekli
