@@ -16,6 +16,8 @@
   .text-zone {
     max-width: 600px;
     width: 100%;
+    position: relative;
+    z-index: 2;
 
     h1 {
       color: $primary-color;
@@ -49,12 +51,12 @@
     margin: 0;
 
     li {
-      padding: 2px; // Border'ların görünmesi için padding eklendi
+      padding: 2px;
       margin: 0;
       list-style: none;
       margin-bottom: 15px;
       opacity: 0;
-      overflow: visible; // Scale animasyonu için overflow visible yapıldı
+      overflow: visible;
       display: block;
       clear: both;
       position: relative;
@@ -205,13 +207,8 @@
 }
 
 @keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-
-  100% {
-    transform: rotate(360deg);
-  }
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 .status-message {
@@ -240,253 +237,36 @@
     background-color: rgba(76, 175, 80, 0.1);
     color: #4caf50;
     border: 1px solid rgba(76, 175, 80, 0.3);
-
-    &::before {
-      content: '✓';
-      color: #4caf50;
-    }
+    &::before { content: '✓'; color: #4caf50; }
   }
 
   &.error {
     background-color: rgba(244, 67, 54, 0.1);
     color: #f44336;
     border: 1px solid rgba(244, 67, 54, 0.3);
-
-    &::before {
-      content: '✗';
-      color: #f44336;
-    }
+    &::before { content: '✗'; color: #f44336; }
   }
 }
 
 @keyframes fadeInSlideUp {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes iconPopIn {
-  0% {
-    transform: scale(0) rotate(-45deg);
-    opacity: 0;
-  }
-
-  100% {
-    transform: scale(1) rotate(0deg);
-    opacity: 1;
-  }
+  0% { transform: scale(0) rotate(-45deg); opacity: 0; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
 }
 
-// Responsive design
+// Responsive
 @media (max-width: 1200px) {
   .contact-page {
-    padding: 2rem;
+    padding: 2rem 2rem 280px;
     height: auto;
     min-height: 100%;
 
     .text-zone {
-      h1 {
-        font-size: 40px;
-      }
-
-      p {
-        font-size: 15px;
-      }
-    }
-  }
-}
-
-@media (max-width: 768px) {
-  textarea {
-    width: 100%;
-    border: 1px solid $btn-border-color;
-    background: $background-color;
-    font-size: 15px;
-    color: $text-color;
-    padding: 15px;
-    box-sizing: border-box;
-    min-height: 150px;
-    border-radius: 4px;
-    transition: all 0.2s ease;
-    line-height: 1.5;
-    resize: vertical;
-
-    &::placeholder {
-      color: $secondary-text-color;
-      opacity: 0.7;
-    }
-
-    &:hover {
-      border-color: rgba($accent-color-1, 0.5);
-    }
-
-    &:focus {
-      border-color: $accent-color-1;
-      outline: none;
-      background: $accent-color-3;
-      box-shadow: 0 0 0 2px rgba($accent-color-1, 0.1);
-    }
-  }
-}
-
-.flat-button {
-  color: $primary-color;
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 4px;
-  font-family: 'Arial Black', sans-serif;
-  text-decoration: none;
-  padding: 12px 24px;
-  border: 2px solid $btn-border-color;
-  margin-top: 25px;
-  background-color: transparent;
-  outline: none;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  text-transform: uppercase;
-  border-radius: 4px;
-  display: block;
-  width: 100%;
-  max-width: 200px;
-  margin: 25px 0 0 0;
-
-  &:hover {
-    background: $btn-hover-bg-color;
-    color: $primary-color;
-    border-color: $accent-color-1;
-    transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba($primary-color, 0.1);
-  }
-
-  &:active {
-    transform: translateY(0);
-  }
-
-  &:focus-visible {
-    outline: 2px solid $accent-color-1;
-    outline-offset: 2px;
-  }
-}
-
-.flat-button[disabled] {
-  position: relative;
-  cursor: wait;
-  color: $secondary-text-color;
-  border-color: $btn-border-color;
-
-  &:hover {
-    background: transparent;
-    color: $secondary-text-color;
-    transform: none;
-    box-shadow: none;
-  }
-
-  &::after {
-    content: '';
-    box-sizing: border-box;
-    position: absolute;
-    top: 50%;
-    right: 15px;
-    margin-top: -8px;
-    width: 16px;
-    height: 16px;
-    border: 2px solid $accent-color-1;
-    border-top-color: transparent;
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-  }
-}
-
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-.status-message {
-  padding: 15px 20px;
-  border-radius: 4px;
-  font-size: 0.95rem;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  line-height: 1.4;
-  width: 100%;
-  margin: 0;
-  box-sizing: border-box;
-  height: 100%;
-
-  &::before {
-    margin-right: 12px;
-    font-size: 1.3rem;
-    animation: iconPopIn 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55) 0.3s forwards;
-    transform: scale(0);
-    display: inline-block;
-    flex-shrink: 0;
-  }
-
-  &.success {
-    background-color: rgba(76, 175, 80, 0.1);
-    color: #4caf50;
-    border: 1px solid rgba(76, 175, 80, 0.3);
-
-    &::before {
-      content: '✓';
-      color: #4caf50;
-    }
-  }
-
-  &.error {
-    background-color: rgba(244, 67, 54, 0.1);
-    color: #f44336;
-    border: 1px solid rgba(244, 67, 54, 0.3);
-
-    &::before {
-      content: '✗';
-      color: #f44336;
-    }
-  }
-}
-
-@keyframes fadeInSlideUp {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes iconPopIn {
-  0% {
-    transform: scale(0) rotate(-45deg);
-    opacity: 0;
-  }
-
-  100% {
-    transform: scale(1) rotate(0deg);
-    opacity: 1;
-  }
-}
-
-// Responsive design
-@media (max-width: 1200px) {
-  .contact-page {
-    padding: 2rem;
-    height: auto;
-    min-height: 100%;
-
-    .text-zone {
-      h1 {
-        font-size: 40px;
-      }
-
-      p {
-        font-size: 15px;
-      }
+      h1 { font-size: 40px; }
+      p { font-size: 15px; }
     }
   }
 }
@@ -496,15 +276,8 @@
     padding: 1rem 1rem 210px;
 
     .text-zone {
-      h1 {
-        font-size: 32px;
-        margin-bottom: 20px;
-      }
-
-      p {
-        font-size: 14px;
-        margin-bottom: 20px;
-      }
+      h1 { font-size: 32px; margin-bottom: 20px; }
+      p { font-size: 14px; margin-bottom: 20px; }
     }
   }
 
@@ -515,9 +288,7 @@
     padding: 0 10px;
 
     ul {
-      li {
-        margin-bottom: 20px;
-      }
+      li { margin-bottom: 20px; }
     }
 
     ul li.half {
@@ -530,21 +301,20 @@
 
 @media (max-width: 480px) {
   .contact-page {
+    padding: 1rem 1rem 160px;
+
     .text-zone {
-      h1 {
-        font-size: 28px;
-        letter-spacing: 1px;
-      }
+      h1 { font-size: 28px; letter-spacing: 1px; }
     }
   }
 
   .flat-button {
     font-size: 14px;
     letter-spacing: 2px;
-    padding: 12px 25px; // Buton içi boşluk artırıldı
+    padding: 12px 25px;
     float: none;
     display: block;
-    margin: 30px auto 0; // Buton etrafı boşluk artırıldı
+    margin: 30px auto 0;
     width: fit-content;
   }
 }
