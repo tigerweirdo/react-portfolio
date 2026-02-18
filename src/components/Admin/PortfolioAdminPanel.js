@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { db, storage } from '../../firebase'; // storage import edildi
+import { db, storage, ensureAuth } from '../../firebase';
 import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from 'firebase/firestore';
 import { ref as storageRef, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage"; // Storage fonksiyonları import edildi
 import { toast } from 'react-toastify'; // toast import edildi
@@ -109,9 +109,10 @@ const PortfolioAdminPanel = ({ onLogout }) => {
         setShowForm(true);
     };
 
-    // Dosya yükleme fonksiyonu
+    // Dosya yükleme fonksiyonu — upload öncesi anonim auth sağlanır
     const uploadFile = async (file, pathPrefix = 'portfolio_images') => {
         if (!file) return null;
+        await ensureAuth();
         const fileRef = storageRef(storage, `${pathPrefix}/${Date.now()}_${file.name}`);
         await uploadBytes(fileRef, file);
         const downloadURL = await getDownloadURL(fileRef);
@@ -122,6 +123,8 @@ const PortfolioAdminPanel = ({ onLogout }) => {
         if (window.confirm("Bu öğeyi silmek istediğinizden emin misiniz?")) {
             setIsSubmitting(true);
             try {
+                // Storage silme işlemi için anonim auth sağla
+                await ensureAuth();
                 // Önce Storage'dan resimleri sil (eğer URL'leri varsa)
                 const itemToDelete = portfolioItems.find(item => item.id === id);
                 if (itemToDelete) {

@@ -1,4 +1,5 @@
 import { initializeApp } from "firebase/app";
+import { getAuth, signInAnonymously } from "firebase/auth";
 import { getStorage } from 'firebase/storage';
 import { getFirestore } from 'firebase/firestore';
 
@@ -12,5 +13,13 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
+export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
+
+// Storage işlemleri için anonim auth — kullanıcı farketmez, sessizce giriş yapar
+export const ensureAuth = async () => {
+  if (!auth.currentUser) {
+    await signInAnonymously(auth);
+  }
+};
