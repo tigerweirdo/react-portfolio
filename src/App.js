@@ -281,6 +281,7 @@ const App = () => {
   const handleLogout = useCallback(() => {
     setIsAuthenticated(false);
     localStorage.removeItem('isAdminAuthenticated');
+    window.location.href = '/';
   }, []);
 
   const scrollToSection = useCallback((sectionId) => {

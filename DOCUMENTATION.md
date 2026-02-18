@@ -185,3 +185,43 @@ src/components/Admin/
 - Genişleyebilir yapı: İleride About, Contact gibi bölümler `AdminLayout` altında yeni Route ve sidebar linki olarak eklenebilir
 - Tüm Firebase işlemleri öncesinde `ensureAuth()` çağrılıyor
 - Mevcut renk paleti (`_variables.scss`) korundu
+
+---
+
+### Görev 6: Çıkış Yönlendirmesi ve Portfolyo Scroll-Reveal Tasarımı (18 Şubat 2026)
+
+**Sorunlar:**
+1. Admin panelinden çıkış yapınca anasayfaya dönülmüyordu.
+2. Portfolyo bölümünün tasarımı basit bir grid'di, daha etkileyici bir görünüm isteniyordu.
+
+**Yapılan Değişiklikler:**
+
+#### 1. Çıkış → Anasayfa Yönlendirmesi
+- **`src/App.js`** — `handleLogout` fonksiyonuna `window.location.href = '/'` eklendi. Çıkış yapıldığında tam sayfa yenilemesiyle anasayfaya dönülür.
+
+#### 2. Portfolyo Scroll-Reveal Galeri Tasarımı
+- **`src/components/Portfolio/index.js`** — Tamamen yeniden yazıldı:
+  - 3 sütunlu grid yerine **scroll-reveal galeri** yapısı
+  - Her proje kendi "sahnesinde" — büyük görsel + metin zigzag düzeninde
+  - `ProjectScene` bileşeni ile modüler yapı
+  - Framer Motion `whileInView` ile scroll tetiklemeli animasyonlar:
+    - Görseller: `scale(0.85→1)`, `opacity(0→1)`, `y(60→0)`
+    - Metinler: staggered `translateY` ile sıralı giriş
+  - Proje numarası (`01`, `02`...) ile görsel hiyerarşi
+  - İç scroll alanı (`.portfolio-scroll-area`) ile ana sayfa scroll-snap'ten bağımsız çalışma
+  - Akıllı wheel handler: İç içerik scroll edilebilirken parent snap engellenir, sınırlara ulaşınca parent'a bırakılır
+
+- **`src/components/Portfolio/index.scss`** — Tamamen yeniden yazıldı:
+  - Zigzag layout: Tek sayılı projeler görsel solda/metin sağda, çift sayılılar tersi
+  - Büyük görseller (`16:10` aspect ratio, yuvarlak köşeler, gölge)
+  - Hover efekti: Görsel hafif zoom (`scale(1.04)`), gölge derinleşir
+  - CTA butonu: Alt çizgi + ok animasyonu
+  - Skeleton loading: Yeni layout'a uygun tam genişlik iskelet
+  - Responsive: Tablet'te daraltılmış, mobilde dikey yığılma
+  - Reduced motion desteği
+  - Özel scrollbar stillemesi
+
+**Etkilenen Dosyalar:**
+- `src/App.js` (handleLogout)
+- `src/components/Portfolio/index.js` (tamamen yeniden)
+- `src/components/Portfolio/index.scss` (tamamen yeniden)
