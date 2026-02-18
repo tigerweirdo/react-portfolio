@@ -4,7 +4,6 @@ import emailjs from '@emailjs/browser'
 import LiquidWave from './LiquidWave'
 import './index.scss'
 
-// Static variant objeleri - bileşen dışında tanımlanarak her render'da yeniden oluşturulması engellenir
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
@@ -44,6 +43,17 @@ const inputVariants = {
   }
 }
 
+const GlassWrap = ({ children, className = '' }) => (
+  <div className={`glass-wrap ${className}`}>
+    <div className="glass-filter" />
+    <div className="glass-overlay" />
+    <div className="glass-specular" />
+    <div className="glass-content">
+      {children}
+    </div>
+  </div>
+)
+
 const Contact = memo(() => {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState(null)
@@ -52,7 +62,6 @@ const Contact = memo(() => {
   const controls = useAnimation()
   const isInView = useInView(containerRef, { once: false, amount: 0.3 })
 
-  // EmailJS'i initialize et (localhost ve production için)
   useEffect(() => {
     emailjs.init('3stLvJAm6BvTLpIsx')
   }, [])
@@ -79,7 +88,6 @@ const Contact = memo(() => {
       setSubmitStatus('success')
       form.current.reset()
 
-      // Başarı mesajını 3 saniye sonra kaybet
       setTimeout(() => {
         setSubmitStatus(null)
       }, 3000)
@@ -94,38 +102,41 @@ const Contact = memo(() => {
   const renderSubmitButton = () => {
     if (isSubmitting) {
       return (
-        <motion.input 
-          type="submit" 
-          className="flat-button" 
-          value="Sending..." 
+        <motion.button
+          type="submit"
+          className="flat-button"
           disabled
           animate={{ opacity: [1, 0.7, 1] }}
           transition={{ duration: 1, repeat: Infinity, ease: "easeInOut" }}
-        />
+        >
+          <span className="btn-text">Sending...</span>
+          <span className="btn-spinner" />
+        </motion.button>
       )
     }
     return (
-      <motion.input 
-        type="submit" 
-        className="flat-button" 
-        value="Send"
+      <motion.button
+        type="submit"
+        className="flat-button"
         whileHover={{ y: -1 }}
         whileTap={{ scale: 0.98 }}
         transition={{ duration: 0.2 }}
-      />
+      >
+        Send
+      </motion.button>
     )
   }
 
   const renderStatusMessage = () => {
     return (
-      <motion.div 
+      <motion.div
         className={`status-message ${submitStatus || ''}`}
         initial={false}
-        animate={{ 
+        animate={{
           opacity: submitStatus ? 1 : 0,
           y: submitStatus ? 0 : -10
         }}
-        transition={{ 
+        transition={{
           duration: 0.3,
           ease: "easeInOut"
         }}
@@ -133,7 +144,7 @@ const Contact = memo(() => {
           pointerEvents: submitStatus ? 'auto' : 'none'
         }}
       >
-        {submitStatus === 'success' 
+        {submitStatus === 'success'
           ? 'Your message has been sent successfully!'
           : submitStatus === 'error'
           ? 'An error occurred while sending the message. Please try again.'
@@ -143,7 +154,7 @@ const Contact = memo(() => {
   }
 
   return (
-    <motion.div 
+    <motion.div
       ref={containerRef}
       className="container contact-page"
       initial="hidden"
@@ -159,60 +170,60 @@ const Contact = memo(() => {
           or large projects. However, if you have any other requests or
           questions, don't hesitate to contact me using below form either.
         </motion.p>
-        <motion.div 
+        <motion.div
           className="contact-form"
           variants={formVariants}
         >
           <form ref={form} onSubmit={sendEmail}>
             <ul>
-              <motion.li 
+              <motion.li
                 className="half"
                 variants={inputVariants}
               >
-                <motion.input 
-                  placeholder="Name" 
-                  type="text" 
-                  name="name" 
-                  required 
-                  disabled={isSubmitting}
-                  whileFocus={{ scale: 1.005 }}
-                  transition={{ duration: 0.2 }}
-                />
+                <GlassWrap>
+                  <input
+                    placeholder="Name"
+                    type="text"
+                    name="name"
+                    required
+                    disabled={isSubmitting}
+                  />
+                </GlassWrap>
               </motion.li>
-              <motion.li 
+              <motion.li
                 className="half"
                 variants={inputVariants}
               >
-                <motion.input
-                  placeholder="Email"
-                  type="email"
-                  name="email"
-                  required
-                  disabled={isSubmitting}
-                  whileFocus={{ scale: 1.005 }}
-                  transition={{ duration: 0.2 }}
-                />
+                <GlassWrap>
+                  <input
+                    placeholder="Email"
+                    type="email"
+                    name="email"
+                    required
+                    disabled={isSubmitting}
+                  />
+                </GlassWrap>
               </motion.li>
               <motion.li variants={inputVariants}>
-                <motion.input
-                  placeholder="Subject"
-                  type="text"
-                  name="subject"
-                  required
-                  disabled={isSubmitting}
-                  whileFocus={{ scale: 1.005 }}
-                  transition={{ duration: 0.2 }}
-                />
+                <GlassWrap>
+                  <input
+                    placeholder="Subject"
+                    type="text"
+                    name="subject"
+                    required
+                    disabled={isSubmitting}
+                  />
+                </GlassWrap>
               </motion.li>
               <motion.li variants={inputVariants}>
-                <motion.textarea
-                  placeholder="Message"
-                  name="message"
-                  required
-                  disabled={isSubmitting}
-                  whileFocus={{ scale: 1.005 }}
-                  transition={{ duration: 0.2 }}
-                ></motion.textarea>
+                <GlassWrap>
+                  <textarea
+                    placeholder="Message"
+                    name="message"
+                    required
+                    disabled={isSubmitting}
+                  />
+                </GlassWrap>
               </motion.li>
               <input
                 type="hidden"
@@ -220,13 +231,26 @@ const Contact = memo(() => {
                 value="temmuzcetiner@gmail.com"
               />
               <motion.li variants={inputVariants} className="submit-row">
-                {renderSubmitButton()}
+                <GlassWrap className="glass-wrap--btn">
+                  {renderSubmitButton()}
+                </GlassWrap>
                 {renderStatusMessage()}
               </motion.li>
             </ul>
           </form>
         </motion.div>
       </div>
+
+      <svg xmlns="http://www.w3.org/2000/svg" style={{ position: 'absolute', width: 0, height: 0, overflow: 'hidden' }}>
+        <filter id="glassLens" x="0%" y="0%" width="100%" height="100%" filterUnits="objectBoundingBox">
+          <feComponentTransfer in="SourceAlpha" result="alpha">
+            <feFuncA type="identity" />
+          </feComponentTransfer>
+          <feGaussianBlur in="alpha" stdDeviation="50" result="blur" />
+          <feDisplacementMap in="SourceGraphic" in2="blur" scale="50" xChannelSelector="A" yChannelSelector="A" />
+        </filter>
+      </svg>
+
       <LiquidWave />
     </motion.div>
   )

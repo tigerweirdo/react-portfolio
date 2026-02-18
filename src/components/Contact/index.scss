@@ -1,53 +1,5 @@
 @import '../../variables';
 
-// Apple Liquid Glass mixin
-@mixin liquid-glass {
-  background: linear-gradient(
-    160deg,
-    rgba(255, 255, 255, 0.72) 0%,
-    rgba(255, 255, 255, 0.48) 50%,
-    rgba(245, 248, 255, 0.52) 100%
-  );
-  backdrop-filter: blur(24px) saturate(1.4);
-  -webkit-backdrop-filter: blur(24px) saturate(1.4);
-  border: 0.5px solid rgba(255, 255, 255, 0.6);
-  border-radius: 14px;
-  box-shadow:
-    0 0.5px 0 0 rgba(255, 255, 255, 0.85) inset,
-    0 -0.5px 0 0 rgba(0, 0, 0, 0.04) inset,
-    0 1px 3px rgba(0, 0, 0, 0.04),
-    0 4px 14px rgba(0, 0, 0, 0.03);
-}
-
-@mixin liquid-glass-hover {
-  background: linear-gradient(
-    160deg,
-    rgba(255, 255, 255, 0.82) 0%,
-    rgba(255, 255, 255, 0.58) 50%,
-    rgba(245, 248, 255, 0.62) 100%
-  );
-  box-shadow:
-    0 0.5px 0 0 rgba(255, 255, 255, 0.9) inset,
-    0 -0.5px 0 0 rgba(0, 0, 0, 0.05) inset,
-    0 2px 6px rgba(0, 0, 0, 0.05),
-    0 8px 24px rgba(0, 0, 0, 0.04);
-}
-
-@mixin liquid-glass-focus {
-  background: linear-gradient(
-    160deg,
-    rgba(255, 255, 255, 0.85) 0%,
-    rgba(255, 255, 255, 0.62) 50%,
-    rgba(248, 250, 255, 0.66) 100%
-  );
-  border-color: rgba(0, 122, 255, 0.3);
-  box-shadow:
-    0 0.5px 0 0 rgba(255, 255, 255, 0.9) inset,
-    0 -0.5px 0 0 rgba(0, 0, 0, 0.04) inset,
-    0 0 0 3.5px rgba(0, 122, 255, 0.12),
-    0 2px 8px rgba(0, 0, 0, 0.05);
-}
-
 .contact-page {
   width: 100%;
   height: 100%;
@@ -88,6 +40,75 @@
     }
   }
 }
+
+// ── Liquid Glass ──
+
+.glass-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: transparent;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow:
+    0 4px 8px rgba(0, 0, 0, 0.06),
+    0 0 14px rgba(0, 0, 0, 0.03);
+  transition: box-shadow 0.2s ease;
+
+  &:focus-within {
+    box-shadow:
+      0 4px 12px rgba(0, 0, 0, 0.08),
+      0 0 0 3px rgba(0, 122, 255, 0.14);
+  }
+}
+
+.glass-filter,
+.glass-overlay,
+.glass-specular {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.glass-filter {
+  z-index: 0;
+  backdrop-filter: blur(4px);
+  filter: url(#glassLens) saturate(120%) brightness(1.15);
+}
+
+.glass-overlay {
+  z-index: 1;
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.glass-specular {
+  z-index: 2;
+  box-shadow:
+    inset 1px 1px 0 rgba(255, 255, 255, 0.75),
+    inset 0 0 5px rgba(255, 255, 255, 0.75);
+}
+
+.glass-content {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  width: 100%;
+}
+
+.glass-wrap:focus-within .glass-overlay {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.glass-wrap:focus-within .glass-specular {
+  box-shadow:
+    inset 1px 1px 0 rgba(255, 255, 255, 0.85),
+    inset 0 0 6px rgba(255, 255, 255, 0.85);
+}
+
+// ── Form ──
 
 .contact-form {
   width: 100%;
@@ -132,21 +153,13 @@
     color: $text-color;
     padding: 0 16px;
     box-sizing: border-box;
-    transition: all 0.2s ease;
-    @include liquid-glass;
+    background: transparent;
+    border: none;
+    outline: none;
 
     &::placeholder {
       color: $secondary-text-color;
       opacity: 0.55;
-    }
-
-    &:hover {
-      @include liquid-glass-hover;
-    }
-
-    &:focus {
-      outline: none;
-      @include liquid-glass-focus;
     }
   }
 
@@ -159,26 +172,30 @@
     min-height: 150px;
     line-height: 1.5;
     resize: vertical;
-    transition: all 0.2s ease;
-    @include liquid-glass;
+    background: transparent;
+    border: none;
+    outline: none;
 
     &::placeholder {
       color: $secondary-text-color;
       opacity: 0.55;
     }
+  }
+}
 
-    &:hover {
-      @include liquid-glass-hover;
-    }
+// ── Button ──
 
-    &:focus {
-      outline: none;
-      @include liquid-glass-focus;
-    }
+.glass-wrap--btn {
+  display: inline-flex;
+  flex: 0 0 auto;
+
+  .glass-content {
+    width: auto;
   }
 }
 
 .flat-button {
+  position: relative;
   color: $primary-color;
   font-size: 13px;
   font-weight: 700;
@@ -190,62 +207,47 @@
   outline: none;
   cursor: pointer;
   text-transform: uppercase;
-  display: block;
-  width: 100%;
-  max-width: 200px;
-  transition: all 0.2s ease;
-  @include liquid-glass;
-
-  &:hover {
-    @include liquid-glass-hover;
-    transform: translateY(-1px);
-  }
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: none;
+  transition: opacity 0.2s ease;
 
   &:active {
-    transform: translateY(0);
-    box-shadow:
-      0 0.5px 0 0 rgba(255, 255, 255, 0.7) inset,
-      0 -0.5px 0 0 rgba(0, 0, 0, 0.03) inset,
-      0 1px 2px rgba(0, 0, 0, 0.04);
+    opacity: 0.85;
   }
 
   &:focus-visible {
     outline: none;
-    @include liquid-glass-focus;
   }
 }
 
 .flat-button[disabled] {
-  position: relative;
   cursor: wait;
   color: $secondary-text-color;
-  opacity: 0.7;
+}
 
-  &:hover {
-    @include liquid-glass;
-    transform: none;
-  }
+.btn-text {
+  position: relative;
+}
 
-  &::after {
-    content: '';
-    box-sizing: border-box;
-    position: absolute;
-    top: 50%;
-    right: 15px;
-    margin-top: -8px;
-    width: 16px;
-    height: 16px;
-    border: 2px solid rgba(0, 122, 255, 0.4);
-    border-top-color: transparent;
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-  }
+.btn-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(0, 122, 255, 0.4);
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  flex-shrink: 0;
 }
 
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+// ── Status ──
 
 .status-message {
   padding: 14px 18px;
@@ -258,8 +260,6 @@
   margin: 0;
   box-sizing: border-box;
   height: 100%;
-  backdrop-filter: blur(24px) saturate(1.4);
-  -webkit-backdrop-filter: blur(24px) saturate(1.4);
   border-radius: 14px;
 
   &::before {
@@ -275,9 +275,6 @@
     background: rgba(52, 199, 89, 0.08);
     color: #34c759;
     border: 0.5px solid rgba(52, 199, 89, 0.2);
-    box-shadow:
-      0 0.5px 0 0 rgba(255, 255, 255, 0.6) inset,
-      0 1px 3px rgba(0, 0, 0, 0.03);
     &::before { content: '✓'; color: #34c759; }
   }
 
@@ -285,9 +282,6 @@
     background: rgba(255, 59, 48, 0.08);
     color: #ff3b30;
     border: 0.5px solid rgba(255, 59, 48, 0.2);
-    box-shadow:
-      0 0.5px 0 0 rgba(255, 255, 255, 0.6) inset,
-      0 1px 3px rgba(0, 0, 0, 0.03);
     &::before { content: '✗'; color: #ff3b30; }
   }
 }
@@ -298,10 +292,6 @@
   gap: 16px;
   clear: both;
   flex-wrap: wrap;
-
-  .flat-button {
-    flex-shrink: 0;
-  }
 
   .status-message {
     flex: 1;
@@ -320,7 +310,8 @@
   100% { transform: scale(1) rotate(0deg); opacity: 1; }
 }
 
-// Responsive
+// ── Responsive ──
+
 @media (max-width: 1200px) {
   .contact-page {
     padding: 2rem 2rem 320px;
@@ -375,10 +366,6 @@
     font-size: 14px;
     letter-spacing: 2px;
     padding: 12px 25px;
-    float: none;
-    display: block;
-    margin: 0 auto;
-    width: fit-content;
   }
 
   .submit-row {
