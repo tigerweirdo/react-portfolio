@@ -151,14 +151,10 @@ const Contact = memo(() => {
       variants={containerVariants}
     >
       <div className="text-zone">
-        <motion.h1 variants={itemVariants}>
-          {/* <AnimatedLetters
-            letterClass={letterClass}
-            strArray={['C', 'o', 'n', 't', 'a', 'c', 't', ' ', 'm', 'e']}
-            idx={15}
-          /> */}
-          Contact me
-        </motion.h1>
+        <motion.div className="glass-heading" variants={itemVariants}>
+          <span className="glass-shimmer" />
+          <h1>Contact me</h1>
+        </motion.div>
         <motion.p variants={itemVariants}>
           I am interested in freelance opportunities - especially on ambitious
           or large projects. However, if you have any other requests or
@@ -219,24 +215,13 @@ const Contact = memo(() => {
                   transition={{ duration: 0.2 }}
                 ></motion.textarea>
               </motion.li>
-              {/* Gizli input: Alıcı e-posta adresi */}
               <input
                 type="hidden"
                 name="to_email"
                 value="temmuzcetiner@gmail.com"
               />
-              <motion.li variants={inputVariants}>
+              <motion.li variants={inputVariants} className="submit-row">
                 {renderSubmitButton()}
-              </motion.li>
-              <motion.li 
-                variants={inputVariants} 
-                style={{ 
-                  height: '60px', 
-                  display: 'flex', 
-                  alignItems: 'flex-start',
-                  marginBottom: '15px'
-                }}
-              >
                 {renderStatusMessage()}
               </motion.li>
             </ul>
