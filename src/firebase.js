@@ -17,9 +17,16 @@ export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
 
-// Storage işlemleri için anonim auth — kullanıcı farketmez, sessizce giriş yapar
 export const ensureAuth = async () => {
   if (!auth.currentUser) {
-    await signInAnonymously(auth);
+    try {
+      const result = await signInAnonymously(auth);
+      console.log("[Firebase] Anonim giriş başarılı, UID:", result.user.uid);
+    } catch (authError) {
+      console.error("[Firebase] Anonim giriş BAŞARISIZ:", authError.code, authError.message);
+      throw authError;
+    }
+  } else {
+    console.log("[Firebase] Zaten giriş yapılmış, UID:", auth.currentUser.uid);
   }
 };
