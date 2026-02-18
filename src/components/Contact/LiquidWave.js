@@ -119,6 +119,7 @@ const LiquidWave = () => {
   useEffect(() => {
     resize();
 
+    const s = stateRef.current;
     const scrollContainer = document.querySelector('.scroll-container');
     if (scrollContainer) {
       scrollContainer.addEventListener('scroll', handleScroll, { passive: true });
@@ -129,11 +130,11 @@ const LiquidWave = () => {
       ro.observe(containerRef.current);
     }
 
-    stateRef.current.animId = requestAnimationFrame(animate);
+    s.animId = requestAnimationFrame(animate);
 
     return () => {
-      if (stateRef.current.animId) {
-        cancelAnimationFrame(stateRef.current.animId);
+      if (s.animId) {
+        cancelAnimationFrame(s.animId);
       }
       if (scrollContainer) {
         scrollContainer.removeEventListener('scroll', handleScroll);
