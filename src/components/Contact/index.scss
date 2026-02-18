@@ -1,5 +1,53 @@
 @import '../../variables';
 
+// Apple Liquid Glass mixin
+@mixin liquid-glass {
+  background: linear-gradient(
+    160deg,
+    rgba(255, 255, 255, 0.72) 0%,
+    rgba(255, 255, 255, 0.48) 50%,
+    rgba(245, 248, 255, 0.52) 100%
+  );
+  backdrop-filter: blur(24px) saturate(1.4);
+  -webkit-backdrop-filter: blur(24px) saturate(1.4);
+  border: 0.5px solid rgba(255, 255, 255, 0.6);
+  border-radius: 14px;
+  box-shadow:
+    0 0.5px 0 0 rgba(255, 255, 255, 0.85) inset,
+    0 -0.5px 0 0 rgba(0, 0, 0, 0.04) inset,
+    0 1px 3px rgba(0, 0, 0, 0.04),
+    0 4px 14px rgba(0, 0, 0, 0.03);
+}
+
+@mixin liquid-glass-hover {
+  background: linear-gradient(
+    160deg,
+    rgba(255, 255, 255, 0.82) 0%,
+    rgba(255, 255, 255, 0.58) 50%,
+    rgba(245, 248, 255, 0.62) 100%
+  );
+  box-shadow:
+    0 0.5px 0 0 rgba(255, 255, 255, 0.9) inset,
+    0 -0.5px 0 0 rgba(0, 0, 0, 0.05) inset,
+    0 2px 6px rgba(0, 0, 0, 0.05),
+    0 8px 24px rgba(0, 0, 0, 0.04);
+}
+
+@mixin liquid-glass-focus {
+  background: linear-gradient(
+    160deg,
+    rgba(255, 255, 255, 0.85) 0%,
+    rgba(255, 255, 255, 0.62) 50%,
+    rgba(248, 250, 255, 0.66) 100%
+  );
+  border-color: rgba(0, 122, 255, 0.3);
+  box-shadow:
+    0 0.5px 0 0 rgba(255, 255, 255, 0.9) inset,
+    0 -0.5px 0 0 rgba(0, 0, 0, 0.04) inset,
+    0 0 0 3.5px rgba(0, 122, 255, 0.12),
+    0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
 .contact-page {
   width: 100%;
   height: 100%;
@@ -82,41 +130,23 @@
     height: 50px;
     font-size: 15px;
     color: $text-color;
-    padding: 0 15px;
+    padding: 0 16px;
     box-sizing: border-box;
     transition: all 0.2s ease;
-    background: rgba(255, 255, 255, 0.45);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(200, 215, 235, 0.55);
-    border-radius: 12px;
-    box-shadow:
-      0 2px 12px rgba(30, 80, 160, 0.04),
-      inset 0 1px 0 rgba(255, 255, 255, 0.6),
-      inset 0 -1px 0 rgba(180, 210, 240, 0.1);
+    @include liquid-glass;
 
     &::placeholder {
       color: $secondary-text-color;
-      opacity: 0.65;
+      opacity: 0.55;
     }
 
     &:hover {
-      border-color: rgba(150, 185, 225, 0.65);
-      box-shadow:
-        0 4px 16px rgba(30, 80, 160, 0.07),
-        inset 0 1px 0 rgba(255, 255, 255, 0.7),
-        inset 0 -1px 0 rgba(180, 210, 240, 0.15);
+      @include liquid-glass-hover;
     }
 
     &:focus {
       outline: none;
-      background: rgba(255, 255, 255, 0.55);
-      border-color: rgba(100, 160, 220, 0.6);
-      box-shadow:
-        0 4px 20px rgba(30, 80, 160, 0.08),
-        0 0 0 3px rgba(100, 160, 220, 0.12),
-        inset 0 1px 0 rgba(255, 255, 255, 0.8),
-        inset 0 -1px 0 rgba(180, 210, 240, 0.2);
+      @include liquid-glass-focus;
     }
   }
 
@@ -124,44 +154,26 @@
     width: 100%;
     font-size: 15px;
     color: $text-color;
-    padding: 15px;
+    padding: 14px 16px;
     box-sizing: border-box;
     min-height: 150px;
     line-height: 1.5;
     resize: vertical;
     transition: all 0.2s ease;
-    background: rgba(255, 255, 255, 0.45);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(200, 215, 235, 0.55);
-    border-radius: 12px;
-    box-shadow:
-      0 2px 12px rgba(30, 80, 160, 0.04),
-      inset 0 1px 0 rgba(255, 255, 255, 0.6),
-      inset 0 -1px 0 rgba(180, 210, 240, 0.1);
+    @include liquid-glass;
 
     &::placeholder {
       color: $secondary-text-color;
-      opacity: 0.65;
+      opacity: 0.55;
     }
 
     &:hover {
-      border-color: rgba(150, 185, 225, 0.65);
-      box-shadow:
-        0 4px 16px rgba(30, 80, 160, 0.07),
-        inset 0 1px 0 rgba(255, 255, 255, 0.7),
-        inset 0 -1px 0 rgba(180, 210, 240, 0.15);
+      @include liquid-glass-hover;
     }
 
     &:focus {
       outline: none;
-      background: rgba(255, 255, 255, 0.55);
-      border-color: rgba(100, 160, 220, 0.6);
-      box-shadow:
-        0 4px 20px rgba(30, 80, 160, 0.08),
-        0 0 0 3px rgba(100, 160, 220, 0.12),
-        inset 0 1px 0 rgba(255, 255, 255, 0.8),
-        inset 0 -1px 0 rgba(180, 210, 240, 0.2);
+      @include liquid-glass-focus;
     }
   }
 }
@@ -182,41 +194,24 @@
   width: 100%;
   max-width: 200px;
   transition: all 0.2s ease;
-  background: rgba(255, 255, 255, 0.5);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(200, 215, 235, 0.55);
-  border-radius: 12px;
-  box-shadow:
-    0 2px 12px rgba(30, 80, 160, 0.05),
-    inset 0 1px 0 rgba(255, 255, 255, 0.65),
-    inset 0 -1px 0 rgba(180, 210, 240, 0.12);
+  @include liquid-glass;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.65);
-    border-color: rgba(150, 185, 225, 0.65);
+    @include liquid-glass-hover;
     transform: translateY(-1px);
-    box-shadow:
-      0 6px 20px rgba(30, 80, 160, 0.08),
-      inset 0 1px 0 rgba(255, 255, 255, 0.8),
-      inset 0 -1px 0 rgba(180, 210, 240, 0.18);
   }
 
   &:active {
     transform: translateY(0);
     box-shadow:
-      0 2px 8px rgba(30, 80, 160, 0.06),
-      inset 0 1px 0 rgba(255, 255, 255, 0.5),
-      inset 0 -1px 0 rgba(180, 210, 240, 0.1);
+      0 0.5px 0 0 rgba(255, 255, 255, 0.7) inset,
+      0 -0.5px 0 0 rgba(0, 0, 0, 0.03) inset,
+      0 1px 2px rgba(0, 0, 0, 0.04);
   }
 
   &:focus-visible {
     outline: none;
-    box-shadow:
-      0 4px 16px rgba(30, 80, 160, 0.07),
-      0 0 0 3px rgba(100, 160, 220, 0.15),
-      inset 0 1px 0 rgba(255, 255, 255, 0.7),
-      inset 0 -1px 0 rgba(180, 210, 240, 0.15);
+    @include liquid-glass-focus;
   }
 }
 
@@ -227,12 +222,8 @@
   opacity: 0.7;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.5);
+    @include liquid-glass;
     transform: none;
-    box-shadow:
-      0 2px 12px rgba(30, 80, 160, 0.05),
-      inset 0 1px 0 rgba(255, 255, 255, 0.65),
-      inset 0 -1px 0 rgba(180, 210, 240, 0.12);
   }
 
   &::after {
@@ -244,7 +235,7 @@
     margin-top: -8px;
     width: 16px;
     height: 16px;
-    border: 2px solid rgba(100, 160, 220, 0.5);
+    border: 2px solid rgba(0, 122, 255, 0.4);
     border-top-color: transparent;
     border-radius: 50%;
     animation: spin 0.8s linear infinite;
@@ -257,7 +248,7 @@
 }
 
 .status-message {
-  padding: 15px 20px;
+  padding: 14px 18px;
   font-size: 0.95rem;
   font-weight: 500;
   display: flex;
@@ -267,9 +258,9 @@
   margin: 0;
   box-sizing: border-box;
   height: 100%;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-radius: 12px;
+  backdrop-filter: blur(24px) saturate(1.4);
+  -webkit-backdrop-filter: blur(24px) saturate(1.4);
+  border-radius: 14px;
 
   &::before {
     margin-right: 12px;
@@ -281,19 +272,23 @@
   }
 
   &.success {
-    background: rgba(76, 175, 80, 0.08);
-    color: #4caf50;
-    border: 1px solid rgba(76, 175, 80, 0.25);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
-    &::before { content: '✓'; color: #4caf50; }
+    background: rgba(52, 199, 89, 0.08);
+    color: #34c759;
+    border: 0.5px solid rgba(52, 199, 89, 0.2);
+    box-shadow:
+      0 0.5px 0 0 rgba(255, 255, 255, 0.6) inset,
+      0 1px 3px rgba(0, 0, 0, 0.03);
+    &::before { content: '✓'; color: #34c759; }
   }
 
   &.error {
-    background: rgba(244, 67, 54, 0.08);
-    color: #f44336;
-    border: 1px solid rgba(244, 67, 54, 0.25);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
-    &::before { content: '✗'; color: #f44336; }
+    background: rgba(255, 59, 48, 0.08);
+    color: #ff3b30;
+    border: 0.5px solid rgba(255, 59, 48, 0.2);
+    box-shadow:
+      0 0.5px 0 0 rgba(255, 255, 255, 0.6) inset,
+      0 1px 3px rgba(0, 0, 0, 0.03);
+    &::before { content: '✗'; color: #ff3b30; }
   }
 }
 

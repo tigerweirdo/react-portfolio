@@ -2,10 +2,10 @@ import React, { useRef, useEffect, useCallback } from 'react';
 import './LiquidWave.scss';
 
 const N = 160;
-const SPRING = 0.025;
-const DAMP = 0.985;
-const SPREAD = 0.25;
-const PASSES = 4;
+const SPRING = 0.018;
+const DAMP = 0.975;
+const SPREAD = 0.2;
+const PASSES = 3;
 const SY_RATIO = 0.40;
 
 const LiquidWave = () => {
@@ -116,9 +116,9 @@ const LiquidWave = () => {
     const t = s.t;
     for (let i = 0; i < N; i++) {
       v[i] +=
-        Math.sin(i * 0.10 + t * 0.7) * 0.04 +
-        Math.sin(i * 0.04 + t * 0.45 + 1.3) * 0.025 +
-        Math.sin(i * 0.20 + t * 1.2 + 3.7) * 0.012;
+        Math.sin(i * 0.08 + t * 0.4) * 0.008 +
+        Math.sin(i * 0.03 + t * 0.25 + 1.3) * 0.005 +
+        Math.sin(i * 0.15 + t * 0.6 + 3.7) * 0.003;
     }
 
     const surfY = s.ht * SY_RATIO;
@@ -175,14 +175,14 @@ const LiquidWave = () => {
     ctx.lineTo(w + 2, ht + 2);
     ctx.closePath();
 
-    const wg = ctx.createLinearGradient(0, sy - 35, 0, ht);
-    wg.addColorStop(0, 'rgba(55,130,198,0.60)');
-    wg.addColorStop(0.05, 'rgba(42,110,182,0.70)');
-    wg.addColorStop(0.12, 'rgba(30,85,158,0.80)');
-    wg.addColorStop(0.25, 'rgba(22,65,132,0.88)');
-    wg.addColorStop(0.45, 'rgba(14,45,100,0.93)');
-    wg.addColorStop(0.70, 'rgba(8,28,68,0.96)');
-    wg.addColorStop(1, 'rgba(4,14,40,0.99)');
+    const wg = ctx.createLinearGradient(0, sy - 20, 0, ht);
+    wg.addColorStop(0, 'rgba(40,105,178,0.80)');
+    wg.addColorStop(0.04, 'rgba(32,88,162,0.88)');
+    wg.addColorStop(0.10, 'rgba(24,70,142,0.92)');
+    wg.addColorStop(0.22, 'rgba(18,55,120,0.95)');
+    wg.addColorStop(0.42, 'rgba(12,38,92,0.97)');
+    wg.addColorStop(0.68, 'rgba(7,24,62,0.98)');
+    wg.addColorStop(1, 'rgba(3,12,35,1)');
     ctx.fillStyle = wg;
     ctx.fill();
 
@@ -335,10 +335,10 @@ const LiquidWave = () => {
       const dx = x - s.px;
       const dy = y - s.py;
       const spd = Math.sqrt(dx * dx + dy * dy);
-      const force = Math.min(spd * 0.55, 16);
+      const force = Math.min(spd * 0.35, 10);
       const surfAt = s.ht * SY_RATIO - (col >= 0 && col < N ? s.h[col] : 0);
       const dir = y > surfAt ? 1 : -1;
-      if (col >= 0 && col < N) disturb(col, force * dir * 0.4);
+      if (col >= 0 && col < N) disturb(col, force * dir * 0.25);
     }
     s.px = x;
     s.py = y;
@@ -351,7 +351,7 @@ const LiquidWave = () => {
     const x = e.clientX - rect.left;
     const s = st.current;
     const col = Math.floor((x / s.w) * N);
-    if (col >= 0 && col < N) disturb(col, 14);
+    if (col >= 0 && col < N) disturb(col, 8);
   }, [disturb]);
 
   const onML = useCallback(() => {
@@ -374,8 +374,8 @@ const LiquidWave = () => {
       const dx = x - s.px;
       const dy = y - s.py;
       const spd = Math.sqrt(dx * dx + dy * dy);
-      const force = Math.min(spd * 0.55, 16);
-      if (col >= 0 && col < N) disturb(col, force * 0.4);
+      const force = Math.min(spd * 0.35, 10);
+      if (col >= 0 && col < N) disturb(col, force * 0.25);
     }
     s.px = x;
     s.py = y;
@@ -396,8 +396,8 @@ const LiquidWave = () => {
     const top = sc.scrollTop;
     const delta = Math.abs(top - s.lst);
     if (delta > 0) {
-      const force = Math.min((delta / dt) * 8, 12);
-      const count = Math.floor(N * 0.4);
+      const force = Math.min((delta / dt) * 4, 6);
+      const count = Math.floor(N * 0.25);
       for (let i = 0; i < count; i++) {
         const idx = Math.floor(Math.random() * N);
         s.v[idx] += (Math.random() - 0.5) * force;
