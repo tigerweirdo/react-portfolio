@@ -345,7 +345,7 @@ const App = () => {
                   className={`page-section ${activeSection === 'portfolio' ? 'active' : ''}`}
                   {...pageTransition}
                 >
-                  <Portfolio />
+                  <Portfolio scrollToSection={scrollToSection} />
                 </motion.section>
 
                 <motion.section 

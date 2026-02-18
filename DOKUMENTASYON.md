@@ -144,3 +144,16 @@
   Cozum:
   - App.js: Scroll threshold 50 -> 15'e dusuruldu. Artik kucuk scroll hareketleri de section degisimini tetikliyor.
   - Portfolio/index.js: atTop ve atBottom algilama toleransi 5px'e cikarildi ve Math.abs ile daha hassas hesaplama yapildi.
+
+- 2026-02-18: Portfolio scroll trap sorunu icin kesin cozum uygulandi (Manuel Navigasyon):
+
+  Sorun: Portfolio bolumunde event bubbling mekanizmasi guvenilir calismiyordu. Kullanici portfolio sonuna gelse bile scroll eventi App.js tarafindan yakalanip sayfa degisimi tetiklenemiyordu. "Portfolio digerlerinden farkli davraniyor" sikayeti vardi.
+
+  Cozum:
+  - App.js: `scrollToSection` fonksiyonu `Portfolio` bilesenine prop olarak gecildi.
+  - Portfolio/index.js: `onWheel` event handler'i guncellendi.
+    - `atBottom` ve `deltaY > 0` (asagi scroll) ise: `scrollToSection('contact')` manuel olarak cagriliyor.
+    - `atTop` ve `deltaY < 0` (yukari scroll) ise: `scrollToSection('about')` manuel olarak cagriliyor.
+    - Ara durumlarda `e.stopPropagation()` ile sadece portfolio ici scroll calisiyor.
+    - `passive: false` yapildi ve `e.preventDefault()` eklendi (sayfa degisimi sirasinda native scroll'u durdurmak icin).
+  - Portfolio/index.scss: `overscroll-behavior: contain` kaldirildi (native engel kaldirildi).

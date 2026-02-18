@@ -119,7 +119,7 @@ const ProjectScene = memo(({ item, index }) => {
   );
 });
 
-const Portfolio = memo(() => {
+const Portfolio = memo(({ scrollToSection }) => {
   const [portfolioData, setPortfolioData] = useState([]);
   const [loading, setLoading] = useState(true);
   const scrollRef = useRef(null);
@@ -156,13 +156,25 @@ const Portfolio = memo(() => {
       const canScroll = scrollHeight > clientHeight + 5;
 
       if (!canScroll) return;
-      if (e.deltaY > 0 && atBottom) return;
-      if (e.deltaY < 0 && atTop) return;
+      
+      if (e.deltaY > 0 && atBottom) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (scrollToSection) scrollToSection('contact');
+        return;
+      }
+      
+      if (e.deltaY < 0 && atTop) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (scrollToSection) scrollToSection('about');
+        return;
+      }
 
       e.stopPropagation();
     };
 
-    el.addEventListener('wheel', onWheel, { passive: true });
+    el.addEventListener('wheel', onWheel, { passive: false });
     return () => el.removeEventListener('wheel', onWheel);
   }, []);
 
