@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef, memo, useCallback } from "react";
 import { motion, useInView, useAnimation } from 'framer-motion';
 import "./index.scss";
 import { getDocs, collection } from 'firebase/firestore';
-import { db } from '../../firebase';
+import { db, ensureAuth } from '../../firebase';
 
 // ===========================
 // STATIC VARIANTS (bileşen dışı — her render'da yeniden oluşturulmaz)
@@ -95,6 +95,7 @@ const Portfolio = memo(() => {
         const getPortfolio = async () => {
             setLoading(true);
             try {
+                await ensureAuth();
                 const querySnapshot = await getDocs(collection(db, 'portfolio'));
                 const data = querySnapshot.docs.map((doc, index) => ({
                     ...doc.data(),
