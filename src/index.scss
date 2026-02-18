@@ -2,11 +2,13 @@
 
 body {
   margin: 0;
-  font: 300 11px/1.4 'Helvetica Neue', sans-serif;
+  font: 300 14px/1.5 'Helvetica Neue', sans-serif;
   color: $secondary-text-color;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background: $background-color;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 
   // Optimized scrollbar styles
   &::-webkit-scrollbar {
@@ -55,6 +57,14 @@ body {
 .dashboard {
   margin-top: 200px;
   margin-left: 50px;
+}
+
+@media (max-width: 768px) {
+  .dashboard {
+    margin-top: 100px;
+    margin-left: 20px;
+    margin-right: 20px;
+  }
 }
 
 // Optimize edilmiş scroll animasyonları

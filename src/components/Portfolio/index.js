@@ -153,9 +153,12 @@ const Portfolio = memo(() => {
       const { scrollTop, scrollHeight, clientHeight } = el;
       const atTop = scrollTop <= 1;
       const atBottom = scrollTop + clientHeight >= scrollHeight - 2;
+      const canScroll = scrollHeight > clientHeight + 5;
 
+      if (!canScroll) return;
       if (e.deltaY > 0 && atBottom) return;
       if (e.deltaY < 0 && atTop) return;
+
       e.stopPropagation();
     };
 
@@ -168,8 +171,8 @@ const Portfolio = memo(() => {
     if (!el) return;
     const { scrollTop, scrollHeight, clientHeight } = el;
     const canScroll = scrollHeight > clientHeight + 5;
-    const atTop = scrollTop <= 1;
-    const atBottom = scrollTop + clientHeight >= scrollHeight - 2;
+    const atTop = scrollTop <= 5;
+    const atBottom = Math.abs(scrollHeight - clientHeight - scrollTop) <= 5;
     if (canScroll && !atTop && !atBottom) {
       e.stopPropagation();
     }

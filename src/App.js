@@ -102,26 +102,21 @@ const App = () => {
   }, [isScrolling]);
 
   const handleWheelScroll = useCallback((event) => {
-    if (isScrolling) {
-      event.preventDefault();
-      return;
-    }
+    event.preventDefault();
+
+    if (isScrolling) return;
 
     const currentIndex = sectionsRef.current.findIndex(section => section === activeSection);
-    const threshold = 50;
+    const threshold = 15;
     
-    if (Math.abs(event.deltaY) < threshold) {
-      return;
-    }
+    if (Math.abs(event.deltaY) < threshold) return;
     
     if (event.deltaY > 0) {
       if (currentIndex < sectionsRef.current.length - 1) {
-        event.preventDefault();
         scrollToSectionByIndex(currentIndex + 1);
       }
     } else {
       if (currentIndex > 0) {
-        event.preventDefault();
         scrollToSectionByIndex(currentIndex - 1);
       }
     }
@@ -238,7 +233,7 @@ const App = () => {
       if (isScrolling) return;
       
       touchEndY = event.changedTouches[0].screenY;
-      const swipeThreshold = 80;
+      const swipeThreshold = window.innerWidth <= 768 ? 50 : 80;
       const difference = touchStartY - touchEndY;
 
       if (Math.abs(difference) > swipeThreshold) {

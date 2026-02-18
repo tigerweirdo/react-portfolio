@@ -3,7 +3,7 @@
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 300px;
+  height: 280px;
   z-index: 1;
   overflow: hidden;
   cursor: default;
@@ -17,12 +17,12 @@
 
 @media (max-width: 768px) {
   .liquid-wave-container {
-    height: 220px;
+    height: 180px;
   }
 }
 
 @media (max-width: 480px) {
   .liquid-wave-container {
-    height: 170px;
+    height: 140px;
   }
 }

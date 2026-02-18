@@ -3,7 +3,7 @@
 .contact-page {
   width: 100%;
   height: 100%;
-  padding: 2rem 5% 320px;
+  padding: 2rem 5% 300px;
   box-sizing: border-box;
   position: relative;
   background: transparent;
@@ -21,10 +21,10 @@
 
     h1 {
       color: $primary-color;
-      font-size: 48px;
+      font-size: clamp(2rem, 5vw, 48px);
       font-family: 'Coolvetica';
       font-weight: 400;
-      margin: 0 0 30px 0;
+      margin: 0 0 24px 0;
       text-align: center;
       text-transform: uppercase;
       letter-spacing: 2px;
@@ -32,9 +32,9 @@
 
     p {
       color: $text-color;
-      font-size: 16px;
+      font-size: clamp(14px, 1.6vw, 16px);
       line-height: 1.6;
-      margin-bottom: 30px;
+      margin-bottom: 24px;
       text-align: center;
       opacity: 0.9;
     }
@@ -112,35 +112,30 @@
 .contact-form {
   width: 100%;
   max-width: 600px;
-  margin-top: 20px;
+  margin-top: 16px;
 
   ul {
     padding: 0;
     margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
 
     li {
       padding: 2px;
       margin: 0;
       list-style: none;
-      margin-bottom: 15px;
       opacity: 0;
       overflow: visible;
       display: block;
-      clear: both;
       position: relative;
       animation: fadeInUp 2s 2s;
       animation-fill-mode: forwards;
+      width: 100%;
     }
 
     li.half {
-      width: 49%;
-      margin-left: 2%;
-      float: left;
-      clear: none;
-
-      &:first-child {
-        margin-left: 0;
-      }
+      width: calc(50% - 6px);
     }
   }
 
@@ -148,13 +143,15 @@
   input[type='email'] {
     width: 100%;
     height: 50px;
-    font-size: 15px;
+    font-size: 16px;
     color: $text-color;
     padding: 0 16px;
     box-sizing: border-box;
     background: transparent;
     border: none;
     outline: none;
+    -webkit-appearance: none;
+    border-radius: 0;
 
     &::placeholder {
       color: $secondary-text-color;
@@ -164,16 +161,18 @@
 
   textarea {
     width: 100%;
-    font-size: 15px;
+    font-size: 16px;
     color: $text-color;
     padding: 14px 16px;
     box-sizing: border-box;
-    min-height: 150px;
+    min-height: 130px;
     line-height: 1.5;
     resize: vertical;
     background: transparent;
     border: none;
     outline: none;
+    -webkit-appearance: none;
+    border-radius: 0;
 
     &::placeholder {
       color: $secondary-text-color;
@@ -309,65 +308,94 @@
   100% { transform: scale(1) rotate(0deg); opacity: 1; }
 }
 
-// ── Responsive ──
+// ── Responsive - Tablet ──
 
 @media (max-width: 1200px) {
   .contact-page {
-    padding: 2rem 2rem 320px;
+    padding: 2rem 2rem 280px;
     height: auto;
     min-height: 100%;
 
     .text-zone {
-      h1 { font-size: 40px; }
+      h1 { font-size: clamp(1.8rem, 5vw, 40px); }
       p { font-size: 15px; }
     }
   }
 }
 
+// ── Responsive - Mobil ──
+
 @media (max-width: 768px) {
   .contact-page {
-    padding: 1rem 1rem 240px;
+    padding: 1.5rem 1.5rem 200px;
+    justify-content: flex-start;
+    padding-top: 3rem;
+    overflow-y: auto;
+    overflow-x: hidden;
 
     .text-zone {
-      h1 { font-size: 32px; margin-bottom: 20px; }
-      p { font-size: 14px; margin-bottom: 20px; }
+      h1 {
+        font-size: clamp(1.6rem, 7vw, 32px);
+        margin-bottom: 16px;
+      }
+      p {
+        font-size: 14px;
+        margin-bottom: 16px;
+        line-height: 1.5;
+      }
     }
   }
 
   .contact-form {
     width: 100%;
-    margin-bottom: 2rem;
-    margin-top: 30px;
-    padding: 0 10px;
+    margin-top: 16px;
+    padding: 0;
 
     ul {
-      li { margin-bottom: 20px; }
+      gap: 10px;
+
+      li.half {
+        width: 100%;
+      }
     }
 
-    ul li.half {
+    textarea {
+      min-height: 100px;
+    }
+  }
+
+  .submit-row {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 12px !important;
+
+    .status-message {
+      min-width: auto !important;
       width: 100%;
-      margin-left: 0;
-      float: none;
     }
   }
 }
 
+// ── Responsive - Küçük mobil ──
+
 @media (max-width: 480px) {
   .contact-page {
-    padding: 1rem 1rem 190px;
+    padding: 1rem 1rem 160px;
+    padding-top: 2rem;
 
     .text-zone {
-      h1 { font-size: 28px; letter-spacing: 1px; }
+      h1 { letter-spacing: 1px; }
+      p { font-size: 13px; }
     }
   }
 
   .flat-button {
-    font-size: 14px;
+    font-size: 12px;
     letter-spacing: 2px;
-    padding: 12px 25px;
+    padding: 12px 22px;
   }
 
   .submit-row {
-    justify-content: center;
+    align-items: center !important;
   }
 }

@@ -10,6 +10,7 @@
   overflow: hidden;
   position: relative;
   background: $background-color;
+  box-sizing: border-box;
 }
 
 .portfolio-scroll-area {
@@ -17,8 +18,8 @@
   height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
-  scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 
   &::-webkit-scrollbar {
     width: 4px;
@@ -322,15 +323,19 @@
 // RESPONSIVE — Tablet
 // ===========================
 @media screen and (max-width: 1024px) {
+  .portfolio-scenes {
+    padding: 0 4%;
+  }
+
   .project-scene {
     gap: 32px;
-    padding: 48px 0;
-    min-height: 50vh;
+    padding: 40px 0;
+    min-height: auto;
   }
 
   .skeleton-scene {
     gap: 32px;
-    padding: 48px 0;
+    padding: 40px 0;
   }
 }
 
@@ -339,17 +344,25 @@
 // ===========================
 @media screen and (max-width: 768px) {
   .portfolio-header {
-    padding: 50px 5% 24px;
+    padding: 40px 5% 20px;
+
+    .portfolio-title {
+      font-size: clamp(1.8rem, 7vw, 3rem);
+    }
 
     .portfolio-subtitle {
-      font-size: 0.9rem;
+      font-size: 0.85rem;
     }
+  }
+
+  .portfolio-scenes {
+    padding: 0 5%;
   }
 
   .project-scene {
     grid-template-columns: 1fr;
-    gap: 24px;
-    padding: 36px 0;
+    gap: 20px;
+    padding: 30px 0;
     min-height: auto;
 
     &.reversed {
@@ -377,6 +390,10 @@
     &::after {
       border-radius: 12px;
     }
+
+    img {
+      aspect-ratio: 16 / 9;
+    }
   }
 
   .scene-description {
@@ -384,44 +401,58 @@
     font-size: 0.9rem;
   }
 
+  .scene-cta {
+    font-size: 0.85rem;
+  }
+
   .skeleton-scene {
     grid-template-columns: 1fr;
-    gap: 20px;
-    padding: 36px 0;
+    gap: 16px;
+    padding: 30px 0;
 
     &:nth-child(even) {
       direction: ltr;
     }
   }
+
+  .portfolio-end-spacer {
+    height: 30px;
+  }
 }
 
 // ===========================
-// RESPONSIVE — Kucuk Mobil
+// RESPONSIVE — Küçük Mobil
 // ===========================
 @media screen and (max-width: 480px) {
   .portfolio-header {
-    padding: 36px 5% 16px;
+    padding: 30px 5% 12px;
+  }
+
+  .portfolio-scenes {
+    padding: 0 4%;
   }
 
   .project-scene {
-    padding: 28px 0;
-    gap: 18px;
+    padding: 24px 0;
+    gap: 16px;
   }
 
   .scene-title {
-    font-size: 1.4rem;
+    font-size: clamp(1.2rem, 5vw, 1.4rem);
   }
 
   .scene-description {
     font-size: 0.85rem;
+    line-height: 1.6;
   }
 
   .scene-cta {
-    font-size: 0.82rem;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
   }
 
   .portfolio-end-spacer {
-    height: 24px;
+    height: 20px;
   }
 }
 

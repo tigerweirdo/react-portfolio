@@ -7,6 +7,9 @@ const DAMP = 0.975;
 const SPREAD = 0.2;
 const PASSES = 3;
 const SY_RATIO = 0.40;
+const MAX_DROPS = 80;
+const AIR_DRAG = 0.992;
+const DROP_MIN_Y = 4;
 
 const LiquidWave = () => {
   const canvasRef = useRef(null);
@@ -27,6 +30,7 @@ const LiquidWave = () => {
     lst: 0,
     lsT: Date.now(),
     drops: [],
+    splashes: [],
   });
 
   const resize = useCallback(() => {
@@ -45,6 +49,31 @@ const LiquidWave = () => {
     s.dpr = dpr;
   }, []);
 
+  const getSurfaceY = useCallback((s, worldX) => {
+    const col = Math.floor((worldX / s.w) * N);
+    const clamped = Math.max(0, Math.min(col, N - 1));
+    return s.ht * SY_RATIO - s.h[clamped];
+  }, []);
+
+  const spawnSplash = useCallback((s, x, surfY, impactForce) => {
+    const cnt = Math.min(Math.floor(impactForce * 1.8), 8);
+    for (let p = 0; p < cnt; p++) {
+      if (s.drops.length >= MAX_DROPS) break;
+      const angle = -Math.PI * 0.25 - Math.random() * Math.PI * 0.5;
+      const speed = 0.5 + Math.random() * impactForce * 0.4;
+      s.drops.push({
+        x: x + (Math.random() - 0.5) * 6,
+        y: surfY - 1,
+        vx: Math.cos(angle) * speed * (Math.random() > 0.5 ? 1 : -1),
+        vy: Math.sin(angle) * speed,
+        life: 0.4 + Math.random() * 0.3,
+        sz: 0.5 + Math.random() * 1.5,
+        grav: 0.08 + Math.random() * 0.04,
+        isSplash: true,
+      });
+    }
+  }, []);
+
   const disturb = useCallback((col, force) => {
     const s = st.current;
     const rad = Math.min(6 + Math.abs(force) * 0.5, 16);
@@ -56,24 +85,29 @@ const LiquidWave = () => {
     }
     if (Math.abs(force) > 1.2) {
       const x = (col / N) * s.w;
-      const surfY = s.ht * SY_RATIO - s.h[Math.max(0, Math.min(col, N - 1))];
+      const surfY = getSurfaceY(s, x);
       const intensity = Math.abs(force);
-      const cnt = Math.min(Math.floor(intensity * 2.5), 20);
+      const cnt = Math.min(Math.floor(intensity * 2), 14);
+      const maxSurfH = s.ht * SY_RATIO * 0.55;
       for (let p = 0; p < cnt; p++) {
-        const angle = -Math.PI * 0.15 - Math.random() * Math.PI * 0.7;
-        const speed = 1.5 + Math.random() * intensity * 0.9;
+        if (s.drops.length >= MAX_DROPS) break;
+        const angle = -Math.PI * 0.2 - Math.random() * Math.PI * 0.6;
+        const speed = 0.8 + Math.random() * Math.min(intensity * 0.55, 3.5);
+        const maxVy = maxSurfH * 0.06;
+        const rawVy = Math.sin(angle) * speed - 0.3;
         s.drops.push({
-          x: x + (Math.random() - 0.5) * 16,
-          y: surfY - Math.random() * 3,
-          vx: Math.cos(angle) * speed * (Math.random() > 0.5 ? 1 : -1),
-          vy: Math.sin(angle) * speed - 0.5,
-          life: 0.7 + Math.random() * 0.5,
-          sz: 1 + Math.random() * 3 * Math.min(intensity * 0.25, 1),
-          grav: 0.06 + Math.random() * 0.06,
+          x: x + (Math.random() - 0.5) * 12,
+          y: surfY - Math.random() * 2,
+          vx: Math.cos(angle) * speed * (Math.random() > 0.5 ? 1 : -1) * 0.7,
+          vy: Math.max(rawVy, -maxVy),
+          life: 1.0 + Math.random() * 0.6,
+          sz: 0.8 + Math.random() * 2.5 * Math.min(intensity * 0.2, 1),
+          grav: 0.065 + Math.random() * 0.045,
+          isSplash: false,
         });
       }
     }
-  }, []);
+  }, [getSurfaceY]);
 
   const physics = useCallback(() => {
     const s = st.current;
@@ -121,28 +155,69 @@ const LiquidWave = () => {
         Math.sin(i * 0.15 + t * 0.6 + 3.7) * 0.003;
     }
 
-    const surfY = s.ht * SY_RATIO;
     for (let i = s.drops.length - 1; i >= 0; i--) {
       const d = s.drops[i];
+
+      d.vy += d.grav;
+      d.vx *= AIR_DRAG;
+      d.vy *= AIR_DRAG;
       d.x += d.vx;
       d.y += d.vy;
-      d.vy += d.grav;
-      d.vx *= 0.995;
-      d.life -= 0.014;
+      d.life -= 0.012;
 
-      if (d.vy > 0 && d.y >= surfY - s.h[Math.floor((d.x / s.w) * N)] && d.life > 0.15) {
-        const col = Math.floor((d.x / s.w) * N);
-        if (col >= 0 && col < N) {
-          s.v[col] += d.vy * 0.3;
-        }
-        d.life = Math.min(d.life, 0.15);
+      if (d.y < DROP_MIN_Y) {
+        d.y = DROP_MIN_Y;
+        d.vy = Math.abs(d.vy) * 0.3;
       }
 
-      if (d.life <= 0 || d.x < -10 || d.x > s.w + 10) {
+      const surfAtDrop = getSurfaceY(s, d.x);
+
+      if (d.vy > 0 && d.y >= surfAtDrop) {
+        const col = Math.floor((d.x / s.w) * N);
+        if (col >= 0 && col < N) {
+          const impactForce = d.vy * d.sz * 0.35;
+          const impactRad = Math.min(Math.ceil(d.sz * 1.5), 8);
+          for (let r = -impactRad; r <= impactRad; r++) {
+            const idx = col + r;
+            if (idx >= 0 && idx < N) {
+              const falloff = Math.cos((Math.abs(r) / (impactRad + 1)) * Math.PI * 0.5);
+              s.v[idx] += impactForce * falloff;
+            }
+          }
+
+          s.splashes.push({
+            x: d.x,
+            y: surfAtDrop,
+            radius: 0,
+            maxRadius: 8 + d.sz * 4,
+            alpha: 0.5 + Math.min(d.vy * 0.1, 0.3),
+            life: 1.0,
+          });
+
+          if (!d.isSplash && d.vy > 1.0 && d.sz > 1.0) {
+            spawnSplash(s, d.x, surfAtDrop, d.vy * d.sz * 0.3);
+          }
+        }
+
+        s.drops.splice(i, 1);
+        continue;
+      }
+
+      if (d.life <= 0 || d.x < -20 || d.x > s.w + 20) {
         s.drops.splice(i, 1);
       }
     }
-  }, []);
+
+    for (let i = s.splashes.length - 1; i >= 0; i--) {
+      const sp = s.splashes[i];
+      sp.life -= 0.04;
+      sp.radius += (sp.maxRadius - sp.radius) * 0.15;
+      sp.alpha *= 0.94;
+      if (sp.life <= 0) {
+        s.splashes.splice(i, 1);
+      }
+    }
+  }, [getSurfaceY, spawnSplash]);
 
   const render = useCallback(() => {
     const cv = canvasRef.current;
@@ -276,36 +351,78 @@ const LiquidWave = () => {
     ctx.fillStyle = rfg;
     ctx.fillRect(0, sy - 2, w, 22);
 
+    const { splashes } = s;
+    if (splashes.length > 0) {
+      for (let i = 0; i < splashes.length; i++) {
+        const sp = splashes[i];
+        if (sp.alpha < 0.02) continue;
+        ctx.beginPath();
+        ctx.ellipse(sp.x, sp.y, sp.radius, sp.radius * 0.35, 0, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(180,220,255,${sp.alpha * 0.6})`;
+        ctx.lineWidth = Math.max(0.5, 1.5 * sp.life);
+        ctx.stroke();
+
+        if (sp.life > 0.5) {
+          const inner = sp.radius * 0.5;
+          ctx.beginPath();
+          ctx.ellipse(sp.x, sp.y, inner, inner * 0.3, 0, 0, Math.PI * 2);
+          ctx.strokeStyle = `rgba(210,240,255,${sp.alpha * 0.3})`;
+          ctx.lineWidth = 0.6;
+          ctx.stroke();
+        }
+      }
+    }
+
     if (drops.length > 0) {
       for (let i = 0; i < drops.length; i++) {
         const d = drops[i];
-        const a = d.life;
-        const sz = d.sz * (0.5 + a * 0.5);
+        const a = Math.min(d.life, 1);
+        const sz = d.sz * (0.6 + a * 0.4);
+        if (sz < 0.3) continue;
+
+        const speed = Math.sqrt(d.vx * d.vx + d.vy * d.vy);
+
+        if (d.vy > 0.5 && speed > 1) {
+          const tailLen = Math.min(speed * 1.8, 10);
+          const nx = -d.vx / speed;
+          const ny = -d.vy / speed;
+          ctx.beginPath();
+          ctx.moveTo(d.x + ny * sz * 0.5, d.y - nx * sz * 0.5);
+          ctx.quadraticCurveTo(
+            d.x + nx * tailLen * 0.5, d.y + ny * tailLen * 0.5,
+            d.x + nx * tailLen, d.y + ny * tailLen
+          );
+          ctx.quadraticCurveTo(
+            d.x + nx * tailLen * 0.5, d.y + ny * tailLen * 0.5,
+            d.x - ny * sz * 0.5, d.y + nx * sz * 0.5
+          );
+          ctx.closePath();
+          ctx.fillStyle = `rgba(160,210,248,${a * 0.25})`;
+          ctx.fill();
+        }
 
         ctx.beginPath();
         ctx.arc(d.x, d.y, sz, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(180,220,250,${a * 0.75})`;
+        ctx.fillStyle = `rgba(180,220,250,${a * 0.8})`;
         ctx.fill();
 
+        if (sz > 1.2) {
+          const hlX = d.x - sz * 0.25;
+          const hlY = d.y - sz * 0.3;
+          const hlR = sz * 0.4;
+          ctx.beginPath();
+          ctx.arc(hlX, hlY, hlR, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(230,245,255,${a * 0.5})`;
+          ctx.fill();
+        }
+
         if (sz > 1.5 && a > 0.3) {
-          const glR = sz * 2.5;
+          const glR = sz * 2;
           const gl = ctx.createRadialGradient(d.x, d.y, 0, d.x, d.y, glR);
-          gl.addColorStop(0, `rgba(140,200,245,${a * 0.2})`);
+          gl.addColorStop(0, `rgba(140,200,245,${a * 0.12})`);
           gl.addColorStop(1, 'rgba(100,170,230,0)');
           ctx.fillStyle = gl;
           ctx.fillRect(d.x - glR, d.y - glR, glR * 2, glR * 2);
-        }
-
-        if (d.vy > 0 && a > 0.2) {
-          const tailLen = Math.min(d.vy * 2, 8);
-          ctx.beginPath();
-          ctx.moveTo(d.x, d.y - sz);
-          ctx.lineTo(d.x - sz * 0.4, d.y);
-          ctx.lineTo(d.x, d.y - tailLen);
-          ctx.lineTo(d.x + sz * 0.4, d.y);
-          ctx.closePath();
-          ctx.fillStyle = `rgba(170,215,248,${a * 0.35})`;
-          ctx.fill();
         }
       }
     }
