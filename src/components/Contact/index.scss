@@ -3,7 +3,7 @@
 .contact-page {
   width: 100%;
   height: 100%;
-  padding: 2rem 5% 280px;
+  padding: 2rem 5% 320px;
   box-sizing: border-box;
   position: relative;
   background: transparent;
@@ -260,7 +260,7 @@
 // Responsive
 @media (max-width: 1200px) {
   .contact-page {
-    padding: 2rem 2rem 280px;
+    padding: 2rem 2rem 320px;
     height: auto;
     min-height: 100%;
 
@@ -273,7 +273,7 @@
 
 @media (max-width: 768px) {
   .contact-page {
-    padding: 1rem 1rem 210px;
+    padding: 1rem 1rem 240px;
 
     .text-zone {
       h1 { font-size: 32px; margin-bottom: 20px; }
@@ -301,7 +301,7 @@
 
 @media (max-width: 480px) {
   .contact-page {
-    padding: 1rem 1rem 160px;
+    padding: 1rem 1rem 190px;
 
     .text-zone {
       h1 { font-size: 28px; letter-spacing: 1px; }

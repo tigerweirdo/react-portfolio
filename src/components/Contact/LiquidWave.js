@@ -6,7 +6,7 @@ const SPRING = 0.025;
 const DAMP = 0.985;
 const SPREAD = 0.25;
 const PASSES = 4;
-const SY_RATIO = 0.28;
+const SY_RATIO = 0.40;
 
 const LiquidWave = () => {
   const canvasRef = useRef(null);
@@ -26,7 +26,7 @@ const LiquidWave = () => {
     ma: false,
     lst: 0,
     lsT: Date.now(),
-    pts: [],
+    drops: [],
   });
 
   const resize = useCallback(() => {
@@ -47,25 +47,29 @@ const LiquidWave = () => {
 
   const disturb = useCallback((col, force) => {
     const s = st.current;
-    const rad = Math.min(6 + Math.abs(force) * 0.4, 14);
+    const rad = Math.min(6 + Math.abs(force) * 0.5, 16);
     for (let i = Math.floor(-rad); i <= Math.ceil(rad); i++) {
       const idx = col + i;
       if (idx >= 0 && idx < N) {
         s.v[idx] += force * Math.cos((Math.abs(i) / (rad + 1)) * Math.PI * 0.5);
       }
     }
-    if (Math.abs(force) > 2.5) {
+    if (Math.abs(force) > 1.2) {
       const x = (col / N) * s.w;
-      const sy = s.ht * SY_RATIO;
-      const cnt = Math.min(Math.floor(Math.abs(force) * 1.5), 12);
+      const surfY = s.ht * SY_RATIO - s.h[Math.max(0, Math.min(col, N - 1))];
+      const intensity = Math.abs(force);
+      const cnt = Math.min(Math.floor(intensity * 2.5), 20);
       for (let p = 0; p < cnt; p++) {
-        s.pts.push({
-          x: x + (Math.random() - 0.5) * 20,
-          y: sy - Math.random() * 4,
-          vx: (Math.random() - 0.5) * 4,
-          vy: -(1.2 + Math.random() * Math.abs(force) * 0.6),
-          life: 1,
-          sz: 0.8 + Math.random() * 2,
+        const angle = -Math.PI * 0.15 - Math.random() * Math.PI * 0.7;
+        const speed = 1.5 + Math.random() * intensity * 0.9;
+        s.drops.push({
+          x: x + (Math.random() - 0.5) * 16,
+          y: surfY - Math.random() * 3,
+          vx: Math.cos(angle) * speed * (Math.random() > 0.5 ? 1 : -1),
+          vy: Math.sin(angle) * speed - 0.5,
+          life: 0.7 + Math.random() * 0.5,
+          sz: 1 + Math.random() * 3 * Math.min(intensity * 0.25, 1),
+          grav: 0.06 + Math.random() * 0.06,
         });
       }
     }
@@ -94,6 +98,20 @@ const LiquidWave = () => {
       }
     }
 
+    const headroom = s.ht * SY_RATIO * 0.85;
+    for (let i = 0; i < N; i++) {
+      if (h[i] > headroom) {
+        const excess = (h[i] - headroom) / headroom;
+        v[i] -= excess * 1.5;
+        v[i] *= 0.92;
+      }
+      if (h[i] < -headroom * 0.6) {
+        const excess = (-h[i] - headroom * 0.6) / headroom;
+        v[i] += excess * 1.2;
+        v[i] *= 0.92;
+      }
+    }
+
     s.t += 0.016;
     const t = s.t;
     for (let i = 0; i < N; i++) {
@@ -103,13 +121,26 @@ const LiquidWave = () => {
         Math.sin(i * 0.20 + t * 1.2 + 3.7) * 0.012;
     }
 
-    for (let i = s.pts.length - 1; i >= 0; i--) {
-      const pt = s.pts[i];
-      pt.x += pt.vx;
-      pt.y += pt.vy;
-      pt.vy += 0.12;
-      pt.life -= 0.016;
-      if (pt.life <= 0) s.pts.splice(i, 1);
+    const surfY = s.ht * SY_RATIO;
+    for (let i = s.drops.length - 1; i >= 0; i--) {
+      const d = s.drops[i];
+      d.x += d.vx;
+      d.y += d.vy;
+      d.vy += d.grav;
+      d.vx *= 0.995;
+      d.life -= 0.014;
+
+      if (d.vy > 0 && d.y >= surfY - s.h[Math.floor((d.x / s.w) * N)] && d.life > 0.15) {
+        const col = Math.floor((d.x / s.w) * N);
+        if (col >= 0 && col < N) {
+          s.v[col] += d.vy * 0.3;
+        }
+        d.life = Math.min(d.life, 0.15);
+      }
+
+      if (d.life <= 0 || d.x < -10 || d.x > s.w + 10) {
+        s.drops.splice(i, 1);
+      }
     }
   }, []);
 
@@ -120,21 +151,12 @@ const LiquidWave = () => {
     if (!ctx) return;
 
     const s = st.current;
-    const { w, ht, dpr, h: hts, t, pts } = s;
+    const { w, ht, dpr, h: hts, t, drops } = s;
     const sy = ht * SY_RATIO;
     const cw = w / (N - 1);
 
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, w, ht);
-
-    const fadeZone = sy * 0.7;
-    const fadeG = ctx.createLinearGradient(0, 0, 0, sy + 30);
-    fadeG.addColorStop(0, 'rgba(255,255,255,0)');
-    fadeG.addColorStop(0.5, 'rgba(220,232,245,0.15)');
-    fadeG.addColorStop(0.8, 'rgba(180,210,240,0.25)');
-    fadeG.addColorStop(1, 'rgba(140,185,230,0.35)');
-    ctx.fillStyle = fadeG;
-    ctx.fillRect(0, fadeZone * 0.3, w, sy + 30 - fadeZone * 0.3);
 
     const points = [];
     for (let i = 0; i < N; i++) {
@@ -153,33 +175,33 @@ const LiquidWave = () => {
     ctx.lineTo(w + 2, ht + 2);
     ctx.closePath();
 
-    const wg = ctx.createLinearGradient(0, sy - 30, 0, ht);
-    wg.addColorStop(0, 'rgba(45,120,190,0.45)');
-    wg.addColorStop(0.06, 'rgba(35,100,175,0.55)');
-    wg.addColorStop(0.15, 'rgba(25,78,148,0.68)');
-    wg.addColorStop(0.30, 'rgba(18,58,118,0.78)');
-    wg.addColorStop(0.50, 'rgba(12,40,88,0.86)');
-    wg.addColorStop(0.75, 'rgba(8,25,60,0.92)');
-    wg.addColorStop(1, 'rgba(4,14,38,0.97)');
+    const wg = ctx.createLinearGradient(0, sy - 35, 0, ht);
+    wg.addColorStop(0, 'rgba(55,130,198,0.60)');
+    wg.addColorStop(0.05, 'rgba(42,110,182,0.70)');
+    wg.addColorStop(0.12, 'rgba(30,85,158,0.80)');
+    wg.addColorStop(0.25, 'rgba(22,65,132,0.88)');
+    wg.addColorStop(0.45, 'rgba(14,45,100,0.93)');
+    wg.addColorStop(0.70, 'rgba(8,28,68,0.96)');
+    wg.addColorStop(1, 'rgba(4,14,40,0.99)');
     ctx.fillStyle = wg;
     ctx.fill();
 
     ctx.save();
     ctx.clip();
 
-    const causticY = ht * 0.6;
+    const causticY = ht * 0.55;
     for (let x = 0; x < w; x += 3) {
       const c1 = Math.sin(x * 0.013 + t * 0.5);
       const c2 = Math.cos(x * 0.008 + t * 0.35 + 1.8);
       const c3 = Math.sin(x * 0.02 + t * 0.75 + 3.2);
       const val = (c1 * c1 * c2 * c2 + c3 * c3 * 0.25) * 0.35;
       if (val > 0.06) {
-        ctx.fillStyle = `rgba(65,145,230,${val * 0.1})`;
+        ctx.fillStyle = `rgba(55,140,225,${val * 0.12})`;
         ctx.fillRect(x, causticY, 3, ht - causticY);
       }
     }
 
-    ctx.globalAlpha = 0.04;
+    ctx.globalAlpha = 0.045;
     for (let r = 0; r < 6; r++) {
       const rx = w * (0.08 + r * 0.16);
       const rw = 15 + Math.sin(t * 0.25 + r * 2.1) * 8;
@@ -198,7 +220,6 @@ const LiquidWave = () => {
       ctx.fill();
     }
     ctx.globalAlpha = 1;
-
     ctx.restore();
 
     ctx.save();
@@ -210,23 +231,23 @@ const LiquidWave = () => {
       ctx.quadraticCurveTo(points[i - 1].x, points[i - 1].y, mx, my);
     }
     const slg = ctx.createLinearGradient(0, 0, w, 0);
-    slg.addColorStop(0, 'rgba(130,195,255,0.15)');
-    slg.addColorStop(0.25, 'rgba(150,210,255,0.4)');
-    slg.addColorStop(0.5, 'rgba(170,220,255,0.5)');
-    slg.addColorStop(0.75, 'rgba(150,210,255,0.4)');
-    slg.addColorStop(1, 'rgba(130,195,255,0.15)');
+    slg.addColorStop(0, 'rgba(120,190,250,0.15)');
+    slg.addColorStop(0.2, 'rgba(145,208,255,0.45)');
+    slg.addColorStop(0.5, 'rgba(165,222,255,0.55)');
+    slg.addColorStop(0.8, 'rgba(145,208,255,0.45)');
+    slg.addColorStop(1, 'rgba(120,190,250,0.15)');
     ctx.strokeStyle = slg;
-    ctx.lineWidth = 2;
+    ctx.lineWidth = 2.2;
     ctx.stroke();
 
     ctx.beginPath();
-    ctx.moveTo(points[0].x, points[0].y - 0.5);
+    ctx.moveTo(points[0].x, points[0].y - 1);
     for (let i = 1; i < points.length; i++) {
       const mx = (points[i - 1].x + points[i].x) * 0.5;
       const my = (points[i - 1].y + points[i].y) * 0.5;
-      ctx.quadraticCurveTo(points[i - 1].x, points[i - 1].y - 0.5, mx, my - 0.5);
+      ctx.quadraticCurveTo(points[i - 1].x, points[i - 1].y - 1, mx, my - 1);
     }
-    ctx.strokeStyle = 'rgba(200,230,255,0.2)';
+    ctx.strokeStyle = 'rgba(210,235,255,0.22)';
     ctx.lineWidth = 0.8;
     ctx.stroke();
     ctx.restore();
@@ -235,12 +256,12 @@ const LiquidWave = () => {
       const p = points[i - 1], c = points[i], nx = points[i + 1];
       if (c.y < p.y && c.y < nx.y) {
         const ch = ((p.y - c.y) + (nx.y - c.y)) * 0.5;
-        if (ch > 0.6) {
-          const inten = Math.min(ch * 0.055, 0.5);
-          const gs = 6 + ch * 1.0;
+        if (ch > 0.5) {
+          const inten = Math.min(ch * 0.06, 0.55);
+          const gs = 7 + ch * 1.1;
           const sg = ctx.createRadialGradient(c.x, c.y - 2, 0, c.x, c.y, gs);
-          sg.addColorStop(0, `rgba(210,235,255,${inten})`);
-          sg.addColorStop(0.3, `rgba(160,210,250,${inten * 0.4})`);
+          sg.addColorStop(0, `rgba(215,240,255,${inten})`);
+          sg.addColorStop(0.3, `rgba(165,215,250,${inten * 0.4})`);
           sg.addColorStop(1, 'rgba(120,185,240,0)');
           ctx.fillStyle = sg;
           ctx.fillRect(c.x - gs, c.y - gs - 2, gs * 2, gs * 2);
@@ -248,20 +269,45 @@ const LiquidWave = () => {
       }
     }
 
-    const rfg = ctx.createLinearGradient(0, sy - 2, 0, sy + 18);
-    rfg.addColorStop(0, 'rgba(80,160,230,0)');
-    rfg.addColorStop(0.2, 'rgba(80,160,230,0.06)');
-    rfg.addColorStop(1, 'rgba(50,120,200,0)');
+    const rfg = ctx.createLinearGradient(0, sy - 2, 0, sy + 20);
+    rfg.addColorStop(0, 'rgba(70,155,225,0)');
+    rfg.addColorStop(0.15, 'rgba(70,155,225,0.07)');
+    rfg.addColorStop(1, 'rgba(45,115,195,0)');
     ctx.fillStyle = rfg;
-    ctx.fillRect(0, sy - 2, w, 20);
+    ctx.fillRect(0, sy - 2, w, 22);
 
-    for (let i = 0; i < pts.length; i++) {
-      const pt = pts[i];
-      const a = pt.life * 0.6;
-      ctx.beginPath();
-      ctx.arc(pt.x, pt.y, pt.sz, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(200,230,255,${a})`;
-      ctx.fill();
+    if (drops.length > 0) {
+      for (let i = 0; i < drops.length; i++) {
+        const d = drops[i];
+        const a = d.life;
+        const sz = d.sz * (0.5 + a * 0.5);
+
+        ctx.beginPath();
+        ctx.arc(d.x, d.y, sz, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(180,220,250,${a * 0.75})`;
+        ctx.fill();
+
+        if (sz > 1.5 && a > 0.3) {
+          const glR = sz * 2.5;
+          const gl = ctx.createRadialGradient(d.x, d.y, 0, d.x, d.y, glR);
+          gl.addColorStop(0, `rgba(140,200,245,${a * 0.2})`);
+          gl.addColorStop(1, 'rgba(100,170,230,0)');
+          ctx.fillStyle = gl;
+          ctx.fillRect(d.x - glR, d.y - glR, glR * 2, glR * 2);
+        }
+
+        if (d.vy > 0 && a > 0.2) {
+          const tailLen = Math.min(d.vy * 2, 8);
+          ctx.beginPath();
+          ctx.moveTo(d.x, d.y - sz);
+          ctx.lineTo(d.x - sz * 0.4, d.y);
+          ctx.lineTo(d.x, d.y - tailLen);
+          ctx.lineTo(d.x + sz * 0.4, d.y);
+          ctx.closePath();
+          ctx.fillStyle = `rgba(170,215,248,${a * 0.35})`;
+          ctx.fill();
+        }
+      }
     }
 
     const vg = ctx.createLinearGradient(0, ht * 0.78, 0, ht);
@@ -289,10 +335,10 @@ const LiquidWave = () => {
       const dx = x - s.px;
       const dy = y - s.py;
       const spd = Math.sqrt(dx * dx + dy * dy);
-      const force = Math.min(spd * 0.45, 14);
+      const force = Math.min(spd * 0.55, 16);
       const surfAt = s.ht * SY_RATIO - (col >= 0 && col < N ? s.h[col] : 0);
       const dir = y > surfAt ? 1 : -1;
-      if (col >= 0 && col < N) disturb(col, force * dir * 0.35);
+      if (col >= 0 && col < N) disturb(col, force * dir * 0.4);
     }
     s.px = x;
     s.py = y;
@@ -305,7 +351,7 @@ const LiquidWave = () => {
     const x = e.clientX - rect.left;
     const s = st.current;
     const col = Math.floor((x / s.w) * N);
-    if (col >= 0 && col < N) disturb(col, 10);
+    if (col >= 0 && col < N) disturb(col, 14);
   }, [disturb]);
 
   const onML = useCallback(() => {
@@ -328,8 +374,8 @@ const LiquidWave = () => {
       const dx = x - s.px;
       const dy = y - s.py;
       const spd = Math.sqrt(dx * dx + dy * dy);
-      const force = Math.min(spd * 0.45, 14);
-      if (col >= 0 && col < N) disturb(col, force * 0.35);
+      const force = Math.min(spd * 0.55, 16);
+      if (col >= 0 && col < N) disturb(col, force * 0.4);
     }
     s.px = x;
     s.py = y;
@@ -350,8 +396,8 @@ const LiquidWave = () => {
     const top = sc.scrollTop;
     const delta = Math.abs(top - s.lst);
     if (delta > 0) {
-      const force = Math.min((delta / dt) * 7, 10);
-      const count = Math.floor(N * 0.35);
+      const force = Math.min((delta / dt) * 8, 12);
+      const count = Math.floor(N * 0.4);
       for (let i = 0; i < count; i++) {
         const idx = Math.floor(Math.random() * N);
         s.v[idx] += (Math.random() - 0.5) * force;
