@@ -40,7 +40,6 @@ const PortfolioAdminPanel = ({ onLogout }) => {
     const fetchPortfolioItems = useCallback(async () => {
         setIsLoading(true);
         try {
-            await ensureAuth();
             const data = await getDocs(portfolioCollectionRef);
             const items = data.docs.map((d) => ({ ...d.data(), id: d.id }));
             setPortfolioItems(items);
@@ -174,7 +173,6 @@ const PortfolioAdminPanel = ({ onLogout }) => {
         let coverUrl = existingCoverUrl;
 
         try {
-            await ensureAuth();
             if (imageFile) {
                 // Eğer eski bir resim varsa ve yeni resim yükleniyorsa, eski resmi Storage'dan sil
                 if (currentItem && currentItem.image && currentItem.image !== existingCoverUrl) { // Cover ile aynı değilse sil

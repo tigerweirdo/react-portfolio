@@ -114,3 +114,74 @@ service firebase.storage {
 **Deploy Edilen Kurallar:**
 - Firestore: `request.auth != null` koşulu ile okuma/yazma
 - Storage: Herkes okuyabilir (`if true`), yazma için `request.auth != null` gerekli
+
+---
+
+### Görev 5: Admin Paneli Tam Yeniden Tasarım (18 Şubat 2026)
+
+**Amaç:** Admin panelini modern bir dashboard yapısıyla tamamen yeniden tasarlamak: sidebar navigasyon, dashboard istatistikleri, gelişmiş portfolyo yönetimi ve genişleyebilir mimari.
+
+**Oluşturulan Yeni Dosyalar:**
+
+1. **`src/components/Admin/AdminLayout.js`** + **`AdminLayout.scss`**
+   - Sidebar navigasyonlu ana kabuk bileşeni
+   - React Router `<Outlet />` ile nested routing
+   - Desktop'ta daraltılabilir sidebar, mobilde hamburger menü
+   - Dashboard ve Portfolyo navigasyon linkleri
+   - Çıkış butonu
+
+2. **`src/components/Admin/Dashboard.js`** + **`Dashboard.scss`**
+   - Toplam proje sayısı ve özel kapak resmi sayısı istatistik kartları
+   - Son eklenen projelerin listesi
+   - Hızlı işlem butonları (Yeni Proje Ekle, Projeleri Yönet)
+   - Boş durum mesajı
+
+3. **`src/components/Admin/PortfolioManager.js`** + **`PortfolioManager.scss`**
+   - Gelişmiş liste görünümü: Grid ve Liste modları
+   - Arama çubuğu ile anlık filtreleme
+   - A-Z / Z-A sıralama
+   - Sayfa içi form (modal yerine): daha geniş çalışma alanı
+   - Drag & drop resim yükleme (ImageUploader bileşeni)
+   - Karakter sayacı (açıklama alanı)
+   - Inline form doğrulama hata mesajları
+   - Özel silme onay dialogu (ConfirmDialog bileşeni)
+
+4. **`src/components/Admin/ConfirmDialog.js`** + **`ConfirmDialog.scss`**
+   - `window.confirm` yerine modern modal dialog
+   - Danger ve Warning varyantları
+   - Escape tuşu ile kapatma, loading durumu
+   - Animasyonlu giriş efekti
+
+5. **`src/components/Admin/ImageUploader.js`** + **`ImageUploader.scss`**
+   - Native HTML5 Drag & Drop API ile dosya sürükle-bırak
+   - Tıklayarak dosya seçme
+   - Resim önizleme ve değiştirme/silme
+   - İstemci tarafı doğrulama (10MB limit, sadece resim formatları)
+   - Mevcut resmi gösterme
+
+**Güncellenen Dosyalar:**
+
+- **`src/App.js`** — Admin route'ları nested route yapısına çevrildi. AdminLayout, Dashboard ve PortfolioManager lazy-loaded.
+- **`src/components/Admin/Login.js`** — Şifre göster/gizle butonu, boş şifre kontrolü, yeni tasarım.
+- **`src/components/Admin/Login.scss`** — Yeniden tasarlandı (Google-benzeri minimal stil).
+
+**Silinen Dosyalar:**
+- `src/components/Admin/PortfolioAdminPanel.js` (yerine PortfolioManager.js)
+- `src/components/Admin/PortfolioAdminPanel.scss` (yerine PortfolioManager.scss)
+- `src/components/Admin/.gitkeep`
+
+**Admin Dosya Yapısı:**
+```
+src/components/Admin/
+  AdminLayout.js / .scss     — Sidebar + content wrapper
+  Dashboard.js / .scss       — İstatistik sayfası
+  PortfolioManager.js / .scss — Portfolyo CRUD yönetimi
+  ConfirmDialog.js / .scss   — Özel onay dialogu
+  ImageUploader.js / .scss   — Drag & drop resim yükleme
+  Login.js / .scss           — Giriş sayfası
+```
+
+**Mimari Notlar:**
+- Genişleyebilir yapı: İleride About, Contact gibi bölümler `AdminLayout` altında yeni Route ve sidebar linki olarak eklenebilir
+- Tüm Firebase işlemleri öncesinde `ensureAuth()` çağrılıyor
+- Mevcut renk paleti (`_variables.scss`) korundu

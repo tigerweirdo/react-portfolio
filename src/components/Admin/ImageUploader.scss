@@ -1,0 +1,158 @@
+@import '../../variables';
+
+.image-uploader {
+  .uploader-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: $text-color;
+    margin-bottom: 8px;
+  }
+
+  .uploader-hidden-input {
+    display: none;
+  }
+}
+
+.uploader-dropzone {
+  border: 2px dashed $btn-border-color;
+  border-radius: 10px;
+  padding: 32px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  background: $accent-color-3;
+
+  &:hover {
+    border-color: $accent-color-1;
+    background: darken($accent-color-3, 1%);
+  }
+
+  &.drag-over {
+    border-color: $primary-color;
+    background: darken($accent-color-3, 3%);
+    border-style: solid;
+  }
+
+  &.has-error {
+    border-color: #dc2626;
+  }
+
+  .dropzone-icon {
+    font-size: 2rem;
+    color: $accent-color-1;
+    margin-bottom: 10px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .dropzone-text {
+    font-size: 0.9rem;
+    color: $secondary-text-color;
+    margin: 0 0 4px;
+  }
+
+  .dropzone-link {
+    color: $primary-color;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .dropzone-hint {
+    font-size: 0.78rem;
+    color: lighten($secondary-text-color, 15%);
+    margin: 0;
+  }
+}
+
+.uploader-preview {
+  position: relative;
+  display: inline-block;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid $btn-border-color;
+  background: $accent-color-3;
+
+  img {
+    display: block;
+    max-width: 100%;
+    max-height: 200px;
+    object-fit: cover;
+    border-radius: 10px;
+  }
+
+  .remove-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    transition: background 0.15s;
+
+    &:hover {
+      background: #dc2626;
+    }
+  }
+
+  .change-btn {
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    border: none;
+    padding: 5px 14px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s;
+    white-space: nowrap;
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.8);
+    }
+  }
+}
+
+.uploader-error {
+  color: #dc2626;
+  font-size: 0.82rem;
+  margin: 6px 0 0;
+  padding: 0;
+}
+
+.uploader-empty-hint {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+  font-size: 0.82rem;
+  color: lighten($secondary-text-color, 15%);
+
+  .empty-icon {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .uploader-dropzone {
+    padding: 24px 16px;
+  }
+
+  .uploader-preview img {
+    max-height: 160px;
+  }
+}

@@ -9,9 +9,11 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './App.scss';
 
-// Lazy load admin components - sadece gizli rotada yüklenecek
+// Lazy load admin components
 const Login = lazy(() => import('./components/Admin/Login'));
-const PortfolioAdminPanel = lazy(() => import('./components/Admin/PortfolioAdminPanel'));
+const AdminLayout = lazy(() => import('./components/Admin/AdminLayout'));
+const Dashboard = lazy(() => import('./components/Admin/Dashboard'));
+const PortfolioManager = lazy(() => import('./components/Admin/PortfolioManager'));
 
 // Gizli admin slug - .env'den okunuyor
 const ADMIN_SLUG = process.env.REACT_APP_ADMIN_SLUG || 'p-x7k9';
@@ -361,31 +363,36 @@ const App = () => {
             </div>
           )}
         />
-        {/* Gizli admin rotaları */}
+        {/* Admin login */}
         <Route
           path={`/${ADMIN_SLUG}`}
           element={
             <Suspense fallback={<div className="loading-auth">Yükleniyor...</div>}>
               {isAuthenticated ? (
-                <Navigate to={`/${ADMIN_SLUG}/portfolio`} replace />
+                <Navigate to={`/${ADMIN_SLUG}/dashboard`} replace />
               ) : (
                 <Login onLoginSuccess={handleLoginSuccess} />
               )}
             </Suspense>
           }
         />
+        {/* Admin panel - nested routes */}
         <Route
-          path={`/${ADMIN_SLUG}/portfolio`}
+          path={`/${ADMIN_SLUG}/*`}
           element={
             <Suspense fallback={<div className="loading-auth">Yükleniyor...</div>}>
               {isAuthenticated ? (
-                <PortfolioAdminPanel onLogout={handleLogout} />
+                <AdminLayout onLogout={handleLogout} />
               ) : (
                 <Navigate to={`/${ADMIN_SLUG}`} replace />
               )}
             </Suspense>
           }
-        />
+        >
+          <Route index element={<Navigate to="dashboard" replace />} />
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="portfolio" element={<PortfolioManager />} />
+        </Route>
         {/* Eski /admin URL'lerini ana sayfaya yönlendir */}
         <Route path="/admin/*" element={<Navigate to="/" replace />} />
         <Route path="/admin" element={<Navigate to="/" replace />} />
