@@ -3,10 +3,10 @@
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 200px;
-  pointer-events: none;
-  z-index: 0;
+  height: 260px;
+  z-index: 1;
   overflow: hidden;
+  cursor: default;
 }
 
 .liquid-wave-canvas {
@@ -17,12 +17,12 @@
 
 @media (max-width: 768px) {
   .liquid-wave-container {
-    height: 150px;
+    height: 190px;
   }
 }
 
 @media (max-width: 480px) {
   .liquid-wave-container {
-    height: 110px;
+    height: 140px;
   }
 }
