@@ -151,10 +151,9 @@ const Contact = memo(() => {
       variants={containerVariants}
     >
       <div className="text-zone">
-        <motion.div className="glass-heading" variants={itemVariants}>
-          <span className="glass-shimmer" />
-          <h1>Contact me</h1>
-        </motion.div>
+        <motion.h1 variants={itemVariants}>
+          Contact me
+        </motion.h1>
         <motion.p variants={itemVariants}>
           I am interested in freelance opportunities - especially on ambitious
           or large projects. However, if you have any other requests or
