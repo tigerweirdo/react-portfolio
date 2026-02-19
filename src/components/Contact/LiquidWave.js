@@ -10,7 +10,6 @@ const SY_RATIO = 0.10;
 const MAX_DROPS = 60;
 const AIR_DRAG = 0.99;
 const GRAVITY = 0.24; // Stronger gravity for punchy drops
-const DROP_MIN_Y = 4;
 
 const LiquidWave = () => {
   const canvasRef = useRef(null);

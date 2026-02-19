@@ -382,3 +382,11 @@
     - Mobil: 140px -> 250px
   - Bu degisiklik, dalgalarin yukari dogru hareket etmesi icin cok daha fazla bos alan (headroom) sagladi.
   - Su seviyesi oransal (SY_RATIO) oldugu icin, container buyuyunce suyun baslangic noktasi da asagi kaydi ama ustten olan mesafe artti, boylece kesilme sorunu cozuldu.
+
+- 2026-02-18: LiquidWave.js build hatasi duzeltildi:
+
+  Sorun: Vercel build sirasinda `DROP_MIN_Y` degiskeninin tanimlandigi ama kullanilmadigi hatasi alindi (no-unused-vars).
+
+  Cozum (LiquidWave.js):
+  - Kullanilmayan `const DROP_MIN_Y = 4;` satiri silindi.
+  - Kod temizlendi ve build hatasi giderildi.
