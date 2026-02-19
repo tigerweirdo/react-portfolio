@@ -69,6 +69,13 @@ const Contact = memo(() => {
   useEffect(() => {
     if (isInView) {
       controls.start("visible")
+      document.body.style.backgroundColor = '#002fa7' // Liquid wave bottom color
+    } else {
+      document.body.style.backgroundColor = '#ffffff' // Default background
+    }
+
+    return () => {
+      document.body.style.backgroundColor = '#ffffff'
     }
   }, [controls, isInView])
 

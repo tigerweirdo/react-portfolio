@@ -3,7 +3,7 @@
 .contact-page {
   width: 100%;
   height: 100%;
-  padding: 2rem 5% 300px;
+  padding: 2rem 5% 0;
   box-sizing: border-box;
   position: relative;
   background: transparent;
@@ -18,6 +18,7 @@
     width: 100%;
     position: relative;
     z-index: 2;
+    margin-bottom: 120px;
 
     h1 {
       color: $primary-color;
@@ -312,11 +313,12 @@
 
 @media (max-width: 1200px) {
   .contact-page {
-    padding: 2rem 2rem 280px;
+    padding: 2rem 2rem 0;
     height: auto;
     min-height: 100%;
 
     .text-zone {
+      margin-bottom: 120px;
       h1 { font-size: clamp(1.8rem, 5vw, 40px); }
       p { font-size: 15px; }
     }
@@ -327,13 +329,14 @@
 
 @media (max-width: 768px) {
   .contact-page {
-    padding: 1.5rem 1.5rem 200px;
+    padding: 1.5rem 1.5rem 0;
     justify-content: flex-start;
     padding-top: 3rem;
     overflow-y: auto;
     overflow-x: hidden;
 
     .text-zone {
+      margin-bottom: 80px;
       h1 {
         font-size: clamp(1.6rem, 7vw, 32px);
         margin-bottom: 16px;
@@ -380,10 +383,11 @@
 
 @media (max-width: 480px) {
   .contact-page {
-    padding: 1rem 1rem 160px;
+    padding: 1rem 1rem 0;
     padding-top: 2rem;
 
     .text-zone {
+      margin-bottom: 60px;
       h1 { letter-spacing: 1px; }
       p { font-size: 13px; }
     }

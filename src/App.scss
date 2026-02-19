@@ -137,8 +137,6 @@ body {
 .page-section {
   min-height: 100vh;
   min-height: 100dvh;
-  height: 100vh;
-  height: 100dvh;
   width: 100%;
   scroll-snap-align: start;
   position: relative;
@@ -151,12 +149,14 @@ body {
   background: $background-color;
 
   &#portfolio {
-    overflow: hidden;
-    height: 100vh;
-    height: 100dvh;
+    height: auto;
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow: visible;
 
     .container {
-      height: 100%;
+      height: auto;
+      min-height: 100vh;
       justify-content: flex-start;
       padding-top: 0;
     }

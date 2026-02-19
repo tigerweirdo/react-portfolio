@@ -157,3 +157,228 @@
     - Ara durumlarda `e.stopPropagation()` ile sadece portfolio ici scroll calisiyor.
     - `passive: false` yapildi ve `e.preventDefault()` eklendi (sayfa degisimi sirasinda native scroll'u durdurmak icin).
   - Portfolio/index.scss: `overscroll-behavior: contain` kaldirildi (native engel kaldirildi).
+
+- 2026-02-18: Scroll Jacking (JS kontrollu scroll) tamamen kaldirildi, Native Scroll'a gecildi:
+
+  Sorun: Kullanici "kontrollu" scroll hissinden ve Portfolio'nun diger bolumlerden farkli davranmasindan rahatsizdi. "Tamamen manuel" bir akis istendi.
+
+  Cozum:
+  - App.js: Tum wheel ve touch event listener'lari silindi. Manuel section degistirme mantigi (scrollToSectionByIndex) kaldirildi.
+  - Portfolio/index.js: Tum scroll event listener'lari silindi. Portfolio'nun kendi icindeki scroll mantigi tamamen iptal edildi.
+  - App.scss: CSS Scroll Snap (scroll-snap-type: y mandatory) aktif tutuldu. Portfolio section'i `height: auto` ve `overflow: visible` yapildi.
+  - Portfolio/index.scss: Portfolio sayfasinin 100vh kisitlamasi kaldirildi.
+
+  Sonuc:
+  - Artik sayfa tek bir scroll bar ile yonetiliyor (Native Browser Scroll).
+  - Bolumler arasi gecisi tarayıcı (CSS Scroll Snap) yapiyor.
+  - Portfolio bolumu icerigi kadar uzuyor ve sayfa akisi icinde dogal bir sekilde yer aliyor.
+  - Hicbir JS mudahalesi kalmadi, tamamen performansli ve dogal bir deneyim.
+
+- 2026-02-18: Home sayfasi logo konumu duzeltildi:
+
+  Sorun: Logo (kaplan gorseli) sag ust kosede havada asili ve kenara sikismis gibi duruyordu. Absolute positioning responsive yapida sorun yaratiyordu.
+
+  Cozum:
+  - Home/index.scss: Layout Flexbox (justify-content: space-between) yapisina cevrildi.
+  - Logo container: position: absolute -> position: relative yapildi.
+  - Logo ve metin artik yan yana (row) duruyor, ekran genisledikce aralarindaki mesafe artiyor.
+  - Sayfa kenarlarina %10 padding eklendi, boylece icerik kenarlara yapismiyor.
+  - Logo boyutu %35 ve max-width: 450px ile sinirlandirildi.
+
+- 2026-02-18: Home sayfasi logo konumu "yapışık" hale getirildi:
+
+  Sorun: Kullanici logonun kenara "yapışmasını" istedi (bosluksuz).
+
+  Cozum:
+  - Home/index.scss:
+    - Sag taraftaki padding (%10) kaldirildi (padding: 0 0 0 10%).
+    - Logo container tekrar `position: absolute` yapildi.
+    - `right: 0` ile sag kenara tam yapistirildi.
+    - `top: 50%` ve `transform: translateY(-50%)` ile dikeyde ortalandi.
+    - `justify-content: flex-end` ile icerik saga yaslandi.
+
+- 2026-02-18: Home sayfasi logo boyutu ve konumu guncellendi:
+
+  Sorun: Logo hala kucuk ve sag kenarda bosluk kaliyor.
+
+  Cozum:
+  - Home/index.scss:
+    - Logo container width: 35% -> 45% (buyutuldu).
+    - Max-width: 450px -> 600px (sinir artirildi).
+    - Right: 0 -> -40px (negatif margin ile saga zorla itildi, bosluk kapatildi).
+    - Top: 50% -> 45% (biraz yukari alindi).
+
+- 2026-02-18: About sayfasi layout duzenlendi (Compact Layout):
+
+  Sorun: About sayfasinda robot ve metin cok ayrik duruyordu, mobil/tablet gorunumunde robot kayboluyordu ve genel olarak "garip" bir gorunum vardi.
+
+  Cozum:
+  - About/index.scss:
+    - Layout: Flex row ile metin (sol) ve robot (sag) yan yana getirildi.
+    - Hizalama: `align-items: center` ve `justify-content: center` ile ortalandi.
+    - Siralama: Metin `order: 1`, Robot `order: 2` yapildi (Masaustu).
+    - Bosluklar: `gap: 2rem` ve `padding: 0 10%` ile daha kompakt hale getirildi.
+    - Robot: `margin-bottom` kaldirildi, `max-width: 500px` siniri konuldu.
+    - Responsive:
+      - Tablet/Mobil'de `flex-direction: column` ile alt alta alindi.
+      - Robot artik gizlenmiyor (`display: none` kaldirildi), kucultulerek gosteriliyor (max-width: 300px/220px).
+      - Metin ve robot ortalandi.
+
+- 2026-02-18: About sayfasi CSS cakismasi ve metin okunabilirligi duzeltildi:
+
+  Sorun: About sayfasinda `.container` class'indan gelen `flex-direction: column` ozelligi, `.about-page`'in `flex-direction: row` ozelligini eziyordu. Bu yuzden masaustunde bile elemanlar alt alta geliyordu. Ayrica metinler cok silik ve okunaksizdi.
+
+  Cozum:
+  - About/index.scss:
+    - `.about-page` secicisi `.container.about-page` olarak degistirildi (specificity artirildi).
+    - Boylece `flex-direction: row` ozelligi dogru sekilde uygulandi.
+    - Metin rengi (`color`) ve opakligi (`opacity: 1`) duzeltildi.
+    - Metinlere hafif bir golge (`text-shadow`) eklenerek okunabilirlik artirildi.
+    - Font agirligi (`font-weight: 500`) artirildi.
+
+- 2026-02-18: About sayfasi robot ve golge hizalamasi duzeltildi:
+
+  Sorun: Robot ve golgesi yan yana duruyordu (flex-direction: row nedeniyle).
+
+  Cozum:
+  - About/index.scss:
+    - `.robot123` container'ina `flex-direction: column` eklendi.
+    - Artik robot (ustte) ve golge (altta) dogru sekilde hizalaniyor.
+
+- 2026-02-18: About sayfasi robot boyutu kucultuldu:
+
+  Sorun: Robot gorseli "asiri buyuk" gorunuyordu.
+
+  Cozum:
+  - About/index.scss:
+    - `.robot123` max-width: 500px -> 280px olarak guncellendi.
+    - SVG max-height: 500px -> 300px olarak guncellendi.
+    - `overflow: visible` eklendi (golgenin kesilmesini onlemek icin).
+
+- 2026-02-18: Contact sayfasi alt bosluk duzeltildi:
+
+  Sorun: Contact sayfasinin en altinda istenmeyen beyaz bir bosluk vardi. Bu bosluk `padding-bottom: 300px` (veya benzeri) degerinden kaynaklaniyordu.
+
+  Cozum:
+  - Contact/index.scss:
+    - `.contact-page` padding-bottom degeri `0` yapildi.
+    - Icerik ile dalga efekti arasindaki mesafe icin `.text-zone`'a `margin-bottom: 300px` (mobil/tablette daha az) eklendi.
+    - Bu sayede dalga efekti sayfanin en altina tam olarak yapisti ve beyaz bosluk kalmadi.
+
+- 2026-02-18: Contact formunun sivinin icine girmesi saglandi:
+
+  Sorun: Kullanici, "Send" butonu ve inputlarin bir kisminin sivinin (LiquidWave) icinde (uzerinde) gorunmesini istedi.
+
+  Cozum:
+  - Contact/index.scss:
+    - `.text-zone` margin-bottom degerleri ciddi oranda dusuruldu:
+      - Desktop: 300px -> 120px
+      - Tablet: 280px -> 120px
+      - Mobil: 200px -> 80px
+      - Kucuk Mobil: 160px -> 60px
+    - Bu sayede form asagi kaydi ve sivinin kapladigi alanla gorsel olarak ust uste bindi.
+    - `.text-zone` z-index degeri (2) sivinin z-index degerinden (1) yuksek oldugu icin form elemanlari sivinin onunde ve tiklanabilir durumda kaldi.
+
+- 2026-02-18: LiquidWave "Cartoon Physics" guncellemesi yapildi:
+
+  Sorun: Sivi efekti cok "duzgun" ve "sakin" duruyordu. Kullanici daha "cizgi film gibi" ve "fizige uyumlu" (daha canli, esnek) bir his istedi.
+
+  Cozum (LiquidWave.js):
+  - Fizik Degiskenleri:
+    - SPRING (yay sertligi): 0.018 -> 0.035 (Daha sert, daha hizli tepki)
+    - DAMP (sonumleme): 0.975 -> 0.94 (Daha az surtunme, daha cok salinim/wobble)
+    - GRAVITY: 0.18 olarak eklendi (Damlalar daha hizli ve agir dusuyor)
+  - Damla Gorselleri (Squash & Stretch):
+    - Hiz vektorune gore damlalarin esnemesi (stretch) ve sikismasi (squash) eklendi.
+    - Hizli duserken uzuyor, yavaslarken veya carpinca sekil degistiriyor.
+    - Renkler daha canli ve parlak (cyan/blue gradient) yapildi.
+    - Parlama efekti (highlight dot) eklenerek "glossy/jelibon" gorunumu verildi.
+  - Yuzey Cizimi:
+    - Yuzeyin ust kismina kalin beyaz bir outline (cizgi) eklendi (Cartoon outline).
+    - Renk gecisleri (gradient) daha keskin ve canli tonlara cekildi.
+
+- 2026-02-18: LiquidWave asiri dalgalanma sorunu giderildi:
+
+  Sorun: "Cartoon" guncellemesi sonrasi sivi yuzeyi cok fazla dalgalaniyordu (asiri wobble).
+
+  Cozum (LiquidWave.js):
+  - DAMP (sonumleme): 0.94 -> 0.96 (Dalgalar daha hizli sonuyor).
+  - SPRING (yay sertligi): 0.035 -> 0.025 (Yuzey daha az "gergin" ve daha yumusak).
+  - SPREAD (yayilma): 0.25 -> 0.22 (Dalga yayilimi biraz kisildi).
+  - Etkilesim kuvvetleri (mouse move/down) dusuruldu, boylece kullanici hareketiyle olusan kaos azaltildi.
+
+- 2026-02-18: LiquidWave "Gercekci Su" ayari yapildi:
+
+  Sorun: Kullanici hala "asiri dalgalanma" oldugunu ve "gercekci su hissiyati" istedigini belirtti.
+
+  Cozum (LiquidWave.js):
+  - SPRING: 0.025 -> 0.012 (Cok daha yumusak, agir salinim).
+  - DAMP: 0.96 -> 0.975 (Daha hizli sonumleme, daha az kaos).
+  - SPREAD: 0.22 -> 0.20 (Dalga yayilimi biraz daha kisildi).
+  - Etkilesim kuvvetleri (mouse move/down) %50 oraninda daha da dusuruldu.
+  - Artik su yuzeyi cok daha sakin, agir ve dogal bir sekilde hareket ediyor.
+
+- 2026-02-18: LiquidWave mouse etkilesim hassasiyeti dusuruldu:
+
+  Sorun: Kullanici mouse ile siviya dokundugunda "asiri tepki" verdigini belirtti.
+
+  Cozum (LiquidWave.js):
+  - Mouse Move Force: `spd * 0.4` -> `spd * 0.15` (Hareket etkisi %60+ azaltildi).
+  - Max Force Cap: `6` -> `4` (Maksimum etki sinirlandirildi).
+  - Disturb Multiplier: `0.2` -> `0.1` (Sonuc etkisi yariya indirildi).
+  - Mouse Down (Click) Force: `5` -> `2` (Tiklama etkisi %60 azaltildi).
+  - Artik mouse hareketleri sivi yuzeyinde cok daha hafif ve zarif dalgalanmalar yaratiyor.
+
+- 2026-02-18: LiquidWave "Yogun/Viskoz Sivi" ayari yapildi:
+
+  Sorun: Kullanici sivinin "daha yogun" olmasini ve "cok fazla dalgalanmamasini" istedi (yag veya bal gibi agir bir sivi hissi).
+
+  Cozum (LiquidWave.js):
+  - SPRING: 0.012 -> 0.005 (Cok dusuk yay sertligi, yuzey cok yavas geri donuyor).
+  - DAMP: 0.975 -> 0.92 (Cok yuksek surtunme/sonumleme, dalgalar aninda duruyor).
+  - SPREAD: 0.20 -> 0.15 (Dalgalar yanlara cok az yayiliyor).
+  - Mouse Force: `spd * 0.1` ve Max `3` (Etkilesim minimuma indirildi).
+  - Sonuc: Sivi artik su gibi calkalanmiyor, agir ve yogun bir kutle gibi hareket ediyor.
+
+- 2026-02-18: LiquidWave "disturb" hatasi duzeltildi ve mouse etkilesimi kaldirildi:
+
+  Sorun: Onceki duzeltmede `disturb` fonksiyonu kaldirilmis ancak event handler'lar silinmemisti, bu da "disturb is not defined" hatasina yol acti. Ayrica kullanici mouse etkilesimini tamamen kapatmak istedi.
+
+  Cozum (LiquidWave.js):
+  - `disturb` fonksiyonu tamamen kaldirildi (artik kullanilmiyor).
+  - `onMM`, `onMD`, `onML`, `onTM`, `onTE` event handler'lari ve referanslari silindi.
+  - `onScroll` fonksiyonu geri getirildi ve `disturb` yerine dogrudan `s.v[idx]` uzerinden siviya kuvvet uygulayacak sekilde guncellendi.
+  - Artik sivi sadece scroll hareketine ve kendi icindeki `ambient motion`'a tepki veriyor. Mouse ile etkilesim tamamen devre disi.
+
+- 2026-02-18: LiquidWave su seviyesi ve scroll dalgalanmasi arttirildi:
+
+  Sorun: Kullanici su seviyesinin biraz daha yuksek olmasini ve scroll yapildiginda dalgalanmanin daha belirgin olmasini istedi.
+
+  Cozum (LiquidWave.js):
+  - Su Seviyesi: `SY_RATIO` 0.40 -> 0.30 olarak guncellendi. (Sivi artik ekranin %70'ini kapliyor, daha yukarida basliyor).
+  - Scroll Dalgalanmasi:
+    - Force Multiplier: 4 -> 8 (Iki katina cikarildi).
+    - Max Force: 6 -> 12 (Ust limit iki katina cikarildi).
+    - Etkilenen Nokta Sayisi: %25 -> %40 (Dalga daha genis bir alana yayiliyor).
+  - Sonuc: Scroll yapildiginda sivi cok daha guclu ve genis bir sekilde calkalaniyor, su seviyesi daha yukarida duruyor.
+
+- 2026-02-18: LiquidWave dalgalanma suresi uzatildi:
+
+  Sorun: Kullanici dalgalarin cok cabuk sondugunu ve "dumduz" oldugunu, cok daha uzun sure dalgali kalmasini istedigini belirtti.
+
+  Cozum (LiquidWave.js):
+  - DAMP (Sonumleme): 0.92 -> 0.995 olarak guncellendi.
+  - Bu degisiklik surtunmeyi minimuma indirerek dalgalarin cok daha uzun sure (neredeyse sonsuz salinim gibi) devam etmesini sagliyor.
+  - Artik bir kez scroll yapildiginda su yuzeyi uzun sure hareketli kaliyor.
+
+- 2026-02-18: LiquidWave container yuksekligi arttirildi:
+
+  Sorun: Yukselen su seviyesi ve artan dalga gucu nedeniyle, dalgalar yukari ciktiginda canvas'in ust sinirina carpip kesiliyordu.
+
+  Cozum (LiquidWave.scss):
+  - Container yuksekligi arttirildi:
+    - Desktop: 280px -> 400px
+    - Tablet: 180px -> 300px
+    - Mobil: 140px -> 250px
+  - Bu degisiklik, dalgalarin yukari dogru hareket etmesi icin cok daha fazla bos alan (headroom) sagladi.
+  - Su seviyesi oransal (SY_RATIO) oldugu icin, container buyuyunce suyun baslangic noktasi da asagi kaydi ama ustten olan mesafe artti, boylece kesilme sorunu cozuldu.

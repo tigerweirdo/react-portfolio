@@ -54,15 +54,8 @@ const App = () => {
   const [activeSection, setActiveSection] = useState('home');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [authChecked, setAuthChecked] = useState(false);
-  const [isScrolling, setIsScrolling] = useState(false);
   const appContainerRef = useRef(null);
   const sectionsRef = useRef(['home', 'about', 'portfolio', 'contact']);
-  const scrollTimeoutRef = useRef(null);
-  const isScrollingRef = useRef(isScrolling);
-
-  useEffect(() => {
-    isScrollingRef.current = isScrolling;
-  }, [isScrolling]);
 
   useEffect(() => {
     const storedAuth = localStorage.getItem('isAdminAuthenticated');
@@ -72,56 +65,7 @@ const App = () => {
     setAuthChecked(true);
   }, []);
 
-  const scrollToSectionByIndex = useCallback((index) => {
-    if (isScrolling || index < 0 || index >= sectionsRef.current.length) {
-      return;
-    }
-    
-    const sectionId = sectionsRef.current[index];
-    const section = document.getElementById(sectionId);
-    
-    if (appContainerRef.current && section) {
-      setIsScrolling(true);
-      setActiveSection(sectionId);
-
-      const targetPosition = section.offsetTop;
-      
-      appContainerRef.current.scrollTo({
-        top: targetPosition,
-        behavior: 'smooth'
-      });
-      
-      if (scrollTimeoutRef.current) {
-        clearTimeout(scrollTimeoutRef.current);
-      }
-      
-      scrollTimeoutRef.current = setTimeout(() => {
-        setIsScrolling(false);
-      }, 800);
-    }
-  }, [isScrolling]);
-
-  const handleWheelScroll = useCallback((event) => {
-    event.preventDefault();
-
-    if (isScrolling) return;
-
-    const currentIndex = sectionsRef.current.findIndex(section => section === activeSection);
-    const threshold = 15;
-    
-    if (Math.abs(event.deltaY) < threshold) return;
-    
-    if (event.deltaY > 0) {
-      if (currentIndex < sectionsRef.current.length - 1) {
-        scrollToSectionByIndex(currentIndex + 1);
-      }
-    } else {
-      if (currentIndex > 0) {
-        scrollToSectionByIndex(currentIndex - 1);
-      }
-    }
-  }, [activeSection, scrollToSectionByIndex, isScrolling]);
-
+  // Intersection Observer for active section tracking
   useEffect(() => {
     const observerOptions = {
       root: appContainerRef.current,
@@ -130,8 +74,6 @@ const App = () => {
     };
 
     const observerCallback = (entries) => {
-      if (isScrollingRef.current) return;
-      
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           setActiveSection(entry.target.id);
@@ -168,106 +110,6 @@ const App = () => {
     };
   }, []);
 
-  useEffect(() => {
-    const currentAppContainer = appContainerRef.current;
-
-    if (window.location.pathname === '/' && currentAppContainer) {
-      currentAppContainer.addEventListener('wheel', handleWheelScroll, { passive: false });
-    }
-
-    return () => {
-      if (currentAppContainer) {
-        currentAppContainer.removeEventListener('wheel', handleWheelScroll);
-      }
-    };
-  }, [handleWheelScroll]);
-
-  useEffect(() => {
-    const handleKeyDown = (event) => {
-      if (window.location.pathname !== '/' || isScrolling) return;
-      
-      const currentIndex = sectionsRef.current.findIndex(section => section === activeSection);
-      
-      switch (event.key) {
-        case 'ArrowDown':
-        case 'PageDown':
-          event.preventDefault();
-          if (currentIndex < sectionsRef.current.length - 1) {
-            scrollToSectionByIndex(currentIndex + 1);
-          }
-          break;
-        case 'ArrowUp':
-        case 'PageUp':
-          event.preventDefault();
-          if (currentIndex > 0) {
-            scrollToSectionByIndex(currentIndex - 1);
-          }
-          break;
-        case 'Home':
-          event.preventDefault();
-          scrollToSectionByIndex(0);
-          break;
-        case 'End':
-          event.preventDefault();
-          scrollToSectionByIndex(sectionsRef.current.length - 1);
-          break;
-        default:
-          break;
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [activeSection, scrollToSectionByIndex, isScrolling]);
-
-  useEffect(() => {
-    let touchStartY = 0;
-    let touchEndY = 0;
-    const currentAppContainer = appContainerRef.current;
-
-    const handleTouchStart = (event) => {
-      touchStartY = event.changedTouches[0].screenY;
-    };
-
-    const handleTouchEnd = (event) => {
-      if (isScrolling) return;
-      
-      touchEndY = event.changedTouches[0].screenY;
-      const swipeThreshold = window.innerWidth <= 768 ? 50 : 80;
-      const difference = touchStartY - touchEndY;
-
-      if (Math.abs(difference) > swipeThreshold) {
-        const currentIndex = sectionsRef.current.findIndex(section => section === activeSection);
-        
-        if (difference > 0 && currentIndex < sectionsRef.current.length - 1) {
-          scrollToSectionByIndex(currentIndex + 1);
-        } else if (difference < 0 && currentIndex > 0) {
-          scrollToSectionByIndex(currentIndex - 1);
-        }
-      }
-    };
-
-    if (window.location.pathname === '/' && currentAppContainer) {
-      currentAppContainer.addEventListener('touchstart', handleTouchStart, { passive: true });
-      currentAppContainer.addEventListener('touchend', handleTouchEnd, { passive: true });
-    }
-
-    return () => {
-      if (currentAppContainer) {
-        currentAppContainer.removeEventListener('touchstart', handleTouchStart);
-        currentAppContainer.removeEventListener('touchend', handleTouchEnd);
-      }
-    };
-  }, [activeSection, scrollToSectionByIndex, isScrolling]);
-
-  useEffect(() => {
-    return () => {
-      if (scrollTimeoutRef.current) {
-        clearTimeout(scrollTimeoutRef.current);
-      }
-    };
-  }, []);
-
   const handleLoginSuccess = useCallback(() => {
     setIsAuthenticated(true);
     localStorage.setItem('isAdminAuthenticated', 'true');
@@ -280,11 +122,11 @@ const App = () => {
   }, []);
 
   const scrollToSection = useCallback((sectionId) => {
-    const sectionIndex = sectionsRef.current.findIndex(section => section === sectionId);
-    if (sectionIndex !== -1) {
-      scrollToSectionByIndex(sectionIndex);
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [scrollToSectionByIndex]);
+  }, []);
 
   if (!authChecked) {
     return (
@@ -322,7 +164,7 @@ const App = () => {
             <div className="one-page-app">
               <div 
                 ref={appContainerRef}
-                className={`scroll-container ${isScrolling ? 'scrolling' : ''}`}
+                className="scroll-container"
               >
                 <motion.section 
                   id="home" 
@@ -345,7 +187,7 @@ const App = () => {
                   className={`page-section ${activeSection === 'portfolio' ? 'active' : ''}`}
                   {...pageTransition}
                 >
-                  <Portfolio scrollToSection={scrollToSection} />
+                  <Portfolio />
                 </motion.section>
 
                 <motion.section 

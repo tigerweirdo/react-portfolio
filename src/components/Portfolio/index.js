@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, memo, useCallback } from "react";
+import React, { useEffect, useState, memo } from "react";
 import { motion } from 'framer-motion';
 import "./index.scss";
 import { getDocs, collection } from 'firebase/firestore';
@@ -119,10 +119,9 @@ const ProjectScene = memo(({ item, index }) => {
   );
 });
 
-const Portfolio = memo(({ scrollToSection }) => {
+const Portfolio = memo(() => {
   const [portfolioData, setPortfolioData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const scrollRef = useRef(null);
 
   useEffect(() => {
     const getPortfolio = async () => {
@@ -145,59 +144,9 @@ const Portfolio = memo(({ scrollToSection }) => {
     getPortfolio();
   }, []);
 
-  useEffect(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-
-    const onWheel = (e) => {
-      const { scrollTop, scrollHeight, clientHeight } = el;
-      const atTop = scrollTop <= 1;
-      const atBottom = scrollTop + clientHeight >= scrollHeight - 2;
-      const canScroll = scrollHeight > clientHeight + 5;
-
-      if (!canScroll) return;
-      
-      if (e.deltaY > 0 && atBottom) {
-        e.preventDefault();
-        e.stopPropagation();
-        if (scrollToSection) scrollToSection('contact');
-        return;
-      }
-      
-      if (e.deltaY < 0 && atTop) {
-        e.preventDefault();
-        e.stopPropagation();
-        if (scrollToSection) scrollToSection('about');
-        return;
-      }
-
-      e.stopPropagation();
-    };
-
-    el.addEventListener('wheel', onWheel, { passive: false });
-    return () => el.removeEventListener('wheel', onWheel);
-  }, []);
-
-  const handleTouchEvent = useCallback((e) => {
-    const el = scrollRef.current;
-    if (!el) return;
-    const { scrollTop, scrollHeight, clientHeight } = el;
-    const canScroll = scrollHeight > clientHeight + 5;
-    const atTop = scrollTop <= 5;
-    const atBottom = Math.abs(scrollHeight - clientHeight - scrollTop) <= 5;
-    if (canScroll && !atTop && !atBottom) {
-      e.stopPropagation();
-    }
-  }, []);
-
   return (
     <div className="portfolio-page">
-      <div
-        ref={scrollRef}
-        className="portfolio-scroll-area"
-        onTouchStart={handleTouchEvent}
-        onTouchEnd={handleTouchEvent}
-      >
+      <div className="portfolio-scroll-area">
         <motion.div
           className="portfolio-header"
           initial={{ opacity: 0, y: 20 }}

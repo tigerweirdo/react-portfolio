@@ -5,9 +5,10 @@
 // ===========================
 .portfolio-page {
   width: 100%;
-  height: 100vh;
-  height: 100dvh;
-  overflow: hidden;
+  min-height: 100vh;
+  min-height: 100dvh;
+  height: auto;
+  overflow: visible;
   position: relative;
   background: $background-color;
   box-sizing: border-box;
@@ -15,22 +16,8 @@
 
 .portfolio-scroll-area {
   width: 100%;
-  height: 100%;
-  overflow-y: auto;
-  overflow-x: hidden;
-  -webkit-overflow-scrolling: touch;
-
-
-  &::-webkit-scrollbar {
-    width: 4px;
-  }
-  &::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  &::-webkit-scrollbar-thumb {
-    background: $accent-color-2;
-    border-radius: 4px;
-  }
+  height: auto;
+  overflow: visible;
 }
 
 // ===========================
