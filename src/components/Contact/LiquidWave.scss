@@ -1,5 +1,5 @@
 .liquid-wave-container {
-  position: fixed;
+  position: absolute;
   bottom: 0;
   left: 0;
   width: 100%;
@@ -7,7 +7,6 @@
   z-index: 1;
   overflow: hidden;
   cursor: default;
-  pointer-events: none;
 }
 
 .liquid-wave-canvas {
@@ -18,12 +17,12 @@
 
 @media (max-width: 768px) {
   .liquid-wave-container {
-    height: 200px;
+    height: 300px;
   }
 }
 
 @media (max-width: 480px) {
   .liquid-wave-container {
-    height: 150px;
+    height: 250px;
   }
 }
