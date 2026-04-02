@@ -28,6 +28,7 @@ const LiquidWave = () => {
     lsT: Date.now(),
     drops: [],
     splashes: [],
+    fish: { x: -60, speed: 0.6, size: 24, tailPhase: 0, tailAmp: 0.4, depthOffset: 20 },
   });
 
   const resize = useCallback(() => {
@@ -169,6 +170,17 @@ const LiquidWave = () => {
       sp.radius += (sp.maxRadius - sp.radius) * 0.2; // Snappy expansion
       if (sp.life <= 0) s.splashes.splice(i, 1);
     }
+
+    // Fish swimming
+    const f = s.fish;
+    f.tailPhase += 0.12;
+    f.x += f.speed;
+    if (f.x > s.w + 80) {
+      f.x = -80;
+      f.depthOffset = 15 + Math.random() * 25;
+      f.size = 20 + Math.random() * 12;
+      f.speed = 0.5 + Math.random() * 0.4;
+    }
   }, [getSurfaceY, spawnSplash]);
 
   const render = useCallback(() => {
@@ -212,6 +224,75 @@ const LiquidWave = () => {
     wg.addColorStop(1, '#002fa7'); // Dark bottom
     ctx.fillStyle = wg;
     ctx.fill();
+
+    // Draw swimming fish (just under the surface)
+    {
+      const f = s.fish;
+      const surfaceAtX = getSurfaceY(s, f.x);
+      const fy = surfaceAtX + f.depthOffset;
+      const bodyLen = f.size * 1.6;
+      const bodyH = f.size * 0.55;
+      const tailSway = Math.sin(f.tailPhase) * f.tailAmp * f.size;
+
+      ctx.save();
+      ctx.translate(f.x, fy);
+
+      // Body
+      ctx.beginPath();
+      ctx.moveTo(bodyLen * 0.5, 0);
+      ctx.bezierCurveTo(
+        bodyLen * 0.3, -bodyH,
+        -bodyLen * 0.2, -bodyH,
+        -bodyLen * 0.35, -bodyH * 0.3
+      );
+      ctx.lineTo(-bodyLen * 0.35 + tailSway * 0.3, -bodyH * 0.3);
+      ctx.lineTo(-bodyLen * 0.35 + tailSway, -bodyH * 0.8);
+      ctx.lineTo(-bodyLen * 0.35 + tailSway, bodyH * 0.8);
+      ctx.lineTo(-bodyLen * 0.35 + tailSway * 0.3, bodyH * 0.3);
+      ctx.bezierCurveTo(
+        -bodyLen * 0.2, bodyH,
+        bodyLen * 0.3, bodyH,
+        bodyLen * 0.5, 0
+      );
+      ctx.closePath();
+
+      const fishGrad = ctx.createLinearGradient(-bodyLen * 0.3, -bodyH, bodyLen * 0.5, 0);
+      fishGrad.addColorStop(0, '#ff8c00');
+      fishGrad.addColorStop(0.5, '#ffaa33');
+      fishGrad.addColorStop(1, '#ff7700');
+      ctx.fillStyle = fishGrad;
+      ctx.fill();
+
+      ctx.strokeStyle = 'rgba(255, 140, 0, 0.5)';
+      ctx.lineWidth = 0.8;
+      ctx.stroke();
+
+      // Eye
+      const eyeR = f.size * 0.1;
+      const eyeX = bodyLen * 0.3;
+      const eyeY = -bodyH * 0.15;
+      ctx.beginPath();
+      ctx.arc(eyeX, eyeY, eyeR, 0, Math.PI * 2);
+      ctx.fillStyle = '#fff';
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(eyeX + eyeR * 0.3, eyeY, eyeR * 0.55, 0, Math.PI * 2);
+      ctx.fillStyle = '#1a1a2e';
+      ctx.fill();
+
+      // Subtle scale pattern
+      ctx.globalAlpha = 0.15;
+      for (let sc = 0; sc < 3; sc++) {
+        const sx = bodyLen * 0.1 - sc * bodyLen * 0.12;
+        ctx.beginPath();
+        ctx.arc(sx, 0, bodyH * 0.65, -0.5, 0.5);
+        ctx.strokeStyle = '#ffd470';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      }
+      ctx.globalAlpha = 1;
+      ctx.restore();
+    }
 
     // Top highlight rim (Cartoon outline effect)
     ctx.save();
