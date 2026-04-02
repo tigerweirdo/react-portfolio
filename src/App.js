@@ -7,6 +7,7 @@ import Portfolio from './components/Portfolio';
 import Contact from './components/Contact';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import JellyfishBackground from './components/JellyfishBackground';
 import './App.scss';
 
 // Lazy load admin components
@@ -162,7 +163,8 @@ const App = () => {
           path="/"
           element={(
             <div className="one-page-app">
-              <div 
+              <JellyfishBackground />
+              <div
                 ref={appContainerRef}
                 className="scroll-container"
               >

@@ -104,6 +104,8 @@ body {
 
 // SCROLL CONTAINER
 .scroll-container {
+  position: relative;
+  z-index: 1;
   flex: 1 0 0;
   overflow-y: auto;
   overflow-x: hidden;

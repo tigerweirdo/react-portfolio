@@ -515,25 +515,3 @@ Bu proje bir "tek sayfa scroll-snap" mimarisi kullanıyor. Tüm bölümler (home
 #### 📊 Sonuç
 
 Tüm 6 tespit edilen sorun düzeltildi. Scroll artık hem doğal hem de snap-tabanlı (proximity) olarak çalışmalı. Mobilde uzun portfolio içerikleri artık kırpılmıyor. Admin modal'ı açılıp kapandığında scroll doğru şekilde geri geliyor.
-
----
-
-### Görev 10: LiquidWave İyileştirmeleri — Balık ve Dalga Görünürlüğü (2 Nisan 2026)
-
-**Sorun 1:** SY_RATIO 0.10 iken dalga tepeleri container dışına taşıyor ve görünmüyordu.
-
-**Çözüm:**
-- `SY_RATIO` → `0.10`'dan `0.25`'e çıkarıldı. Sıvı yüzeyi artık container yüksekliğinin %25'inde başlıyor.
-- Container yüksekliği → Desktop'ta 300px'den 400px'e çıkarıldı (mobil: 300px, küçük mobil: 250px).
-
-**Eklenti: Yüzen Balık:**
-- Canvas üzerinde yüzeyin hemen altında yüzen turuncu bir balık render ediliyor
-- Fizik döngüsünde: Balık soldan sağa yüzüyor, ekranın sağına çıkınca sola geri dönüyor
-- Rastgelelenen parametreler: hız, derinlik, boyut — her geçiş farklı
-- Kuyruk animasyonu: Sinüs dalgası ile yalpalama (tailPhase + tailAmp)
-- Görsel detaylar: Göz, pul deseni, gradient gövdesi
-- Scroll hızı sıfırken bile yüzüyor (idle animasyon)
-
-**Dosyalar:**
-- `src/components/Contact/LiquidWave.js` — Balık state'i, fizik güncellemesi, render
-- `src/components/Contact/LiquidWave.scss` — Container yüksekliği 400px'e çıkarıldı
