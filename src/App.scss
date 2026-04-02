@@ -107,7 +107,7 @@ body {
   flex: 1 0 0;
   overflow-y: auto;
   overflow-x: hidden;
-  scroll-snap-type: y proximity;
+  scroll-snap-type: none;
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
 
@@ -150,6 +150,7 @@ body {
     min-height: 100vh;
     min-height: 100dvh;
     overflow: visible;
+    scroll-snap-align: none;
 
     .container {
       height: auto;
@@ -216,10 +217,6 @@ body {
 
 // RESPONSIVE - Mobil
 @media screen and (max-width: 768px) {
-  .scroll-container {
-    scroll-snap-type: y proximity;
-  }
-
   .page-section {
     min-height: 100vh;
     min-height: 100dvh;
@@ -234,7 +231,7 @@ body {
     }
 
     &#portfolio {
-      scroll-snap-align: start;
+      scroll-snap-align: none;
       height: auto;
       min-height: 100dvh;
       overflow: visible;

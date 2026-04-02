@@ -487,6 +487,31 @@ Bu proje bir "tek sayfa scroll-snap" mimarisi kullanıyor. Tüm bölümler (home
 
 ---
 
+### Görev 9: Portfolio Scroll Takılması ve LiquidWave Dalgalanma Düzeltmesi (2 Nisan 2026)
+
+**Sorun 1:** `scroll-snap-type: y proximity` portfolio bölümünün uzun içeriğiyle çakışıyor, scroll takılıyordu.
+
+**Çözüm:**
+- `.scroll-container` → `scroll-snap-type: none` (tamamen kaldırıldı)
+- `.page-section#portfolio` → `scroll-snap-align: none` (portfolio section snap noktası iptal)
+
+**Sorun 2:** `.one-page-app` `min-height` + `overflow: visible` yapısı `.scroll-container`'ın içinde scroll yapmasını engelliyor, LiquidWave scroll velocity'si hep 0 kalıyordu.
+
+**Çözüm:**
+- `.one-page-app` → `height: 100vh` + `overflow: hidden` (container'ı viewport'a sabit tut, scroll container çalışsın)
+- `.scroll-container` → `flex: 1 0 0` (kalan alanı kapla, kendi içinde scroll yap)
+
+**Neden bu yapı çalışıyor:**
+1. `.one-page-app` sabit yükseklikte (`height: 100vh`) → overflow taşanları gizliyor
+2. `.scroll-container` flex ile kalan alanı kaplıyor → `flex: 1 0 0` → kendi içinde scroll yapılabiliyor
+3. Scroll event'leri `.scroll-container` üzerinde tetikleniyor → LiquidWave `onScroll` handler'ı çalışıyor
+4. `body` artık `position: static` → doğal scroll akışı bozulmuyor (gerekirse)
+
+**Dosyalar:**
+- `src/App.scss` — 3 değişiklik (scroll-snap none, flex düzeltme, portfolio snap-align none)
+
+---
+
 #### 📊 Sonuç
 
 Tüm 6 tespit edilen sorun düzeltildi. Scroll artık hem doğal hem de snap-tabanlı (proximity) olarak çalışmalı. Mobilde uzun portfolio içerikleri artık kırpılmıyor. Admin modal'ı açılıp kapandığında scroll doğru şekilde geri geliyor.
