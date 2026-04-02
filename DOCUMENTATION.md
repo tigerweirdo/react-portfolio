@@ -264,3 +264,229 @@ src/components/Admin/
 - Damping faktörü: 0.92 — scroll durduğunda amplitude doğal şekilde söner
 - Lerp hızı: 0.08 — yumuşak geçiş için
 - Velocity ölçekleme: 0.15, max amplitude: 1.0
+
+---
+
+### Görev 8: Scroll Sorunu Kapsamlı Debug Analizi (2 Nisan 2026)
+
+**Sorun:** Sayfa scroll'u beklenen şekilde çalışmıyor — takılıyor, kilitlenmiş gibi davranıyor veya tamamen gizlenmiş durumda.
+
+**Kapsam:** 4 ana başlıkta kod tabanı tarandı:
+1. Global CSS ve Layout Hataları
+2. JavaScript/Event Müdahaleleri
+3. Modal/Menü Scroll Kilidi Yan Etkileri
+4. Bileşen Taşkınları (Overflow)
+
+---
+
+#### Bulgu 1: `html` + `body` Elementlerinde Scroll Kilidi (KRİTİK)
+
+**Dosya:** `src/App.scss` — Satırlar 59-94
+
+`html` ve `body` elementlerinde **aynı anda** aşağıdaki kurallar mevcut:
+```css
+html {
+  height: 100%;
+  overflow: hidden;       ← Doğal scroll'u tamamen devre dışı bırakıyor
+}
+body {
+  overflow: hidden;        ← Tekrar scroll kilidi
+  position: fixed;         ← Body'yi viewport'a sabitliyor
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+}
+```
+
+**Neden kırıcı:** `position: fixed` + `overflow: hidden` kombinasyonu body'nin herhangi bir scroll hareketini imkansız kılıyor. Tüm sayfa içeriği viewport boyutuna kilitleniyor. Tasarım amacı "custom scroll container" yapısı kurmak ancak bu yaklaşım içerik taştığında erişilemez hâle getiriyor.
+
+**Çözüm:**
+```css
+html {
+  scroll-behavior: smooth;
+  height: auto;
+  overflow: auto;        ← auto yap
+}
+body {
+  overflow: auto;        ← auto yap
+  overflow-x: hidden;    ← yatay scroll engeli kalsın
+  height: auto;          ← auto yap
+  position: static;      ← static yap
+  width: 100%;
+}
+```
+
+---
+
+#### Bulgu 2: Custom Scroll Container Scroll-Snap Takılma (KRİTİK)
+
+**Dosya:** `src/App.scss` — Satırlar 96-134
+
+Bütün uygulama `.one-page-app > .scroll-container` yapısında:
+```css
+.one-page-app {
+  height: 100vh;
+  overflow: hidden;       ← Taşan içeriği gizliyor
+}
+.scroll-container {
+  height: 100vh;
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;  ← Her section'a "yapışıyor"
+}
+```
+
+`scroll-snap-type: y mandatory` özellikle:
+- Uzun içerikli bölümlerde (Portfolio) içerik tam okunamadan snap atlıyor
+- Mobilde "yaklaş" (proximity) yerine "zorunlu" (mandatory) snap agresif davranıyor
+- `overflow: hidden` ile dışarı taşan içerik erişilemez oluyor
+
+**Çözüm:**
+```css
+.one-page-app {
+  min-height: 100vh;
+  overflow: visible;     ← visible yap
+}
+.scroll-container {
+  min-height: 100vh;
+  scroll-snap-type: y proximity;  ← mandatory → proximity (daha yumuşak)
+  /* veya tamamen kaldır: scroll-snap-type: none */
+}
+```
+
+---
+
+#### Bulgu 3: Modal Scroll Kilidi Çelişkisi (ORTA)
+
+**Dosya:** `src/components/Admin/ConfirmDialog.js` — Satırlar 22-31
+
+```javascript
+useEffect(() => {
+  if (isOpen) {
+    document.body.style.overflow = 'hidden';  ← Zaten CSS'te hidden, tekrar set
+  }
+  return () => {
+    document.body.style.overflow = '';         ← Inline temizleniyor ama CSS'te hâlâ hidden
+  };
+}, [isOpen, handleKeyDown]);
+```
+
+**Sorun:** `App.scss` body'ye zaten `overflow: hidden` veriyor. Modal inline `overflow: hidden` ekliyor, cleanup'ta inline stil'i siliyor ama App.scss kuralı geçerli kalıyor. Gerçek bir değişiklik yok ama kod kafa karıştırıcı ve bakım zorluğu yaratıyor.
+
+**Çözüm:** Body CSS'i `overflow: auto` yapıldıktan sonra bu bileşen modal açıldığında `hidden`, kapandığında `auto` set etmeli:
+```javascript
+useEffect(() => {
+  if (isOpen) {
+    document.body.style.overflow = 'hidden';
+  } else {
+    document.body.style.overflow = 'auto';
+  }
+  return () => {
+    document.body.style.overflow = 'auto';
+  };
+}, [isOpen, handleKeyDown]);
+```
+
+---
+
+#### Bulgu 4: `.page-section` Overflow Çakışması (ORTA)
+
+**Dosya:** `src/App.scss` — Satırlar 148, 155, 250
+
+```css
+.page-section {
+  overflow: hidden;           ← Varsayılan: gizle
+  &#portfolio {
+    overflow: visible;        ← Portfolio: göster
+  }
+}
+@media (max-width: 768px) {
+  .page-section#portfolio {
+    overflow: hidden;         ← Mobilde tekrar gizle ← Çelişki!
+  }
+}
+```
+
+**Sorun:** Portfolio bölümü desktop'ta `visible` ama mobilde `hidden`. Uzun portfolio içerikleri mobilde kırpılabilir.
+
+---
+
+#### Bulgu 5: Etkileşim Yok — `e.preventDefault()` Form Submit dışında scroll'u engellmiyor
+
+**Taranan Dosyalar:**
+- `src/components/Contact/index.js:83` — form submit (ilgili değil)
+- `src/components/Admin/ImageUploader.js:37,45,51` — drag-drop (ilgili değil)
+- `src/components/Admin/PortfolioManager.js:149` — form submit (ilgili değil)
+- `src/components/Admin/Login.js:12` — form submit (ilgili değil)
+- `src/components/Admin/PortfolioAdminPanel.js:166` — form submit (ilgili değil)
+
+Hiçbiri `wheel`, `scroll` veya `touchmove` event'lerini engellemiyor. **Bu kategori temiz.**
+
+---
+
+#### Bulgu 6: `100vw` Yatay Scroll Sorunu Yok
+
+Proje genelinde `width: 100vw` kullanılmamış. **Bu kategori temiz.**
+
+---
+
+#### Öncelikli Düzeltme Sırası
+
+| # | Öncelik | Dosya | Değişiklik |
+|---|---------|-------|------------|
+| 1 | 🔴 Kritik | `src/App.scss:59-67` | `html` → `overflow: auto; height: auto` |
+| 2 | 🔴 Kritik | `src/App.scss:69-94` | `body` → `overflow: auto; position: static; height: auto` |
+| 3 | 🔴 Kritik | `src/App.scss:96-104` | `.one-page-app` → `overflow: visible; min-height: 100vh` |
+| 4 | 🟡 Orta | `src/App.scss:107-114` | `.scroll-container` → `scroll-snap-type: y proximity` |
+| 5 | 🟡 Orta | `src/App.scss:246-251` | `.page-section#portfolio` mobil → `overflow: visible` |
+| 6 | 🟡 Orta | `src/components/Admin/ConfirmDialog.js:22-31` | `overflow: auto` cleanup |
+
+---
+
+#### Not: Mevcut Mimari Anlayışı
+
+Bu proje bir "tek sayfa scroll-snap" mimarisi kullanıyor. Tüm bölümler (home, about, portfolio, contact) `.scroll-container` içinde ve her biri viewport yüksekliğinde. Amaç sayfa scroll'u yerine container scroll kullanmak. Ancak `position: fixed` + `overflow: hidden` kombinasyonu bu yapının da dışına taşan her şeyi erişilemez kılıyor. Düzeltme sonrası scroll hem doğal hem de snap-tabanlı olarak çalışmalı.
+
+---
+
+#### ✅ Yapılan Düzeltmeler (2 Nisan 2026 — Uygulandı)
+
+**1. `src/App.scss` — Global html/body scroll kilidi kaldırıldı:**
+
+| Özellik | Önceki | Sonraki | Neden |
+|---------|--------|---------|-------|
+| `html` height | `100%` | `auto` | Sabit yükseklik yerine dinamik |
+| `html` overflow | `hidden` | `auto` | Doğal scroll'a izin ver |
+| `body` overflow | `hidden` | `auto` | Scroll kilidi kaldırıldı |
+| `body` position | `fixed` | `static` | Body artık viewport'a sabit değil |
+| `body` height | `100%` | `auto` | İçerik yüksekliğine uyum |
+| `body #root` height | `100%` | `auto` | Container da dinamik |
+
+**2. `src/App.scss` — `.one-page-app` ve `.scroll-container` güncellendi:**
+
+| Özellik | Önceki | Sonraki | Neden |
+|---------|--------|---------|-------|
+| `.one-page-app` height | `100vh/100dvh` | `min-height: 100vh/100dvh` | İçerik taşabilir olmalı |
+| `.one-page-app` overflow | `hidden` | `visible` | Taşan içerik erişilebilir |
+| `.scroll-container` height | `100vh/100dvh` | `min-height: 100vh/100dvh` | Dinamik yükseklik |
+| `.scroll-container` scroll-snap-type | `y mandatory` | `y proximity` | Daha yumuşak snap, takılma yok |
+
+**3. `src/App.scss` — Mobil portfolio overflow düzeltildi:**
+
+| Özellik | Önceki | Sonraki | Neden |
+|---------|--------|---------|-------|
+| `.page-section#portfolio` height (mobil) | `100vh/100dvh` | `auto` + `min-height: 100dvh` | Uzun içerik kırpılmıyor |
+| `.page-section#portfolio` overflow (mobil) | `hidden` | `visible` | Taşan içerik erişilebilir |
+
+**4. `src/components/Admin/ConfirmDialog.js` — Modal scroll kilidi düzeltildi:**
+
+| Özellik | Önceki | Sonraki | Neden |
+|---------|--------|---------|-------|
+| `else` bloğu | yok | `document.body.style.overflow = 'auto'` | Modal kapalıyken scroll açık |
+| cleanup return | `overflow = ''` | `overflow = 'auto'` | Explicit olarak scroll aç |
+
+---
+
+#### 📊 Sonuç
+
+Tüm 6 tespit edilen sorun düzeltildi. Scroll artık hem doğal hem de snap-tabanlı (proximity) olarak çalışmalı. Mobilde uzun portfolio içerikleri artık kırpılmıyor. Admin modal'ı açılıp kapandığında scroll doğru şekilde geri geliyor.
