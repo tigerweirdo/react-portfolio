@@ -1,7 +1,7 @@
 @import '../../variables';
 
 // ===========================
-// PORTFOLIO PAGE — scroll-reveal galeri
+// PORTFOLIO PAGE — Hover-preview list layout
 // ===========================
 .portfolio-page {
   width: 100%;
@@ -14,199 +14,163 @@
   box-sizing: border-box;
 }
 
-.portfolio-scroll-area {
-  width: 100%;
-  height: auto;
-  overflow: visible;
-}
-
 // ===========================
 // HEADER
 // ===========================
 .portfolio-header {
-  text-align: center;
-  padding: 80px 5% 40px;
-
-  .portfolio-title {
-    font-size: clamp(2.5rem, 6vw, 4.5rem);
-    font-family: 'Coolvetica', sans-serif;
-    color: $primary-color;
-    font-weight: 400;
-    margin: 0;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    line-height: 1.1;
-  }
-
-  .portfolio-subtitle {
-    font-size: 1rem;
-    color: $secondary-text-color;
-    margin: 12px 0 0;
-    font-weight: 400;
-    letter-spacing: 0.5px;
-  }
-}
-
-// ===========================
-// PROJECT SCENES
-// ===========================
-.portfolio-scenes {
+  padding: 80px 5% 48px;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 5%;
-}
-
-.project-scene {
-  display: grid;
-  grid-template-columns: 1.15fr 1fr;
-  gap: 48px;
-  align-items: center;
-  padding: 60px 0;
-  min-height: 60vh;
-
-  &:not(:last-child) {
-    border-bottom: 1px solid rgba($btn-border-color, 0.5);
-  }
-
-  &.reversed {
-    grid-template-columns: 1fr 1.15fr;
-
-    .scene-visual {
-      order: 2;
-    }
-
-    .scene-content {
-      order: 1;
-      text-align: right;
-
-      .scene-number {
-        margin-left: auto;
-        margin-right: 0;
-      }
-
-      .scene-cta {
-        justify-content: flex-end;
-      }
-    }
-  }
-}
-
-// ===========================
-// SCENE VISUAL
-// ===========================
-.scene-visual {
-  will-change: transform, opacity;
-
-  .visual-inner {
-    position: relative;
-    border-radius: 16px;
-    overflow: hidden;
-    background: $accent-color-3;
-    box-shadow:
-      0 20px 60px rgba($primary-color, 0.08),
-      0 8px 24px rgba($primary-color, 0.04);
-    transition: box-shadow 0.4s ease;
-
-    &::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: 16px;
-      border: 1px solid rgba($btn-border-color, 0.4);
-      pointer-events: none;
-    }
-
-    &:hover {
-      box-shadow:
-        0 30px 80px rgba($primary-color, 0.12),
-        0 12px 32px rgba($primary-color, 0.06);
-    }
-
-    img {
-      width: 100%;
-      aspect-ratio: 16 / 10;
-      object-fit: cover;
-      display: block;
-      transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    }
-
-    &:hover img {
-      transform: scale(1.04);
-    }
-  }
-}
-
-// ===========================
-// SCENE CONTENT
-// ===========================
-.scene-content {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  will-change: transform, opacity;
+  align-items: baseline;
+  justify-content: space-between;
+  border-bottom: 1px solid $btn-border-color;
+
+  .header-code {
+    font-family: 'Courier New', monospace;
+    font-size: 0.72rem;
+    color: $secondary-text-color;
+    letter-spacing: 2px;
+  }
+
+  .header-title {
+    font-family: 'Coolvetica', sans-serif;
+    font-size: clamp(2.8rem, 6vw, 5rem);
+    font-weight: 400;
+    color: $primary-color;
+    margin: 0;
+    line-height: 1;
+  }
 }
 
-.scene-number {
-  display: block;
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 3px;
-  color: $accent-color-1;
-  margin-bottom: 14px;
+// ===========================
+// LIST WRAPPER — two-column flex
+// ===========================
+.portfolio-list-wrapper {
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+  padding: 0 5% 60px;
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+}
+
+// ===========================
+// PROJECT LIST — left column
+// ===========================
+.portfolio-list {
+  width: 58%;
+  flex-shrink: 0;
+}
+
+// ===========================
+// PROJECT ROW
+// ===========================
+.project-row {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 22px 0;
+  border-bottom: 1px solid $btn-border-color;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  position: relative;
+
+  &:hover,
+  &.is-hovered {
+    .row-title {
+      color: $accent-color-1;
+    }
+
+    .row-index {
+      color: $primary-color;
+    }
+  }
+}
+
+.row-index {
   font-family: 'Courier New', monospace;
+  font-size: 0.7rem;
+  color: rgba($secondary-text-color, 0.5);
+  letter-spacing: 1.5px;
+  min-width: 48px;
+  transition: color 0.2s ease;
+  flex-shrink: 0;
 }
 
-.scene-title {
+.row-title {
   font-family: 'Coolvetica', sans-serif;
-  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  font-size: clamp(1.4rem, 2.5vw, 2rem);
   font-weight: 400;
   color: $primary-color;
-  margin: 0 0 16px;
+  flex: 1;
+  margin: 0;
+  line-height: 1.1;
   letter-spacing: 0.5px;
-  line-height: 1.15;
+  transition: color 0.25s ease;
 }
 
-.scene-description {
-  font-size: 0.95rem;
-  line-height: 1.7;
-  color: $secondary-text-color;
-  margin: 0 0 24px;
-  max-width: 420px;
-}
-
-.scene-cta {
-  display: inline-flex;
+.row-right {
+  display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 0.88rem;
-  font-weight: 600;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: $primary-color;
-  text-decoration: none;
-  padding: 10px 0;
-  border-bottom: 2px solid $primary-color;
-  transition: gap 0.25s ease;
-  width: fit-content;
+  gap: 20px;
+  flex-shrink: 0;
+}
 
-  .arrow-icon {
-    transition: transform 0.25s ease;
-  }
+.row-tags {
+  font-size: 0.75rem;
+  color: rgba($secondary-text-color, 0.6);
+  letter-spacing: 0.5px;
+  font-family: 'Helvetica Neue', sans-serif;
+}
 
-  &:hover {
-    gap: 14px;
-
-    .arrow-icon {
-      transform: translateX(4px);
-    }
-  }
+.row-year {
+  font-family: 'Courier New', monospace;
+  font-size: 0.72rem;
+  color: rgba($secondary-text-color, 0.5);
+  letter-spacing: 1px;
 }
 
 // ===========================
-// END SPACER
+// PREVIEW — right column (sticky)
 // ===========================
-.portfolio-end-spacer {
-  height: 40px;
+.portfolio-preview {
+  position: sticky;
+  top: 20%;
+  width: 38%;
+  flex-shrink: 0;
+  padding-left: 5%;
+  padding-top: 20px;
+}
+
+.preview-image-box {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 12px;
+  overflow: hidden;
+  background: $accent-color-3;
+  border: 1px solid $btn-border-color;
+  position: relative;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+}
+
+.preview-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba($secondary-text-color, 0.3);
+  font-size: 0.75rem;
+  font-family: 'Courier New', monospace;
+  letter-spacing: 2px;
 }
 
 // ===========================
@@ -222,224 +186,134 @@
 // ===========================
 // SKELETON LOADING
 // ===========================
-.portfolio-skeletons {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 5%;
-}
-
-.skeleton-scene {
-  display: grid;
-  grid-template-columns: 1.15fr 1fr;
-  gap: 48px;
-  align-items: center;
-  padding: 60px 0;
-
-  &:nth-child(even) {
-    direction: rtl;
-    > * { direction: ltr; }
-  }
-}
-
-.skeleton-image {
-  width: 100%;
-  aspect-ratio: 16 / 10;
-  background: $accent-color-3;
-  border-radius: 16px;
-  border: 1px solid rgba($btn-border-color, 0.3);
-  position: relative;
-  overflow: hidden;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-      90deg,
-      transparent 0%,
-      rgba($accent-color-2, 0.4) 50%,
-      transparent 100%
-    );
-    animation: shimmer 1.5s ease-in-out infinite;
-  }
-}
-
-.skeleton-text {
+.skeleton-row {
   display: flex;
-  flex-direction: column;
-  gap: 14px;
+  align-items: center;
+  gap: 24px;
+  padding: 22px 0;
+  border-bottom: 1px solid $btn-border-color;
+  pointer-events: none;
 }
 
-.skeleton-line {
-  height: 14px;
+.skeleton-pill {
+  height: 20px;
+  border-radius: 4px;
   background: $accent-color-3;
-  border-radius: 6px;
   position: relative;
   overflow: hidden;
 
-  &.wide { width: 70%; }
-  &.medium { width: 100%; height: 10px; }
-  &.narrow { width: 40%; }
+  &.narrow  { width: 48px; }
+  &.wide    { width: clamp(160px, 30%, 280px); }
+  &.xnarrow { width: 32px; }
 
   &::before {
     content: '';
     position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-      90deg,
-      transparent 0%,
-      rgba($accent-color-2, 0.5) 50%,
-      transparent 100%
-    );
+    inset: 0 -100%;
+    background: linear-gradient(90deg, transparent, rgba($accent-color-2, 0.8), transparent);
     animation: shimmer 1.5s ease-in-out infinite;
   }
 }
 
 @keyframes shimmer {
-  0% { left: -100%; }
-  100% { left: 100%; }
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
 }
 
 // ===========================
-// RESPONSIVE — Tablet
+// RESPONSIVE — Tablet (max-width: 1024px)
 // ===========================
 @media screen and (max-width: 1024px) {
-  .portfolio-scenes {
-    padding: 0 4%;
+  .portfolio-header {
+    padding: 60px 5% 36px;
   }
 
-  .project-scene {
-    gap: 32px;
-    padding: 40px 0;
-    min-height: auto;
+  .portfolio-list-wrapper {
+    padding: 0 4% 48px;
   }
 
-  .skeleton-scene {
-    gap: 32px;
-    padding: 40px 0;
+  .row-title {
+    font-size: clamp(1.2rem, 2.5vw, 1.7rem);
   }
 }
 
 // ===========================
-// RESPONSIVE — Mobil
+// RESPONSIVE — Mobile (max-width: 900px)
 // ===========================
+@media screen and (max-width: 900px) {
+  .portfolio-preview {
+    display: none;
+  }
+
+  .portfolio-list {
+    width: 100%;
+  }
+
+  .row-tags {
+    display: none;
+  }
+}
+
 @media screen and (max-width: 768px) {
   .portfolio-header {
-    padding: 40px 5% 20px;
+    padding: 40px 5% 24px;
 
-    .portfolio-title {
-      font-size: clamp(1.8rem, 7vw, 3rem);
+    .header-title {
+      font-size: clamp(2rem, 8vw, 3rem);
     }
 
-    .portfolio-subtitle {
-      font-size: 0.85rem;
-    }
-  }
-
-  .portfolio-scenes {
-    padding: 0 5%;
-  }
-
-  .project-scene {
-    grid-template-columns: 1fr;
-    gap: 20px;
-    padding: 30px 0;
-    min-height: auto;
-
-    &.reversed {
-      grid-template-columns: 1fr;
-
-      .scene-visual { order: 1; }
-      .scene-content {
-        order: 2;
-        text-align: left;
-
-        .scene-number {
-          margin-left: 0;
-        }
-
-        .scene-cta {
-          justify-content: flex-start;
-        }
-      }
+    .header-code {
+      font-size: 0.65rem;
     }
   }
 
-  .scene-visual .visual-inner {
-    border-radius: 12px;
-
-    &::after {
-      border-radius: 12px;
-    }
-
-    img {
-      aspect-ratio: 16 / 9;
-    }
+  .portfolio-list-wrapper {
+    padding: 0 5% 40px;
   }
 
-  .scene-description {
-    max-width: 100%;
-    font-size: 0.9rem;
-  }
-
-  .scene-cta {
-    font-size: 0.85rem;
-  }
-
-  .skeleton-scene {
-    grid-template-columns: 1fr;
+  .project-row {
+    padding: 16px 0;
     gap: 16px;
-    padding: 30px 0;
-
-    &:nth-child(even) {
-      direction: ltr;
-    }
   }
 
-  .portfolio-end-spacer {
-    height: 30px;
+  .row-title {
+    font-size: clamp(1.1rem, 4.5vw, 1.4rem);
+  }
+
+  .row-index {
+    font-size: 0.62rem;
+    min-width: 40px;
+  }
+
+  .row-year {
+    font-size: 0.65rem;
   }
 }
 
 // ===========================
-// RESPONSIVE — Küçük Mobil
+// RESPONSIVE — Small Mobile
 // ===========================
 @media screen and (max-width: 480px) {
   .portfolio-header {
-    padding: 30px 5% 12px;
+    padding: 30px 4% 16px;
   }
 
-  .portfolio-scenes {
-    padding: 0 4%;
+  .portfolio-list-wrapper {
+    padding: 0 4% 32px;
   }
 
-  .project-scene {
-    padding: 24px 0;
-    gap: 16px;
+  .project-row {
+    padding: 14px 0;
+    gap: 12px;
   }
 
-  .scene-title {
-    font-size: clamp(1.2rem, 5vw, 1.4rem);
+  .row-title {
+    font-size: clamp(1rem, 4vw, 1.2rem);
   }
 
-  .scene-description {
-    font-size: 0.85rem;
-    line-height: 1.6;
-  }
-
-  .scene-cta {
-    font-size: 0.8rem;
-    letter-spacing: 1px;
-  }
-
-  .portfolio-end-spacer {
-    height: 20px;
+  .row-index {
+    min-width: 36px;
+    font-size: 0.58rem;
   }
 }
 
@@ -447,11 +321,13 @@
 // Reduced Motion
 // ===========================
 @media (prefers-reduced-motion: reduce) {
-  .scene-visual .visual-inner img {
+  .project-row,
+  .row-title,
+  .row-index {
     transition: none;
   }
 
-  .scene-visual .visual-inner {
-    transition: none;
+  .skeleton-pill::before {
+    animation: none;
   }
 }
