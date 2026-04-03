@@ -1,11 +1,22 @@
-@import '../../variables';
+$a-bg:        #0d0d0d;
+$a-surface:   #161616;
+$a-surface2:  #1f1f1f;
+$a-border:    rgba(240, 237, 232, 0.08);
+$a-border2:   rgba(240, 237, 232, 0.14);
+$a-text:      #f0ede8;
+$a-muted:     rgba(240, 237, 232, 0.40);
+$a-danger:    #e05c5c;
+$a-radius:    6px;
+$a-transition: 0.2s ease;
 
 .image-uploader {
   .uploader-label {
     display: block;
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: $text-color;
+    font-family: 'Courier New', monospace;
+    font-size: 0.65rem;
+    color: $a-muted;
+    letter-spacing: 2px;
+    text-transform: uppercase;
     margin-bottom: 8px;
   }
 
@@ -15,54 +26,50 @@
 }
 
 .uploader-dropzone {
-  border: 2px dashed $btn-border-color;
-  border-radius: 10px;
-  padding: 32px 20px;
+  border: 1px dashed $a-border2;
+  border-radius: $a-radius;
+  padding: 32px;
   text-align: center;
   cursor: pointer;
-  transition: border-color 0.2s, background 0.2s;
-  background: $accent-color-3;
+  transition: border-color $a-transition, background $a-transition;
 
-  &:hover {
-    border-color: $accent-color-1;
-    background: darken($accent-color-3, 1%);
-  }
-
+  &:hover,
   &.drag-over {
-    border-color: $primary-color;
-    background: darken($accent-color-3, 3%);
-    border-style: solid;
+    border-color: $a-text;
+    background: $a-surface2;
   }
 
   &.has-error {
-    border-color: #dc2626;
+    border-color: $a-danger;
   }
 
   .dropzone-icon {
     font-size: 2rem;
-    color: $accent-color-1;
-    margin-bottom: 10px;
+    color: $a-muted;
+    margin-bottom: 12px;
     display: block;
     margin-left: auto;
     margin-right: auto;
   }
 
   .dropzone-text {
-    font-size: 0.9rem;
-    color: $secondary-text-color;
+    font-family: 'Helvetica Neue', sans-serif;
+    font-size: 0.8rem;
+    color: $a-muted;
     margin: 0 0 4px;
+    line-height: 1.5;
   }
 
   .dropzone-link {
-    color: $primary-color;
-    font-weight: 600;
+    color: $a-text;
     text-decoration: underline;
     text-underline-offset: 2px;
   }
 
   .dropzone-hint {
-    font-size: 0.78rem;
-    color: lighten($secondary-text-color, 15%);
+    font-family: 'Helvetica Neue', sans-serif;
+    font-size: 0.72rem;
+    color: rgba(240, 237, 232, 0.25);
     margin: 0;
   }
 }
@@ -70,17 +77,17 @@
 .uploader-preview {
   position: relative;
   display: inline-block;
-  border-radius: 10px;
+  border-radius: $a-radius;
   overflow: hidden;
-  border: 1px solid $btn-border-color;
-  background: $accent-color-3;
+  border: 1px solid $a-border2;
+  background: $a-surface2;
 
   img {
     display: block;
     max-width: 100%;
     max-height: 200px;
     object-fit: cover;
-    border-radius: 10px;
+    border-radius: $a-radius;
   }
 
   .remove-btn {
@@ -90,19 +97,17 @@
     width: 28px;
     height: 28px;
     border-radius: 50%;
-    background: rgba(0, 0, 0, 0.6);
-    color: #fff;
-    border: none;
+    background: rgba(13, 13, 13, 0.8);
+    border: 1px solid $a-border2;
+    color: $a-text;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.75rem;
-    transition: background 0.15s;
+    font-size: 0.7rem;
+    transition: background $a-transition;
 
-    &:hover {
-      background: #dc2626;
-    }
+    &:hover { background: $a-danger; }
   }
 
   .change-btn {
@@ -110,26 +115,25 @@
     bottom: 8px;
     left: 50%;
     transform: translateX(-50%);
-    background: rgba(0, 0, 0, 0.6);
-    color: #fff;
-    border: none;
+    background: rgba(13, 13, 13, 0.8);
+    border: 1px solid $a-border2;
+    color: $a-text;
     padding: 5px 14px;
-    border-radius: 6px;
-    font-size: 0.8rem;
-    font-weight: 500;
+    border-radius: $a-radius;
+    font-family: 'Helvetica Neue', sans-serif;
+    font-size: 0.75rem;
     cursor: pointer;
-    transition: background 0.15s;
+    transition: background $a-transition;
     white-space: nowrap;
 
-    &:hover {
-      background: rgba(0, 0, 0, 0.8);
-    }
+    &:hover { background: $a-surface; }
   }
 }
 
 .uploader-error {
-  color: #dc2626;
-  font-size: 0.82rem;
+  color: $a-danger;
+  font-family: 'Helvetica Neue', sans-serif;
+  font-size: 0.78rem;
   margin: 6px 0 0;
   padding: 0;
 }
@@ -139,11 +143,12 @@
   align-items: center;
   gap: 6px;
   margin-top: 6px;
-  font-size: 0.82rem;
-  color: lighten($secondary-text-color, 15%);
+  font-family: 'Helvetica Neue', sans-serif;
+  font-size: 0.78rem;
+  color: rgba(240, 237, 232, 0.25);
 
   .empty-icon {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
   }
 }
 

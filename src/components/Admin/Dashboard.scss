@@ -1,221 +1,151 @@
-@import '../../variables';
+$a-bg:        #0d0d0d;
+$a-surface:   #161616;
+$a-surface2:  #1f1f1f;
+$a-border:    rgba(240, 237, 232, 0.08);
+$a-border2:   rgba(240, 237, 232, 0.14);
+$a-text:      #f0ede8;
+$a-muted:     rgba(240, 237, 232, 0.40);
+$a-accent:    #f0ede8;
+$a-danger:    #e05c5c;
+$a-radius:    6px;
+$a-transition: 0.2s ease;
 
+// ===========================
+// LOADING
+// ===========================
 .dashboard-loading {
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
   min-height: 300px;
-  gap: 12px;
-  color: $secondary-text-color;
-
-  .loading-spinner {
-    width: 32px;
-    height: 32px;
-    border: 3px solid $accent-color-2;
-    border-top-color: $primary-color;
-    border-radius: 50%;
-    animation: dashSpin 0.7s linear infinite;
-  }
 }
 
-@keyframes dashSpin {
-  to { transform: rotate(360deg); }
-}
-
+// ===========================
+// DASHBOARD
+// ===========================
 .dashboard {
   max-width: 960px;
 }
 
-.dashboard-header {
-  margin-bottom: 28px;
-
-  h1 {
-    font-size: 1.6rem;
-    font-weight: 700;
-    color: $text-color;
-    margin: 0 0 4px;
-  }
-
-  .dashboard-subtitle {
-    font-size: 0.9rem;
-    color: $secondary-text-color;
-    margin: 0;
-  }
-}
-
-.stats-grid {
+// ===========================
+// STATS ROW
+// ===========================
+.stats-row {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 16px;
-  margin-bottom: 32px;
+  grid-template-columns: 1fr 1fr;
+  border-bottom: 1px solid $a-border;
+  margin-bottom: 40px;
 }
 
-.stat-card {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  background: $background-color;
-  border: 1px solid $btn-border-color;
-  border-radius: 12px;
-  padding: 20px;
+.stat-item {
+  padding: 32px 0;
   cursor: pointer;
-  transition: box-shadow 0.2s, border-color 0.2s;
+  transition: opacity $a-transition;
+
+  &:first-child {
+    border-right: 1px solid $a-border;
+    padding-right: 32px;
+  }
+
+  &:last-child {
+    padding-left: 32px;
+  }
 
   &:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-    border-color: darken($btn-border-color, 8%);
+    opacity: 0.7;
   }
 
-  .stat-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2rem;
-    flex-shrink: 0;
-
-    &.portfolio-icon {
-      background: #eff6ff;
-      color: #2563eb;
-    }
-
-    &.image-icon {
-      background: #f0fdf4;
-      color: #16a34a;
-    }
+  .stat-code {
+    font-family: 'Courier New', monospace;
+    font-size: 0.65rem;
+    color: $a-muted;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+    display: block;
   }
 
-  .stat-info {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .stat-value {
-    font-size: 1.7rem;
-    font-weight: 700;
-    color: $text-color;
+  .stat-number {
+    font-family: 'Coolvetica', sans-serif;
+    font-size: clamp(3rem, 6vw, 5rem);
+    color: $a-text;
+    font-weight: 400;
     line-height: 1;
+    display: block;
   }
 
   .stat-label {
-    font-size: 0.82rem;
-    color: $secondary-text-color;
-    margin-top: 4px;
+    font-family: 'Helvetica Neue', sans-serif;
+    font-size: 0.8rem;
+    color: $a-muted;
+    margin-top: 6px;
+    display: block;
   }
 }
 
+// ===========================
+// SECTIONS
+// ===========================
 .dashboard-section {
-  margin-bottom: 32px;
+  margin-bottom: 40px;
 
-  .section-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 16px;
-
-    h2 {
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: $text-color;
-      margin: 0;
-    }
-
-    .action-btn {
-      background: none;
-      border: none;
-      color: $secondary-text-color;
-      font-size: 0.85rem;
-      font-weight: 500;
-      cursor: pointer;
-      padding: 4px 8px;
-      border-radius: 6px;
-      transition: background 0.15s, color 0.15s;
-
-      &:hover {
-        background: $accent-color-3;
-        color: $text-color;
-      }
-    }
+  .section-title {
+    font-family: 'Coolvetica', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 400;
+    color: $a-text;
+    margin: 0 0 20px;
+    letter-spacing: 0.5px;
   }
 }
 
-.empty-state {
-  text-align: center;
-  padding: 48px 24px;
-  background: $background-color;
-  border: 1px solid $btn-border-color;
-  border-radius: 12px;
-
-  .empty-icon {
-    font-size: 2.2rem;
-    color: $accent-color-2;
-    margin-bottom: 12px;
-  }
+// ===========================
+// EMPTY STATE
+// ===========================
+.dashboard-empty {
+  padding: 40px 0;
+  border-bottom: 1px solid $a-border;
 
   p {
-    color: $secondary-text-color;
-    font-size: 0.95rem;
+    font-family: 'Helvetica Neue', sans-serif;
+    font-size: 0.85rem;
+    color: $a-muted;
     margin: 0 0 16px;
   }
-
-  .add-first-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 20px;
-    background: $primary-color;
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    font-size: 0.9rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background 0.2s;
-
-    &:hover {
-      background: lighten($primary-color, 12%);
-    }
-  }
 }
 
+// ===========================
+// RECENT LIST
+// ===========================
 .recent-list {
-  background: $background-color;
-  border: 1px solid $btn-border-color;
-  border-radius: 12px;
-  overflow: hidden;
+  border-top: 1px solid $a-border;
 }
 
-.recent-item {
-  display: flex;
+.recent-row {
+  display: grid;
+  grid-template-columns: 48px 1fr auto;
   align-items: center;
-  gap: 14px;
-  padding: 14px 16px;
-  transition: background 0.12s;
-
-  &:not(:last-child) {
-    border-bottom: 1px solid $accent-color-2;
-  }
+  gap: 20px;
+  padding: 18px 0;
+  border-bottom: 1px solid $a-border;
+  transition: background $a-transition;
 
   &:hover {
-    background: $accent-color-3;
+    background: rgba(240, 237, 232, 0.02);
   }
 
   .recent-thumb {
-    width: 52px;
-    height: 52px;
-    border-radius: 8px;
+    width: 48px;
+    height: 36px;
+    border-radius: 4px;
     overflow: hidden;
+    background: $a-surface2;
     flex-shrink: 0;
-    background: $accent-color-3;
-    border: 1px solid $accent-color-2;
 
     img {
       width: 100%;
       height: 100%;
       object-fit: cover;
+      display: block;
     }
 
     .thumb-placeholder {
@@ -224,106 +154,75 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      color: $accent-color-1;
-      font-size: 1.2rem;
+      color: $a-muted;
+      font-size: 0.9rem;
     }
   }
 
-  .recent-info {
-    flex: 1;
-    min-width: 0;
-
-    h4 {
-      margin: 0 0 2px;
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: $text-color;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    p {
-      margin: 0;
-      font-size: 0.8rem;
-      color: $secondary-text-color;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
+  .recent-name {
+    font-family: 'Coolvetica', sans-serif;
+    font-size: 1.2rem;
+    color: $a-text;
+    font-weight: 400;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .recent-link {
-    flex-shrink: 0;
-    width: 32px;
-    height: 32px;
-    border-radius: 6px;
+    color: $a-muted;
+    font-size: 0.8rem;
+    transition: color $a-transition;
     display: flex;
     align-items: center;
-    justify-content: center;
-    color: $secondary-text-color;
-    transition: background 0.15s, color 0.15s;
-    font-size: 0.85rem;
 
-    &:hover {
-      background: $accent-color-2;
-      color: $text-color;
-    }
+    &:hover { color: $a-text; }
   }
 }
 
-.quick-actions {
-  h2 {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: $text-color;
-    margin: 0 0 16px;
-  }
-}
-
-.actions-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 12px;
-}
-
-.quick-action-card {
+// ===========================
+// QUICK ACTION BUTTONS
+// ===========================
+.qa-btn {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 16px;
-  background: $background-color;
-  border: 1px solid $btn-border-color;
-  border-radius: 10px;
+  gap: 10px;
+  padding: 16px 0;
+  background: none;
+  border: none;
+  border-bottom: 1px solid $a-border;
+  color: $a-text;
+  font-family: 'Helvetica Neue', sans-serif;
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
   cursor: pointer;
-  transition: box-shadow 0.2s, border-color 0.2s;
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: $text-color;
+  width: 100%;
+  text-align: left;
+  transition: color $a-transition;
 
-  .qa-icon {
-    font-size: 1rem;
-    color: $accent-color-1;
-  }
-
-  &:hover {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-    border-color: darken($btn-border-color, 8%);
-  }
+  &:hover { color: rgba(240, 237, 232, 0.6); }
 }
 
+// ===========================
+// RESPONSIVE
+// ===========================
 @media (max-width: 768px) {
-  .stats-grid {
+  .stats-row {
     grid-template-columns: 1fr;
   }
 
-  .dashboard-header h1 {
-    font-size: 1.35rem;
-  }
-}
+  .stat-item {
+    &:first-child {
+      border-right: none;
+      border-bottom: 1px solid $a-border;
+      padding-right: 0;
+      padding-bottom: 24px;
+    }
 
-@media (max-width: 480px) {
-  .actions-grid {
-    grid-template-columns: 1fr;
+    &:last-child {
+      padding-left: 0;
+      padding-top: 24px;
+    }
   }
 }

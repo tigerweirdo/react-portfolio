@@ -222,15 +222,20 @@ const PortfolioManager = () => {
     }
   }, [deleteDialog, items, fetchItems, safeDeleteStorage]);
 
-  // --- RENDER ---
-
+  // --- RENDER: FORM ---
   if (showForm) {
     return (
       <div className="pm-form-page">
         <button className="pm-back-btn" onClick={resetForm} type="button">
           <FaArrowLeft /> Listeye Dön
         </button>
-        <h2 className="pm-form-title">{currentItem ? 'Projeyi Düzenle' : 'Yeni Proje Ekle'}</h2>
+
+        <div className="admin-page-header">
+          <div className="page-header-left">
+            <span className="page-eyebrow">{currentItem ? '(Pm-Ed)' : '(Pm-Nw)'}</span>
+            <h1 className="page-title">{currentItem ? 'Düzenle' : 'Yeni Proje'}</h1>
+          </div>
+        </div>
 
         <form onSubmit={handleSubmit} className="pm-form" noValidate>
           <div className={`pm-field ${formErrors.name ? 'has-error' : ''}`}>
@@ -307,12 +312,13 @@ const PortfolioManager = () => {
     );
   }
 
+  // --- RENDER: LIST ---
   return (
     <div className="portfolio-manager">
-      <div className="pm-header">
-        <div>
-          <h1>Portfolyo Yönetimi</h1>
-          <p className="pm-subtitle">{items.length} proje</p>
+      <div className="admin-page-header">
+        <div className="page-header-left">
+          <span className="page-eyebrow">(Pm-00)</span>
+          <h1 className="page-title">Portfolio</h1>
         </div>
         <button className="pm-add-btn" onClick={openNewForm}>
           <FaPlus /> Yeni Proje
@@ -321,7 +327,7 @@ const PortfolioManager = () => {
 
       <div className="pm-toolbar">
         <div className="pm-search">
-          <FaSearch className="search-icon" />
+          <FaSearch />
           <input
             type="text"
             placeholder="Proje ara..."
@@ -332,35 +338,31 @@ const PortfolioManager = () => {
 
         <div className="pm-controls">
           <button
-            className="pm-sort-btn"
             onClick={() => setSortOrder(prev => prev === 'az' ? 'za' : 'az')}
             title={sortOrder === 'az' ? 'A-Z sıralama' : 'Z-A sıralama'}
           >
             {sortOrder === 'az' ? <FaSortAmountDown /> : <FaSortAmountUp />}
           </button>
-          <div className="pm-view-toggle">
-            <button
-              className={viewMode === 'grid' ? 'active' : ''}
-              onClick={() => setViewMode('grid')}
-              title="Grid görünümü"
-            >
-              <FaTh />
-            </button>
-            <button
-              className={viewMode === 'list' ? 'active' : ''}
-              onClick={() => setViewMode('list')}
-              title="Liste görünümü"
-            >
-              <FaList />
-            </button>
-          </div>
+          <button
+            className={viewMode === 'grid' ? 'active' : ''}
+            onClick={() => setViewMode('grid')}
+            title="Grid görünümü"
+          >
+            <FaTh />
+          </button>
+          <button
+            className={viewMode === 'list' ? 'active' : ''}
+            onClick={() => setViewMode('list')}
+            title="Liste görünümü"
+          >
+            <FaList />
+          </button>
         </div>
       </div>
 
       {isLoading ? (
         <div className="pm-loading">
-          <div className="loading-spinner" />
-          <p>Yükleniyor...</p>
+          <div className="admin-spinner" />
         </div>
       ) : filteredItems.length === 0 ? (
         <div className="pm-empty">

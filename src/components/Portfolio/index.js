@@ -3,7 +3,7 @@ import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import "./index.scss";
 import { getDocs, collection } from "firebase/firestore";
-import { db, ensureAuth } from "../../firebase";
+import { db, ensureAuth, firebaseEnabled } from "../../firebase";
 
 const SKELETON_COUNT = 5;
 
@@ -68,6 +68,12 @@ const Portfolio = memo(() => {
   useEffect(() => {
     const fetchProjects = async () => {
       setLoading(true);
+      if (!firebaseEnabled) {
+        console.warn("[Portfolio] Firebase not enabled, showing empty state.");
+        setProjects([]);
+        setLoading(false);
+        return;
+      }
       try {
         await ensureAuth();
         const snap = await getDocs(collection(db, "portfolio"));

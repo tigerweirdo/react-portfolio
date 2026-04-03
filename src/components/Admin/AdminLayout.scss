@@ -1,302 +1,199 @@
-@import '../../variables';
+$a-bg:        #0d0d0d;
+$a-surface:   #161616;
+$a-surface2:  #1f1f1f;
+$a-border:    rgba(240, 237, 232, 0.08);
+$a-border2:   rgba(240, 237, 232, 0.14);
+$a-text:      #f0ede8;
+$a-muted:     rgba(240, 237, 232, 0.40);
+$a-accent:    #f0ede8;
+$a-danger:    #e05c5c;
+$a-radius:    6px;
+$a-transition: 0.2s ease;
 
-$sidebar-width: 240px;
-$sidebar-collapsed-width: 64px;
-$sidebar-bg: $primary-color;
-$sidebar-text: #ffffff;
-$sidebar-hover: rgba(255, 255, 255, 0.08);
-$sidebar-active: rgba(255, 255, 255, 0.14);
-$topbar-height: 56px;
-$transition-speed: 0.25s;
-
+// ===========================
+// LAYOUT
+// ===========================
 .admin-layout {
-  display: flex;
   min-height: 100vh;
-  background-color: $accent-color-3;
-  overflow: hidden;
+  background: $a-bg;
+  color: $a-text;
 }
 
-.sidebar-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.45);
-  z-index: 998;
-  display: none;
-}
-
-.admin-sidebar {
-  width: $sidebar-width;
-  min-width: $sidebar-width;
-  background: $sidebar-bg;
-  color: $sidebar-text;
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
+// ===========================
+// TOPBAR
+// ===========================
+.admin-topbar {
   position: sticky;
   top: 0;
-  transition: width $transition-speed ease, min-width $transition-speed ease;
-  z-index: 999;
-  overflow: hidden;
+  z-index: 100;
+  width: 100%;
+  background: $a-bg;
+  border-bottom: 1px solid $a-border;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 5%;
+  height: 60px;
+  box-sizing: border-box;
+}
 
-  .sidebar-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 20px 16px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    min-height: 64px;
-    box-sizing: border-box;
-  }
+.topbar-eyebrow {
+  font-family: 'Courier New', monospace;
+  font-size: 0.65rem;
+  color: $a-muted;
+  letter-spacing: 3px;
+}
 
-  .sidebar-title {
-    font-size: 1.15rem;
-    font-weight: 600;
-    margin: 0;
-    white-space: nowrap;
-    letter-spacing: 0.3px;
-  }
+.topbar-logo {
+  font-family: 'Coolvetica', sans-serif;
+  font-size: 1.6rem;
+  color: $a-text;
+  font-weight: 400;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
 
-  .collapse-btn,
-  .close-btn {
+.topbar-nav {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+
+  a, button {
+    font-family: 'Helvetica Neue', sans-serif;
+    font-size: 0.8rem;
+    color: $a-muted;
+    text-decoration: none;
+    letter-spacing: 1px;
+    text-transform: uppercase;
     background: none;
     border: none;
-    color: rgba(255, 255, 255, 0.7);
     cursor: pointer;
-    padding: 6px;
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: color 0.2s, background 0.2s;
-    font-size: 1rem;
+    transition: color $a-transition;
+    padding: 0;
 
-    &:hover {
-      color: #fff;
-      background: $sidebar-hover;
-    }
-  }
-
-  .collapse-icon {
-    transition: transform $transition-speed ease;
-    &.rotated {
-      transform: rotate(180deg);
-    }
-  }
-
-  .sidebar-nav {
-    flex: 1;
-    padding: 12px 8px;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    overflow-y: auto;
-  }
-
-  .nav-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 10px 12px;
-    border-radius: 8px;
-    color: rgba(255, 255, 255, 0.75);
-    text-decoration: none;
-    font-size: 0.9rem;
-    font-weight: 500;
-    transition: background 0.15s, color 0.15s;
-    white-space: nowrap;
-    overflow: hidden;
-
-    .nav-icon {
-      font-size: 1.1rem;
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-    }
-
-    &:hover {
-      background: $sidebar-hover;
-      color: #fff;
-    }
-
-    &.active {
-      background: $sidebar-active;
-      color: #fff;
-      font-weight: 600;
-    }
-  }
-
-  .sidebar-footer {
-    padding: 12px 8px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    &:hover, &.active { color: $a-text; }
   }
 
   .logout-btn {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    width: 100%;
-    padding: 10px 12px;
-    border-radius: 8px;
-    background: none;
-    border: none;
-    color: rgba(255, 255, 255, 0.7);
-    cursor: pointer;
-    font-size: 0.9rem;
-    font-weight: 500;
-    transition: background 0.15s, color 0.15s;
-    white-space: nowrap;
-    text-align: left;
-
-    .nav-icon {
-      font-size: 1.1rem;
-      flex-shrink: 0;
-    }
-
-    &:hover {
-      background: rgba(255, 80, 80, 0.15);
-      color: #ff6b6b;
-    }
+    color: $a-danger;
+    &:hover { color: lighten($a-danger, 10%); }
   }
 }
 
-.sidebar-collapsed {
-  .admin-sidebar {
-    width: $sidebar-collapsed-width;
-    min-width: $sidebar-collapsed-width;
-
-    .sidebar-header {
-      justify-content: center;
-      padding: 20px 8px;
-    }
-
-    .sidebar-nav {
-      padding: 12px 6px;
-    }
-
-    .nav-item {
-      justify-content: center;
-      padding: 10px;
-    }
-
-    .sidebar-footer {
-      padding: 12px 6px;
-    }
-
-    .logout-btn {
-      justify-content: center;
-      padding: 10px;
-    }
-  }
+.topbar-hamburger {
+  display: none;
+  background: none;
+  border: none;
+  color: $a-text;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 4px;
 }
 
-.admin-main {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-  min-height: 100vh;
+// ===========================
+// CONTENT
+// ===========================
+.admin-content {
+  padding: 48px 5%;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-.admin-topbar {
-  height: $topbar-height;
-  min-height: $topbar-height;
+// ===========================
+// PAGE HEADER — shared by all admin pages
+// ===========================
+.admin-page-header {
+  margin-bottom: 40px;
+  border-bottom: 1px solid $a-border;
+  padding-bottom: 32px;
   display: flex;
-  align-items: center;
-  padding: 0 24px;
-  background: $background-color;
-  border-bottom: 1px solid $btn-border-color;
+  align-items: flex-end;
+  justify-content: space-between;
   gap: 16px;
 
-  .topbar-title {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: $text-color;
+  .page-header-left {
+    flex: 1;
   }
 
-  .hamburger-btn {
-    background: none;
-    border: none;
-    font-size: 1.25rem;
-    color: $text-color;
-    cursor: pointer;
-    padding: 6px;
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
+  .page-eyebrow {
+    display: block;
+    font-family: 'Courier New', monospace;
+    font-size: 0.65rem;
+    color: $a-muted;
+    letter-spacing: 3px;
+    margin-bottom: 10px;
+  }
 
-    &:hover {
-      background: $accent-color-3;
-    }
+  .page-title {
+    font-family: 'Coolvetica', sans-serif;
+    font-size: clamp(3rem, 6vw, 5rem);
+    font-weight: 400;
+    color: $a-text;
+    margin: 0;
+    line-height: 0.9;
+    letter-spacing: -1px;
   }
 }
 
-.admin-content {
-  flex: 1;
-  padding: 24px;
-  overflow-y: auto;
-}
-
+// ===========================
+// LOADING
+// ===========================
 .admin-page-loading {
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 200px;
-
-  .loading-dot-spinner {
-    width: 28px;
-    height: 28px;
-    border: 3px solid $accent-color-2;
-    border-top-color: $primary-color;
-    border-radius: 50%;
-    animation: adminSpin 0.7s linear infinite;
-  }
 }
 
-@keyframes adminSpin {
-  to { transform: rotate(360deg); }
+.admin-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid $a-border2;
+  border-top-color: $a-text;
+  border-radius: 50%;
+  animation: adminSpin 0.7s linear infinite;
 }
 
-.mobile-only {
-  display: none;
-}
+@keyframes adminSpin { to { transform: rotate(360deg); } }
 
-.desktop-only {
-  display: flex;
-}
-
+// ===========================
+// RESPONSIVE — Mobile
+// ===========================
 @media (max-width: 768px) {
-  .mobile-only {
+  .topbar-hamburger {
     display: flex;
+    align-items: center;
   }
 
-  .desktop-only {
+  .topbar-nav {
     display: none;
-  }
-
-  .sidebar-overlay {
-    display: block;
-  }
-
-  .admin-sidebar {
-    position: fixed;
+    position: absolute;
+    top: 60px;
     left: 0;
-    top: 0;
-    transform: translateX(-100%);
-    transition: transform $transition-speed ease;
-    width: $sidebar-width !important;
-    min-width: $sidebar-width !important;
-    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.2);
+    right: 0;
+    background: $a-surface;
+    border-bottom: 1px solid $a-border;
+    flex-direction: column;
+    padding: 16px 5%;
+    gap: 16px;
+    align-items: flex-start;
 
     &.mobile-open {
-      transform: translateX(0);
+      display: flex;
     }
   }
 
   .admin-content {
-    padding: 16px;
+    padding: 32px 5%;
   }
 
-  .admin-topbar {
-    padding: 0 16px;
+  .admin-page-header {
+    flex-direction: column;
+    align-items: flex-start;
+
+    .page-title {
+      font-size: clamp(2.2rem, 8vw, 3.5rem);
+    }
   }
 }

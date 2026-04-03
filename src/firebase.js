@@ -1,10 +1,10 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, signInAnonymously } from "firebase/auth";
+import { getAuth, signInAnonymously } from 'firebase/auth';
 import { getStorage } from 'firebase/storage';
 import { getFirestore } from 'firebase/firestore';
 
 const firebaseConfig = {
-  apiKey: process.env.REACT_APP_FIREBASE_API_KEY || "AIzaSyCEnUhLvqbZTFfLFhsDUUORyWbYFHG0V18",
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY || "AIzaSyCEnUhLvqbZTFfLFhsDUUORyWbYFH0V18",
   authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN || "portfolio-b0e27.firebaseapp.com",
   projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID || "portfolio-b0e27",
   storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET || "portfolio-b0e27.appspot.com",
@@ -12,12 +12,24 @@ const firebaseConfig = {
   appId: process.env.REACT_APP_FIREBASE_APP_ID || "1:247723789432:web:59e198796f96dee415f18d"
 };
 
-const app = initializeApp(firebaseConfig);
-export const auth = getAuth(app);
-export const db = getFirestore(app);
-export const storage = getStorage(app);
+let app, auth, db, storage, firebaseEnabled = false;
+
+try {
+  app = initializeApp(firebaseConfig);
+  auth = getAuth(app);
+  db = getFirestore(app);
+  storage = getStorage(app);
+  firebaseEnabled = true;
+  console.log("[Firebase] Initialized successfully");
+} catch (error) {
+  console.warn("[Firebase] Initialization failed, app will run without Firebase:", error.message);
+  firebaseEnabled = false;
+}
+
+export { auth, db, storage, firebaseEnabled };
 
 export const ensureAuth = async () => {
+  if (!firebaseEnabled) return;
   if (!auth.currentUser) {
     try {
       const result = await signInAnonymously(auth);

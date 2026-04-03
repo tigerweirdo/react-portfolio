@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './Login.scss';
-import { FaLock, FaSignInAlt, FaEye, FaEyeSlash } from 'react-icons/fa';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 const Login = ({ onLoginSuccess }) => {
   const [password, setPassword] = useState('');
@@ -30,21 +30,17 @@ const Login = ({ onLoginSuccess }) => {
   };
 
   return (
-    <div className="login-page-container">
-      <div className="login-box">
-        <div className="login-header">
-          <div className="header-icon-wrapper">
-            <FaLock className="header-icon" />
-          </div>
-          <h2>Admin Panel</h2>
-          <p className="login-subtitle">Devam etmek için şifrenizi girin</p>
-        </div>
-        <form onSubmit={handleSubmit} className="login-form">
-          <div className={`input-group ${error ? 'has-error' : ''}`}>
-            <FaLock className="input-icon" />
+    <div className="login-page">
+      <span className="login-eyebrow">(Ad-00)</span>
+
+      <div className="login-center">
+        <h1 className="login-title">Admin</h1>
+        <div className="login-divider" />
+
+        <form onSubmit={handleSubmit} className="login-form" noValidate>
+          <div className={`login-input-wrapper ${error ? 'has-error' : ''}`}>
             <input
               type={showPassword ? 'text' : 'password'}
-              id="password"
               value={password}
               onChange={(e) => { setPassword(e.target.value); setError(''); }}
               placeholder="Şifrenizi girin"
@@ -62,20 +58,16 @@ const Login = ({ onLoginSuccess }) => {
               {showPassword ? <FaEyeSlash /> : <FaEye />}
             </button>
           </div>
-          {error && <p className="error-message">{error}</p>}
-          <button
-            type="submit"
-            className="login-button"
-            disabled={isLoading}
-          >
+
+          {error && <p className="login-error">{error}</p>}
+
+          <button type="submit" className="login-btn" disabled={isLoading}>
             {isLoading ? (
               <>
-                <span className="spinner" /> Giriş yapılıyor...
+                <span className="login-spinner" /> Giriş yapılıyor...
               </>
             ) : (
-              <>
-                Giriş Yap <FaSignInAlt className="button-icon" />
-              </>
+              'Giriş Yap'
             )}
           </button>
         </form>

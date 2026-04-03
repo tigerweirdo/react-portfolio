@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { collection, getDocs } from 'firebase/firestore';
 import { db, ensureAuth } from '../../firebase';
-import { FaBriefcase, FaImage, FaPlus, FaExternalLinkAlt } from 'react-icons/fa';
+import { FaExternalLinkAlt, FaImage } from 'react-icons/fa';
 import './Dashboard.scss';
 
 const Dashboard = () => {
@@ -33,61 +33,47 @@ const Dashboard = () => {
   if (loading) {
     return (
       <div className="dashboard-loading">
-        <div className="loading-spinner" />
-        <p>Yükleniyor...</p>
+        <div className="admin-spinner" />
       </div>
     );
   }
 
   return (
     <div className="dashboard">
-      <div className="dashboard-header">
-        <h1>Dashboard</h1>
-        <p className="dashboard-subtitle">Portfolyonuzun genel durumu</p>
+      <div className="admin-page-header">
+        <div className="page-header-left">
+          <span className="page-eyebrow">(Db-00)</span>
+          <h1 className="page-title">Overview</h1>
+        </div>
       </div>
 
-      <div className="stats-grid">
-        <div className="stat-card" onClick={() => navigate('../portfolio')}>
-          <div className="stat-icon portfolio-icon">
-            <FaBriefcase />
-          </div>
-          <div className="stat-info">
-            <span className="stat-value">{stats.total}</span>
-            <span className="stat-label">Toplam Proje</span>
-          </div>
+      <div className="stats-row">
+        <div className="stat-item" onClick={() => navigate('../portfolio')}>
+          <span className="stat-code">SC_01</span>
+          <span className="stat-number">{stats.total}</span>
+          <span className="stat-label">Toplam Proje</span>
         </div>
-
-        <div className="stat-card">
-          <div className="stat-icon image-icon">
-            <FaImage />
-          </div>
-          <div className="stat-info">
-            <span className="stat-value">{stats.withCover}</span>
-            <span className="stat-label">Özel Kapak Resmi</span>
-          </div>
+        <div className="stat-item">
+          <span className="stat-code">SC_02</span>
+          <span className="stat-number">{stats.withCover}</span>
+          <span className="stat-label">Kapak Görselli</span>
         </div>
       </div>
 
       <div className="dashboard-section">
-        <div className="section-header">
-          <h2>Son Eklenen Projeler</h2>
-          <button className="action-btn" onClick={() => navigate('../portfolio')}>
-            Tümünü Gör
-          </button>
-        </div>
+        <h2 className="section-title">Son Eklenen Projeler</h2>
 
         {stats.recentItems.length === 0 ? (
-          <div className="empty-state">
-            <FaBriefcase className="empty-icon" />
+          <div className="dashboard-empty">
             <p>Henüz portfolyo öğesi eklenmemiş.</p>
-            <button className="add-first-btn" onClick={() => navigate('../portfolio?action=new')}>
-              <FaPlus /> İlk Projenizi Ekleyin
+            <button className="qa-btn" onClick={() => navigate('../portfolio?action=new')}>
+              + İlk Projenizi Ekleyin
             </button>
           </div>
         ) : (
           <div className="recent-list">
             {stats.recentItems.map(item => (
-              <div key={item.id} className="recent-item">
+              <div key={item.id} className="recent-row">
                 <div className="recent-thumb">
                   {item.cover || item.image ? (
                     <img src={item.cover || item.image} alt={item.name} />
@@ -95,10 +81,7 @@ const Dashboard = () => {
                     <div className="thumb-placeholder"><FaImage /></div>
                   )}
                 </div>
-                <div className="recent-info">
-                  <h4>{item.name}</h4>
-                  <p>{item.description?.substring(0, 80)}{item.description?.length > 80 ? '...' : ''}</p>
-                </div>
+                <span className="recent-name">{item.name}</span>
                 {item.url && (
                   <a href={item.url} target="_blank" rel="noopener noreferrer" className="recent-link" aria-label="Projeye git">
                     <FaExternalLinkAlt />
@@ -110,18 +93,14 @@ const Dashboard = () => {
         )}
       </div>
 
-      <div className="quick-actions">
-        <h2>Hızlı İşlemler</h2>
-        <div className="actions-grid">
-          <button className="quick-action-card" onClick={() => navigate('../portfolio?action=new')}>
-            <FaPlus className="qa-icon" />
-            <span>Yeni Proje Ekle</span>
-          </button>
-          <button className="quick-action-card" onClick={() => navigate('../portfolio')}>
-            <FaBriefcase className="qa-icon" />
-            <span>Projeleri Yönet</span>
-          </button>
-        </div>
+      <div className="dashboard-section">
+        <h2 className="section-title">Hızlı İşlemler</h2>
+        <button className="qa-btn" onClick={() => navigate('../portfolio?action=new')}>
+          + Yeni Proje Ekle
+        </button>
+        <button className="qa-btn" onClick={() => navigate('../portfolio')}>
+          Projeleri Yönet
+        </button>
       </div>
     </div>
   );
