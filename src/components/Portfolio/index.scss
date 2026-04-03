@@ -1,157 +1,156 @@
-@import '../../variables';
+// ===========================
+// PORTFOLIO PAGE — Dark theme, Malvah-style
+// ===========================
 
-// ===========================
-// PORTFOLIO PAGE — Hover-preview list layout
-// ===========================
+// Local dark palette (scoped to this section only)
+$porto-bg: #0d0d0d;
+$porto-text: #f0ede8;
+$porto-muted: rgba(240, 237, 232, 0.35);
+$porto-border: rgba(240, 237, 232, 0.10);
+$porto-accent: rgba(240, 237, 232, 0.06);
+
 .portfolio-page {
   width: 100%;
   min-height: 100vh;
   min-height: 100dvh;
-  height: auto;
+  background: $porto-bg;
+  color: $porto-text;
   overflow: visible;
   position: relative;
-  background: $background-color;
   box-sizing: border-box;
+  cursor: default;
 }
 
 // ===========================
 // HEADER
 // ===========================
 .portfolio-header {
-  padding: 80px 5% 48px;
-  max-width: 1200px;
+  padding: 60px 6% 40px;
+  max-width: 1400px;
   margin: 0 auto;
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  border-bottom: 1px solid $btn-border-color;
+  border-bottom: 1px solid $porto-border;
 
-  .header-code {
+  .header-eyebrow {
     font-family: 'Courier New', monospace;
-    font-size: 0.72rem;
-    color: $secondary-text-color;
-    letter-spacing: 2px;
+    font-size: 0.7rem;
+    color: $porto-muted;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    display: block;
   }
 
   .header-title {
     font-family: 'Coolvetica', sans-serif;
-    font-size: clamp(2.8rem, 6vw, 5rem);
+    font-size: clamp(5rem, 14vw, 13rem);
     font-weight: 400;
-    color: $primary-color;
+    color: $porto-text;
     margin: 0;
-    line-height: 1;
+    line-height: 0.9;
+    letter-spacing: -2px;
   }
 }
 
 // ===========================
-// LIST WRAPPER — two-column flex
+// LIST SECTION
 // ===========================
-.portfolio-list-wrapper {
-  display: flex;
-  align-items: flex-start;
-  gap: 0;
-  padding: 0 5% 60px;
-  max-width: 1200px;
+.portfolio-list-section {
+  padding: 0 6%;
+  max-width: 1400px;
   margin: 0 auto;
-  position: relative;
-}
-
-// ===========================
-// PROJECT LIST — left column
-// ===========================
-.portfolio-list {
-  width: 58%;
-  flex-shrink: 0;
 }
 
 // ===========================
 // PROJECT ROW
 // ===========================
 .project-row {
-  display: flex;
+  display: grid;
+  grid-template-columns: 80px 1fr auto;
   align-items: center;
-  gap: 24px;
-  padding: 22px 0;
-  border-bottom: 1px solid $btn-border-color;
-  cursor: pointer;
-  transition: background 0.2s ease;
+  gap: 32px;
+  padding: 28px 0;
+  border-bottom: 1px solid $porto-border;
+  cursor: none;
   position: relative;
+  transition: background 0.2s ease;
 
   &:hover,
   &.is-hovered {
+    background: rgba(240, 237, 232, 0.03);
+
     .row-title {
-      color: $accent-color-1;
+      letter-spacing: 1px;
     }
 
     .row-index {
-      color: $primary-color;
+      color: $porto-text;
     }
   }
 }
 
 .row-index {
   font-family: 'Courier New', monospace;
-  font-size: 0.7rem;
-  color: rgba($secondary-text-color, 0.5);
-  letter-spacing: 1.5px;
-  min-width: 48px;
-  transition: color 0.2s ease;
-  flex-shrink: 0;
+  font-size: 0.68rem;
+  color: rgba(240, 237, 232, 0.30);
+  letter-spacing: 2px;
+  transition: color 0.3s ease;
 }
 
 .row-title {
   font-family: 'Coolvetica', sans-serif;
-  font-size: clamp(1.4rem, 2.5vw, 2rem);
+  font-size: clamp(2rem, 4.5vw, 4rem);
   font-weight: 400;
-  color: $primary-color;
-  flex: 1;
+  color: $porto-text;
   margin: 0;
-  line-height: 1.1;
-  letter-spacing: 0.5px;
-  transition: color 0.25s ease;
+  line-height: 1;
+  transition: letter-spacing 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-.row-right {
+.row-meta {
   display: flex;
-  align-items: center;
-  gap: 20px;
-  flex-shrink: 0;
-}
-
-.row-tags {
-  font-size: 0.75rem;
-  color: rgba($secondary-text-color, 0.6);
-  letter-spacing: 0.5px;
-  font-family: 'Helvetica Neue', sans-serif;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
 }
 
 .row-year {
   font-family: 'Courier New', monospace;
-  font-size: 0.72rem;
-  color: rgba($secondary-text-color, 0.5);
+  font-size: 0.68rem;
+  color: rgba(240, 237, 232, 0.30);
   letter-spacing: 1px;
 }
 
-// ===========================
-// PREVIEW — right column (sticky)
-// ===========================
-.portfolio-preview {
-  position: sticky;
-  top: 20%;
-  width: 38%;
-  flex-shrink: 0;
-  padding-left: 5%;
-  padding-top: 20px;
+.row-tags {
+  font-family: 'Helvetica Neue', sans-serif;
+  font-size: 0.7rem;
+  color: rgba(240, 237, 232, 0.25);
+  letter-spacing: 0.5px;
+  text-align: right;
 }
 
-.preview-image-box {
-  width: 100%;
-  aspect-ratio: 4 / 3;
-  border-radius: 12px;
+// ===========================
+// EMPTY STATE
+// ===========================
+.portfolio-empty {
+  text-align: center;
+  padding: 80px 20px;
+  color: $porto-muted;
+  font-size: 1rem;
+}
+
+// ===========================
+// CURSOR-FOLLOWING PREVIEW (portaled to body)
+// ===========================
+.cursor-preview {
+  position: fixed;
+  width: 420px;
+  aspect-ratio: 16 / 10;
+  border-radius: 8px;
   overflow: hidden;
-  background: $accent-color-3;
-  border: 1px solid $btn-border-color;
-  position: relative;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -60%);
+  will-change: left, top;
 
   img {
     width: 100%;
@@ -161,57 +160,40 @@
   }
 }
 
-.preview-placeholder {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: rgba($secondary-text-color, 0.3);
-  font-size: 0.75rem;
-  font-family: 'Courier New', monospace;
-  letter-spacing: 2px;
-}
-
 // ===========================
-// EMPTY STATE
-// ===========================
-.portfolio-empty {
-  text-align: center;
-  padding: 80px 20px;
-  color: $secondary-text-color;
-  font-size: 1rem;
-}
-
-// ===========================
-// SKELETON LOADING
+// SKELETON LOADING — Dark theme
 // ===========================
 .skeleton-row {
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  padding: 22px 0;
-  border-bottom: 1px solid $btn-border-color;
+  display: grid;
+  grid-template-columns: 80px 1fr auto;
+  gap: 32px;
+  padding: 28px 0;
+  border-bottom: 1px solid $porto-border;
   pointer-events: none;
 }
 
 .skeleton-pill {
-  height: 20px;
-  border-radius: 4px;
-  background: $accent-color-3;
+  height: 22px;
+  border-radius: 3px;
+  background: $porto-accent;
   position: relative;
   overflow: hidden;
 
-  &.narrow  { width: 48px; }
-  &.wide    { width: clamp(160px, 30%, 280px); }
-  &.xnarrow { width: 32px; }
+  &.narrow  { width: 56px; }
+  &.wide    { width: min(320px, 50%); height: 40px; }
+  &.xnarrow { width: 36px; height: 14px; }
 
   &::before {
     content: '';
     position: absolute;
-    inset: 0 -100%;
-    background: linear-gradient(90deg, transparent, rgba($accent-color-2, 0.8), transparent);
-    animation: shimmer 1.5s ease-in-out infinite;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(240, 237, 232, 0.08) 50%,
+      transparent 100%
+    );
+    animation: shimmer 1.8s ease-in-out infinite;
   }
 }
 
@@ -221,72 +203,83 @@
 }
 
 // ===========================
-// RESPONSIVE — Tablet (max-width: 1024px)
+// RESPONSIVE — Tablet
 // ===========================
 @media screen and (max-width: 1024px) {
   .portfolio-header {
-    padding: 60px 5% 36px;
+    padding: 48px 5% 32px;
   }
 
-  .portfolio-list-wrapper {
-    padding: 0 4% 48px;
+  .portfolio-list-section {
+    padding: 0 5%;
   }
 
-  .row-title {
-    font-size: clamp(1.2rem, 2.5vw, 1.7rem);
+  .project-row {
+    gap: 24px;
+  }
+
+  .cursor-preview {
+    width: 320px;
   }
 }
 
 // ===========================
-// RESPONSIVE — Mobile (max-width: 900px)
+// RESPONSIVE — Mobile
 // ===========================
-@media screen and (max-width: 900px) {
-  .portfolio-preview {
+@media screen and (max-width: 768px) {
+  .cursor-preview {
     display: none;
   }
 
-  .portfolio-list {
-    width: 100%;
+  .portfolio-page {
+    cursor: default;
+  }
+
+  .project-row {
+    cursor: pointer;
+    grid-template-columns: 48px 1fr auto;
+    gap: 16px;
+    padding: 20px 0;
+  }
+
+  .portfolio-header {
+    padding: 36px 5% 24px;
+
+    .header-title {
+      font-size: clamp(3.5rem, 16vw, 7rem);
+      letter-spacing: -1px;
+    }
+
+    .header-eyebrow {
+      font-size: 0.62rem;
+      margin-bottom: 12px;
+    }
+  }
+
+  .portfolio-list-section {
+    padding: 0 5%;
+  }
+
+  .row-title {
+    font-size: clamp(1.6rem, 7vw, 2.4rem);
+  }
+
+  .row-index {
+    font-size: 0.6rem;
   }
 
   .row-tags {
     display: none;
   }
-}
-
-@media screen and (max-width: 768px) {
-  .portfolio-header {
-    padding: 40px 5% 24px;
-
-    .header-title {
-      font-size: clamp(2rem, 8vw, 3rem);
-    }
-
-    .header-code {
-      font-size: 0.65rem;
-    }
-  }
-
-  .portfolio-list-wrapper {
-    padding: 0 5% 40px;
-  }
-
-  .project-row {
-    padding: 16px 0;
-    gap: 16px;
-  }
-
-  .row-title {
-    font-size: clamp(1.1rem, 4.5vw, 1.4rem);
-  }
-
-  .row-index {
-    font-size: 0.62rem;
-    min-width: 40px;
-  }
 
   .row-year {
-    font-size: 0.65rem;
+    font-size: 0.6rem;
+  }
+
+  .skeleton-row {
+    grid-template-columns: 48px 1fr auto;
+    gap: 16px;
+    padding: 20px 0;
   }
 }
 
@@ -295,25 +288,30 @@
 // ===========================
 @media screen and (max-width: 480px) {
   .portfolio-header {
-    padding: 30px 4% 16px;
+    padding: 28px 4% 18px;
+
+    .header-title {
+      font-size: clamp(2.8rem, 18vw, 5rem);
+    }
   }
 
-  .portfolio-list-wrapper {
-    padding: 0 4% 32px;
+  .portfolio-list-section {
+    padding: 0 4%;
   }
 
   .project-row {
-    padding: 14px 0;
+    grid-template-columns: 40px 1fr auto;
     gap: 12px;
+    padding: 16px 0;
   }
 
   .row-title {
-    font-size: clamp(1rem, 4vw, 1.2rem);
+    font-size: clamp(1.3rem, 6vw, 1.8rem);
   }
 
   .row-index {
-    min-width: 36px;
-    font-size: 0.58rem;
+    font-size: 0.55rem;
+    letter-spacing: 1.5px;
   }
 }
 
@@ -321,8 +319,19 @@
 // Reduced Motion
 // ===========================
 @media (prefers-reduced-motion: reduce) {
-  .project-row,
-  .row-title,
+  .cursor-preview {
+    display: none;
+  }
+
+  .project-row {
+    cursor: pointer;
+    transition: none;
+  }
+
+  .row-title {
+    transition: none;
+  }
+
   .row-index {
     transition: none;
   }
