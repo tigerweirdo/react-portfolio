@@ -1,0 +1,19 @@
+{"sessionId":"85f138","location":"App.js:53","message":"App component started","data":{"localStorage":null,"slug":"p-x7k9","pathname":"/p-x7k9"},"timestamp":1775218657761}
+{"sessionId":"85f138","location":"App.js:131","message":"Auth not checked - showing loading","data":{"authChecked":false},"timestamp":1775218657762}
+{"sessionId":"85f138","location":"App.js:53","message":"App component started","data":{"localStorage":null,"slug":"p-x7k9","pathname":"/p-x7k9"},"timestamp":1775218657763}
+{"sessionId":"85f138","location":"App.js:131","message":"Auth not checked - showing loading","data":{"authChecked":false},"timestamp":1775218657763}
+{"sessionId":"85f138","location":"App.js:60","message":"Auth check effect","data":{"storedAuth":null,"willSetAuth":false},"timestamp":1775218657935}
+{"sessionId":"85f138","location":"App.js:60","message":"Auth check effect","data":{"storedAuth":null,"willSetAuth":false},"timestamp":1775218657935}
+{"sessionId":"85f138","location":"App.js:53","message":"App component started","data":{"localStorage":null,"slug":"p-x7k9","pathname":"/p-x7k9"},"timestamp":1775218657936}
+{"sessionId":"85f138","location":"App.js:207","message":"Admin login route element","data":{"isAuthenticated":false,"path":"p-x7k9"},"timestamp":1775218657936}
+{"sessionId":"85f138","location":"App.js:219","message":"Admin wildcard route element","data":{"isAuthenticated":false,"path":"p-x7k9/*"},"timestamp":1775218657937}
+{"sessionId":"85f138","location":"App.js:53","message":"App component started","data":{"localStorage":null,"slug":"p-x7k9","pathname":"/p-x7k9"},"timestamp":1775218657937}
+{"sessionId":"85f138","location":"App.js:207","message":"Admin login route element","data":{"isAuthenticated":false,"path":"p-x7k9"},"timestamp":1775218657937}
+{"sessionId":"85f138","location":"App.js:219","message":"Admin wildcard route element","data":{"isAuthenticated":false,"path":"p-x7k9/*"},"timestamp":1775218657937}
+{"sessionId":"85f138","location":"App.js:22","message":"AdminRouteHandler render","data":{"pathname":"/p-x7k9","isAdminRoute":true},"timestamp":1775218657938}
+{"sessionId":"85f138","location":"App.js:22","message":"AdminRouteHandler render","data":{"pathname":"/p-x7k9","isAdminRoute":true},"timestamp":1775218657939}
+{"sessionId":"85f138","location":"App.js:53","message":"App component started","data":{"localStorage":null,"slug":"p-x7k9","pathname":"/p-x7k9"},"timestamp":1775218657950}
+{"sessionId":"85f138","location":"App.js:53","message":"App component started","data":{"localStorage":null,"slug":"p-x7k9","pathname":"/p-x7k9"},"timestamp":1775218657951}
+{"sessionId":"85f138","location":"App.js:53","message":"App component started","data":{"localStorage":null,"slug":"p-x7k9","pathname":"/p-x7k9"},"timestamp":1775218657952}
+{"sessionId":"85f138","location":"App.js:22","message":"AdminRouteHandler render","data":{"pathname":"/p-x7k9","isAdminRoute":true},"timestamp":1775218657953}
+{"sessionId":"85f138","location":"App.js:22","message":"AdminRouteHandler render","data":{"pathname":"/p-x7k9","isAdminRoute":true},"timestamp":1775218657953}

@@ -1,15 +1,12 @@
 import React, { useState, useEffect, useCallback, Suspense } from 'react';
-import { Outlet, NavLink, useLocation } from 'react-router-dom';
 import { FaBars, FaTimes } from 'react-icons/fa';
 import './AdminLayout.scss';
 
-const AdminLayout = ({ onLogout }) => {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const location = useLocation();
+const ADMIN_SLUG = process.env.REACT_APP_ADMIN_SLUG || 'p-x7k9';
 
-  useEffect(() => {
-    setMobileMenuOpen(false);
-  }, [location.pathname]);
+const AdminLayout = ({ onLogout, children }) => {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const pathname = window.location.pathname;
 
   const toggleMobileMenu = useCallback(() => {
     setMobileMenuOpen(prev => !prev);
@@ -22,18 +19,18 @@ const AdminLayout = ({ onLogout }) => {
         <span className="topbar-logo">Admin</span>
 
         <nav className={`topbar-nav ${mobileMenuOpen ? 'mobile-open' : ''}`}>
-          <NavLink
-            to="dashboard"
-            className={({ isActive }) => isActive ? 'active' : ''}
+          <a
+            href={`/${ADMIN_SLUG}/dashboard`}
+            className={pathname.includes('dashboard') ? 'active' : ''}
           >
             Dashboard
-          </NavLink>
-          <NavLink
-            to="portfolio"
-            className={({ isActive }) => isActive ? 'active' : ''}
+          </a>
+          <a
+            href={`/${ADMIN_SLUG}/portfolio`}
+            className={pathname.includes('portfolio') ? 'active' : ''}
           >
             Portfolyo
-          </NavLink>
+          </a>
           <button className="logout-btn" onClick={onLogout}>
             Çıkış
           </button>
@@ -49,9 +46,7 @@ const AdminLayout = ({ onLogout }) => {
       </header>
 
       <main className="admin-content">
-        <Suspense fallback={<div className="admin-page-loading"><div className="admin-spinner" /></div>}>
-          <Outlet />
-        </Suspense>
+        {children}
       </main>
     </div>
   );

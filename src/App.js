@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef, useCallback, memo, lazy, Suspense } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import React, { useState, useEffect, useRef, useCallback, lazy, Suspense } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Home from './components/Home';
 import About from './components/About';
@@ -18,34 +18,16 @@ const PortfolioManager = lazy(() => import('./components/Admin/PortfolioManager'
 // Gizli admin slug - .env'den okunuyor
 const ADMIN_SLUG = process.env.REACT_APP_ADMIN_SLUG || 'p-x7k9';
 
-// Admin route handler
-const AdminRouteHandler = memo(({ children }) => {
-  const location = useLocation();
-
-  useEffect(() => {
-    const isAdminRoute = location.pathname.startsWith(`/${ADMIN_SLUG}`);
-    if (isAdminRoute) {
-      document.documentElement.classList.add('admin-page');
-      document.body.classList.add('admin-page');
-    } else {
-      document.documentElement.classList.remove('admin-page');
-      document.body.classList.remove('admin-page');
-    }
-  }, [location.pathname]);
-
-  return <>{children}</>;
-});
-
 // Page transition variants - very subtle
 const pageTransition = {
   initial: { opacity: 1 },
-  animate: { 
+  animate: {
     opacity: 1,
     transition: {
       duration: 0.3
     }
   },
-  exit: { 
+  exit: {
     opacity: 1
   }
 };
@@ -57,6 +39,10 @@ const App = () => {
   const appContainerRef = useRef(null);
   const sectionsRef = useRef(['home', 'about', 'portfolio', 'contact']);
 
+  // Admin route detection - window.location ile direkt kontrol
+  const pathname = window.location.pathname;
+  const isAdminRoute = pathname.startsWith(`/${ADMIN_SLUG}`);
+
   useEffect(() => {
     const storedAuth = localStorage.getItem('isAdminAuthenticated');
     if (storedAuth === 'true') {
@@ -65,8 +51,20 @@ const App = () => {
     setAuthChecked(true);
   }, []);
 
+  useEffect(() => {
+    if (isAdminRoute) {
+      document.documentElement.classList.add('admin-page');
+      document.body.classList.add('admin-page');
+    } else {
+      document.documentElement.classList.remove('admin-page');
+      document.body.classList.remove('admin-page');
+    }
+  }, [isAdminRoute]);
+
   // Intersection Observer for active section tracking
   useEffect(() => {
+    if (isAdminRoute) return;
+
     const observerOptions = {
       root: appContainerRef.current,
       rootMargin: '-45% 0px -45% 0px',
@@ -108,11 +106,12 @@ const App = () => {
         observer.disconnect();
       }
     };
-  }, []);
+  }, [isAdminRoute]);
 
   const handleLoginSuccess = useCallback(() => {
     setIsAuthenticated(true);
     localStorage.setItem('isAdminAuthenticated', 'true');
+    window.location.href = `/${ADMIN_SLUG}/dashboard`;
   }, []);
 
   const handleLogout = useCallback(() => {
@@ -142,23 +141,65 @@ const App = () => {
     );
   }
 
+  // Admin routes - React Router kullanmadan, doğrudan render
+  if (isAdminRoute) {
+    // Exact match: /p-x7k9 → Login sayfası
+    if (pathname === `/${ADMIN_SLUG}`) {
+      if (isAuthenticated) {
+        window.location.href = `/${ADMIN_SLUG}/dashboard`;
+        return null;
+      }
+      return (
+        <>
+          <ToastContainer position="top-right" autoClose={5000} theme="colored" />
+          <Suspense fallback={<div className="loading-auth">Yükleniyor...</div>}>
+            <Login onLoginSuccess={handleLoginSuccess} />
+          </Suspense>
+        </>
+      );
+    }
+
+    // Admin panel sayfaları: /p-x7k9/dashboard, /p-x7k9/portfolio
+    if (!isAuthenticated) {
+      window.location.href = `/${ADMIN_SLUG}`;
+      return null;
+    }
+
+    const adminSubPath = pathname.replace(`/${ADMIN_SLUG}`, '').replace(/^\//, '');
+
+    return (
+      <Router>
+        <ToastContainer position="top-right" autoClose={5000} theme="colored" />
+        <Suspense fallback={<div className="loading-auth">Yükleniyor...</div>}>
+          <AdminLayout onLogout={handleLogout}>
+            <Suspense fallback={<div className="admin-page-loading"><div className="admin-spinner" /></div>}>
+              {adminSubPath === 'dashboard' && <Dashboard />}
+              {adminSubPath === 'portfolio' && <PortfolioManager />}
+              {!adminSubPath && <Dashboard />}
+            </Suspense>
+          </AdminLayout>
+        </Suspense>
+      </Router>
+    );
+  }
+
+  // Ana sayfa
   return (
     <Router>
-      <AdminRouteHandler>
-        <ToastContainer 
-          position="top-right"
-          autoClose={5000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="colored"
-        />
-        <Routes>
-        <Route 
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
+      <Routes>
+        <Route
           path="/"
           element={(
             <div className="one-page-app">
@@ -166,32 +207,32 @@ const App = () => {
                 ref={appContainerRef}
                 className="scroll-container"
               >
-                <motion.section 
-                  id="home" 
+                <motion.section
+                  id="home"
                   className={`page-section ${activeSection === 'home' ? 'active' : ''}`}
                   {...pageTransition}
                 >
                   <Home scrollToSection={scrollToSection} />
                 </motion.section>
 
-                <motion.section 
-                  id="about" 
+                <motion.section
+                  id="about"
                   className={`page-section ${activeSection === 'about' ? 'active' : ''}`}
                   {...pageTransition}
                 >
                   <About />
                 </motion.section>
 
-                <motion.section 
-                  id="portfolio" 
+                <motion.section
+                  id="portfolio"
                   className={`page-section ${activeSection === 'portfolio' ? 'active' : ''}`}
                   {...pageTransition}
                 >
                   <Portfolio />
                 </motion.section>
 
-                <motion.section 
-                  id="contact" 
+                <motion.section
+                  id="contact"
                   className={`page-section ${activeSection === 'contact' ? 'active' : ''}`}
                   {...pageTransition}
                 >
@@ -201,41 +242,10 @@ const App = () => {
             </div>
           )}
         />
-        {/* Admin login */}
-        <Route
-          path={`/${ADMIN_SLUG}`}
-          element={
-            <Suspense fallback={<div className="loading-auth">Yükleniyor...</div>}>
-              {isAuthenticated ? (
-                <Navigate to={`/${ADMIN_SLUG}/dashboard`} replace />
-              ) : (
-                <Login onLoginSuccess={handleLoginSuccess} />
-              )}
-            </Suspense>
-          }
-        />
-        {/* Admin panel - nested routes */}
-        <Route
-          path={`/${ADMIN_SLUG}/*`}
-          element={
-            <Suspense fallback={<div className="loading-auth">Yükleniyor...</div>}>
-              {isAuthenticated ? (
-                <AdminLayout onLogout={handleLogout} />
-              ) : (
-                <Navigate to={`/${ADMIN_SLUG}`} replace />
-              )}
-            </Suspense>
-          }
-        >
-          <Route index element={<Navigate to="dashboard" replace />} />
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route path="portfolio" element={<PortfolioManager />} />
-        </Route>
-        {/* Eski /admin URL'lerini ana sayfaya yönlendir */}
         <Route path="/admin/*" element={<Navigate to="/" replace />} />
         <Route path="/admin" element={<Navigate to="/" replace />} />
-        </Routes>
-      </AdminRouteHandler>
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
     </Router>
   );
 };

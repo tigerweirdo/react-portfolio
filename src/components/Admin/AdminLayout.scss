@@ -77,7 +77,7 @@ $a-transition: 0.2s ease;
 
   .logout-btn {
     color: $a-danger;
-    &:hover { color: lighten($a-danger, 10%); }
+    &:hover { color: #e87878; }
   }
 }
 
