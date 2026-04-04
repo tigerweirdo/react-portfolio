@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, Suspense } from 'react';
+import React, { useState, useCallback } from 'react';
 import { FaBars, FaTimes } from 'react-icons/fa';
 import './AdminLayout.scss';
 

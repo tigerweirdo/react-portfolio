@@ -515,3 +515,134 @@ Bu proje bir "tek sayfa scroll-snap" mimarisi kullanıyor. Tüm bölümler (home
 #### 📊 Sonuç
 
 Tüm 6 tespit edilen sorun düzeltildi. Scroll artık hem doğal hem de snap-tabanlı (proximity) olarak çalışmalı. Mobilde uzun portfolio içerikleri artık kırpılmıyor. Admin modal'ı açılıp kapandığında scroll doğru şekilde geri geliyor.
+
+---
+
+### Görev 10: Portfolio “Premium Proje Vitrini” Izgara Tasarımı (4 Nisan 2026)
+
+**İstek:** Work / portfolio bölümü, verilen HTML örneğindeki gibi tam ekran ızgara kartlar, hover’da merkez “peek” görseli, yan etiketler ve tıklanınca blur’lu detay katmanı ile güncellensin; renkler mevcut portföy koyu temasıyla (#0d0d0d, #f0ede8) uyumlu olsun.
+
+**Yapılanlar:**
+
+1. **`src/components/Portfolio/index.js`**
+   - Liste satırı + imleç önizlemesi kaldırıldı; Firebase’den gelen projeler `premium-grid` içinde kart olarak gösteriliyor.
+   - Arka plan görseli: `cover || image`; hover iç görsel: `image` kapaktan farklıysa `image`, aksi halde tek görsel kullanımı.
+   - Sol etiket: ilk `tags` değeri (veya proje adından üretilmiş kısa etiket); sağ: `( PEEK )`.
+   - Detay: başlık, açıklama, kapatma (sonradan Görev 12’de ikon + backdrop + Escape); isteğe bağlı `url` için “Projeyi aç” linki.
+   - Giriş animasyonu: `framer-motion` ile hafif gecikmeli fade/slide.
+
+2. **`src/components/Portfolio/index.scss`**
+   - Tailwind yerine SCSS ile özgün sınıflar: ızgara çizgileri, `ease-premium`, metin reveal, `is-open` durumları, mobil/tablet kırılımları, `prefers-reduced-motion` desteği.
+   - Rozetler krem zemin (`#f0ede8`) + koyu metin (`#0d0d0d`); overlay sıcak koyu ton + blur.
+
+3. **`public/index.html`** *(Görev 11’de portföy fontları kaldırıldı; site geneli Coolvetica + Helvetica ile devam ediyor.)*
+
+4. **`src/components/Admin/AdminLayout.js`**
+   - Kullanılmayan `useEffect` / `Suspense` importları kaldırıldı (CI’da eslint uyarısı build’i kırıyordu).
+
+**Etkilenen dosyalar:** `src/components/Portfolio/index.js`, `src/components/Portfolio/index.scss`, `public/index.html`, `src/components/Admin/AdminLayout.js`
+
+---
+
+### Görev 11: Portfolio Başlık ve Tema — Ana Siteyle Hizalama (4 Nisan 2026)
+
+**Sorun:** Work bölümü koyu tam sayfa arka plan, aşırı büyük başlık ve Manrope / Space Mono ile Contact / About bölümlerinden görsel olarak kopuktu.
+
+**Yapılanlar:**
+
+- `src/components/Portfolio/index.scss`: `src/_variables.scss` içindeki global palet kullanıldı — sayfa arka planı şeffaf (`.page-section` beyazı), başlık Contact’taki gibi ortalanmış Coolvetica, `clamp(2rem, 5vw, 48px)`, uppercase, `letter-spacing: 2px`; eyebrow Courier + `$secondary-text-color`.
+- Izgara çizgileri ve kart kromu `$primary-color` türevleri; rozetler beyaz zemin + `$btn-border-color` kenarlık (site butonlarıyla uyumlu).
+- Detay katmanı ve tipografi site gövdesi (`Helvetica Neue`, Courier) ile uyumlu; krem tonlu eski portföy paleti kaldırıldı.
+- `public/index.html`: yalnızca portföy için eklenen Google Fonts linkleri kaldırıldı.
+
+**Etkilenen dosyalar:** `src/components/Portfolio/index.scss`, `public/index.html`, `DOCUMENTATION.md`
+
+---
+
+### Görev 12: Portfolio Detay Kapatma — Daha Kullanıcı Dostu (4 Nisan 2026)
+
+**İstek:** `( KAPAT )` metni yerine daha anlaşılır bir kapatma deneyimi.
+
+**Yapılanlar:**
+
+- **`src/components/Portfolio/index.js`**
+  - Metin kaldırıldı; yerine **yuvarlak X ikon düğmesi** (`aria-label="Detayı kapat"`), **boş alana (backdrop) tıklayınca kapanma** (içerik alanı `stopPropagation` ile kapanmıyor).
+  - Ekran okuyucular için gizli kısa yönerge (`aria-describedby` + `.portfolio-sr-only`): boş alan, Escape ve kapat düğmesi.
+  - `Escape` davranışı aynı kaldı.
+
+- **`src/components/Portfolio/index.scss`**
+  - Kapat düğmesi: minimum 44×44px dokunma alanı, yarı saydam dairesel zemin, hover/focus/active durumları; `.portfolio-sr-only` yardım sınıfı.
+
+**Etkilenen dosyalar:** `src/components/Portfolio/index.js`, `src/components/Portfolio/index.scss`, `DOCUMENTATION.md`
+
+---
+
+### Görev 13: Work Başlığı + Peek Videosu (4 Nisan 2026)
+
+**İstek:** `(Sc-00)` kaldırılsın; başlık About ile aynı boyutta olsun; hover iç alanında (peek) isteğe bağlı video kullanılabilsin.
+
+**Yapılanlar:**
+
+1. **`src/components/Portfolio/index.js`**
+   - Eyebrow `(Sc-00)` kaldırıldı.
+   - Firestore alanı `peekVideo` (URL): varsa hover peek alanında video; yoksa önceki gibi ikinci görsel mantığı (`innerStill`).
+
+2. **`src/components/Portfolio/PeekInner.js`** (yeni)
+   - Peek için `<video>` veya `<img>`; detay açıkken ve `prefers-reduced-motion` iken video duraklatılır.
+
+3. **`src/components/Portfolio/index.scss`**
+   - `.header-title`: About `.text-zone h1` ile uyumlu — `clamp(2.5rem, 6vw, 60px)`; tablet/mobil kırılımları About ile hizalı.
+   - `.premium-card__inner-video` yardımcı sınıfı.
+
+4. **`src/components/Admin/PortfolioManager.js` + `.scss`**
+   - Opsiyonel **Peek videosu** alanı: MP4 / WebM / MOV, en fazla 80MB; Firebase Storage `portfolio_videos/` yüklemesi; önizleme ve kaldır.
+   - Kayıt/silme sırasında `peekVideo` dosyası Storage’dan temizlenir.
+
+**Firebase Storage (kullanıcı tarafında yapılmalı):** `portfolio_videos/` için resim kurallarına benzer okuma/yazma kuralı eklenmeli (ör. `match /portfolio_videos/{allPaths=**}`).
+
+**Etkilenen dosyalar:** `src/components/Portfolio/index.js`, `src/components/Portfolio/index.scss`, `src/components/Portfolio/PeekInner.js`, `src/components/Admin/PortfolioManager.js`, `src/components/Admin/PortfolioManager.scss`, `DOCUMENTATION.md`
+
+---
+
+### Görev 14: Ana Medya — Görsel veya Video (4 Nisan 2026)
+
+**İstek:** “Ana Resim” alanında video da kullanılabilsin; portföy kartında tam alan arka planda oynasın.
+
+**Yapılanlar:**
+
+- **Firestore:** `imageIsVideo` (boolean). Ana medya video ise `image` alanı video URL’sini tutar; yükleme `portfolio_videos/` altına yapılır. Görsel ise `portfolio_images/`.
+- **`cover`:** Ana medya video iken poster isteğe bağlı (yalnızca görsel); ana medya görsel iken kapak yoksa `cover` yine `image` ile doldurulur.
+- **`src/components/Portfolio/CardBackground.js`:** Arka planda `<video>` veya `<img>`; detay açıkken ve `prefers-reduced-motion` iken arka plan videosu durur.
+- **`src/components/Portfolio/index.js`:** Peek iç görseli, video ana medyada poster görseline göre hesaplanır.
+- **`src/components/Admin/PortfolioManager.js`:** “Ana görsel veya video” tek dosya seçimi; kapak alanı açıklaması güncellendi; admin liste önizlemesinde video + `poster`.
+
+**Etkilenen dosyalar:** `src/components/Portfolio/CardBackground.js`, `src/components/Portfolio/index.js`, `src/components/Portfolio/index.scss`, `src/components/Admin/PortfolioManager.js`, `src/components/Admin/PortfolioManager.scss`, `DOCUMENTATION.md`
+
+---
+
+### Görev 15: Video Kapakta — Ana Alan Yalnız Görsel (4 Nisan 2026)
+
+**İstek:** Görev 14’teki model tersine çevrildi: **ana medya her zaman görsel**; **video yalnızca kapak** alanında kullanılabilir.
+
+**Yapılanlar:**
+
+- **Firestore:** `coverIsVideo` (boolean). Video kapak ise `cover` URL’si `portfolio_videos/` yüklemesidir; kart arka planında `<video src={cover} poster={image}>` kullanılır. `image` her zaman görsel (`portfolio_images/`). Kayıtta `imageIsVideo: false` yazılır.
+- **Eski veriler:** Daha önce `imageIsVideo: true` ile kaydedilmiş projeler **CardBackground** ve admin küçük resimde geçici olarak desteklenmeye devam eder.
+- **`PortfolioManager`:** Ana alan tekrar `ImageUploader` (yalnız görsel). Kapak alanı görsel veya video dosyası; açıklama metinleri güncellendi.
+
+**Etkilenen dosyalar:** `src/components/Portfolio/CardBackground.js`, `src/components/Portfolio/index.js`, `src/components/Admin/PortfolioManager.js`, `DOCUMENTATION.md`
+
+---
+
+### Görev 16: Dış Görsel — İç Video (Peek) (4 Nisan 2026)
+
+**Sorun:** Kapak video olduğunda tam ekran arka planda video oynuyordu; istenen: **dışarıda yalnızca görsel**, **içeride (hover peek) video**.
+
+**Yapılanlar:**
+
+- **`CardBackground.js`:** Yalnızca `<img>`; `coverIsVideo` ise `src` = ana görsel (`image`), aksi halde `cover || image`.
+- **`index.js`:** İç video URL’si = `peekVideo` alanı **veya** (`coverIsVideo` ise `cover` video URL’si). `PeekInner` bu tek kaynakla oynatır.
+- **`PortfolioManager`:** Kapak alanı açıklaması güncellendi (dış = ana görsel, kapak videosu = iç peek).
+- **Admin liste küçük resim:** Her zaman görsel; kapak video iken ana görsel gösterilir.
+
+**Etkilenen dosyalar:** `src/components/Portfolio/CardBackground.js`, `src/components/Portfolio/index.js`, `src/components/Admin/PortfolioManager.js`, `src/components/Admin/PortfolioManager.scss`, `DOCUMENTATION.md`

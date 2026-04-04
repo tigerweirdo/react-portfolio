@@ -1,69 +1,46 @@
-import React, { useEffect, useState, useRef, memo, useCallback } from "react";
-import { createPortal } from "react-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useEffect, useState, useCallback, memo } from "react";
+import { motion } from "framer-motion";
+import PeekInner from "./PeekInner";
+import CardBackground from "./CardBackground";
 import "./index.scss";
 import { getDocs, collection } from "firebase/firestore";
 import { db, ensureAuth, firebaseEnabled } from "../../firebase";
 
-const SKELETON_COUNT = 5;
+const SKELETON_COUNT = 4;
+
+const easePremium = [0.16, 1, 0.3, 1];
+
+function labelFromItem(item) {
+  const rawTags = item.tags;
+  const tag = Array.isArray(rawTags) ? rawTags[0] : rawTags;
+  if (tag && String(tag).trim()) {
+    return String(tag)
+      .trim()
+      .toUpperCase()
+      .replace(/\s+/g, "_")
+      .slice(0, 24);
+  }
+  const name = item.name || "PROJECT";
+  return String(name)
+    .toUpperCase()
+    .replace(/\s+/g, "_")
+    .slice(0, 24);
+}
 
 const LoadingSkeleton = () => (
-  <div className="portfolio-list-section">
+  <section className="premium-grid" aria-hidden="true">
     {Array.from({ length: SKELETON_COUNT }).map((_, idx) => (
-      <div key={`sk-${idx}`} className="project-row skeleton-row">
-        <div className="skeleton-pill narrow" />
-        <div className="skeleton-pill wide" />
-        <div className="skeleton-pill xnarrow" />
+      <div key={`sk-${idx}`} className="premium-card premium-card--skeleton">
+        <div className="skeleton-shine" />
       </div>
     ))}
-  </div>
+  </section>
 );
-
-const CursorPreview = memo(({ activeIndex, projects, previewRef }) => {
-  const image =
-    activeIndex !== null
-      ? projects[activeIndex]?.cover || projects[activeIndex]?.image
-      : null;
-  const name = activeIndex !== null ? projects[activeIndex]?.name : "";
-
-  return createPortal(
-    <AnimatePresence>
-      {activeIndex !== null && image && (
-        <motion.div
-          className="cursor-preview"
-          ref={previewRef}
-          initial={{ opacity: 0, scale: 0.85 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.85 }}
-          transition={{ duration: 0.25, ease: [0.25, 0.46, 0.45, 0.94] }}
-        >
-          <AnimatePresence mode="wait">
-            <motion.img
-              key={activeIndex}
-              src={image}
-              alt={name}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-            />
-          </AnimatePresence>
-        </motion.div>
-      )}
-    </AnimatePresence>,
-    document.body
-  );
-});
 
 const Portfolio = memo(() => {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [activeIndex, setActiveIndex] = useState(null);
-
-  const targetRef = useRef({ x: -1000, y: -1000 });
-  const currentRef = useRef({ x: -1000, y: -1000 });
-  const rafRef = useRef(null);
-  const previewRef = useRef(null);
+  const [openIndex, setOpenIndex] = useState(null);
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -92,88 +69,182 @@ const Portfolio = memo(() => {
     fetchProjects();
   }, []);
 
-  // RAF lerp loop — no re-renders, direct DOM updates
-  useEffect(() => {
-    const lerp = (a, b, t) => a + (b - a) * t;
-
-    const animate = () => {
-      currentRef.current.x = lerp(currentRef.current.x, targetRef.current.x, 0.1);
-      currentRef.current.y = lerp(currentRef.current.y, targetRef.current.y, 0.1);
-
-      if (previewRef.current) {
-        previewRef.current.style.left = currentRef.current.x + "px";
-        previewRef.current.style.top = currentRef.current.y + "px";
-      }
-
-      rafRef.current = requestAnimationFrame(animate);
-    };
-
-    rafRef.current = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(rafRef.current);
+  const openDetail = useCallback((index) => {
+    setOpenIndex(index);
   }, []);
 
-  const handleMouseMove = useCallback((e) => {
-    targetRef.current = { x: e.clientX, y: e.clientY };
+  const closeDetail = useCallback((e) => {
+    e.stopPropagation();
+    setOpenIndex(null);
+  }, []);
+
+  const handleDetailInnerClick = useCallback((e) => {
+    e.stopPropagation();
+  }, []);
+
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === "Escape") setOpenIndex(null);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
   }, []);
 
   return (
-    <div className="portfolio-page" onMouseMove={handleMouseMove}>
+    <div className="portfolio-page">
       <div className="portfolio-header">
-        <span className="header-eyebrow">(Sc-00)</span>
         <h1 className="header-title">Work</h1>
       </div>
 
-      <div className="portfolio-list-section">
-        {loading && <LoadingSkeleton />}
+      {loading && <LoadingSkeleton />}
 
-        {!loading && projects.length === 0 && (
-          <div className="portfolio-empty">
-            <p>No portfolio items found.</p>
-          </div>
-        )}
+      {!loading && projects.length === 0 && (
+        <div className="portfolio-empty">
+          <p>Henüz portfolyo öğesi yok.</p>
+        </div>
+      )}
 
-        {!loading &&
-          projects.length > 0 &&
-          projects.map((item, index) => (
-            <motion.div
-              key={item.firestoreId || `item-${index}`}
-              className={`project-row ${activeIndex === index ? "is-hovered" : ""}`}
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{
-                duration: 0.5,
-                delay: index * 0.07,
-                ease: [0.25, 0.46, 0.45, 0.94],
-              }}
-              onMouseEnter={() => setActiveIndex(index)}
-              onMouseLeave={() => setActiveIndex(null)}
-              onClick={() => {
-                if (item.url) window.open(item.url, "_blank", "noopener,noreferrer");
-              }}
-            >
-              <span className="row-index">
-                SC_{String(index + 1).padStart(2, "0")}
-              </span>
-              <h2 className="row-title">{item.name}</h2>
-              <div className="row-meta">
-                <span className="row-year">
-                  &copy;{item.year || "25"}
-                </span>
-                {item.tags && item.tags.length > 0 && (
-                  <span className="row-tags">
-                    {item.tags.slice(0, 2).join(", ")}
+      {!loading && projects.length > 0 && (
+        <section className="premium-grid">
+          {projects.map((item, index) => {
+            const coverIsVideo = item.coverIsVideo === true && item.cover;
+            const peekVideoField =
+              typeof item.peekVideo === "string" && item.peekVideo.trim()
+                ? item.peekVideo.trim()
+                : null;
+            /** İç (hover) video: önce ayrı peek alanı, yoksa kapak video dosyası */
+            const innerVideoSrc =
+              peekVideoField || (coverIsVideo ? item.cover : null);
+
+            let innerStill = null;
+            if (!innerVideoSrc) {
+              const c = item.cover || item.image;
+              innerStill =
+                item.image &&
+                item.cover &&
+                !coverIsVideo &&
+                item.image !== item.cover
+                  ? item.image
+                  : c;
+            }
+            const isOpen = openIndex === index;
+            const leftLabel = labelFromItem(item);
+
+            return (
+              <motion.article
+                key={item.firestoreId || `item-${index}`}
+                className={`premium-card group ${isOpen ? "is-open" : ""}`}
+                layout={false}
+                initial={{ opacity: 0, y: 28 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  duration: 0.55,
+                  delay: index * 0.06,
+                  ease: easePremium,
+                }}
+                onClick={() => openDetail(index)}
+                role="button"
+                tabIndex={0}
+                aria-label={`${item.name || "Proje"} — detayı aç`}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    openDetail(index);
+                  }
+                }}
+                aria-expanded={isOpen}
+              >
+                <CardBackground item={item} index={index} />
+
+                <div className="premium-card__hover-layer" aria-hidden="true">
+                  <div className="premium-card__inner-wrap">
+                    <PeekInner
+                      peekVideo={innerVideoSrc}
+                      innerSrc={innerVideoSrc ? null : innerStill}
+                      isOpen={isOpen}
+                    />
+                  </div>
+
+                  <div className="premium-card__label premium-card__label--left">
+                    {leftLabel}
+                  </div>
+                  <div className="premium-card__label premium-card__label--right">
+                    ( PEEK )
+                  </div>
+                </div>
+
+                <div
+                  className="premium-card__detail"
+                  onClick={closeDetail}
+                  role="dialog"
+                  aria-modal="true"
+                  aria-label={item.name || "Proje detayı"}
+                  aria-describedby={`portfolio-detail-hint-${index}`}
+                >
+                  <span
+                    id={`portfolio-detail-hint-${index}`}
+                    className="portfolio-sr-only"
+                  >
+                    Kapatmak için boş alana tıklayın, Escape tuşunu kullanın veya
+                    kapat düğmesine basın.
                   </span>
-                )}
-              </div>
-            </motion.div>
-          ))}
-      </div>
-
-      <CursorPreview
-        activeIndex={activeIndex}
-        projects={projects}
-        previewRef={previewRef}
-      />
+                  <button
+                    type="button"
+                    className="premium-card__close"
+                    onClick={closeDetail}
+                    aria-label="Detayı kapat"
+                  >
+                    <svg
+                      className="premium-card__close-icon"
+                      width="22"
+                      height="22"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      aria-hidden="true"
+                      focusable="false"
+                    >
+                      <path
+                        d="M6 6l12 12M18 6L6 18"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                      />
+                    </svg>
+                  </button>
+                  <div
+                    className="premium-card__detail-inner"
+                    onClick={handleDetailInnerClick}
+                  >
+                    <div className="text-mask premium-card__title-mask">
+                      <span className="text-reveal title-reveal premium-card__detail-title">
+                        {item.name || "—"}
+                      </span>
+                    </div>
+                    <div className="text-mask">
+                      <p className="text-reveal desc-reveal premium-card__detail-desc">
+                        {item.description?.trim()
+                          ? item.description
+                          : "Bu proje için açıklama henüz eklenmemiş."}
+                      </p>
+                    </div>
+                    {item.url ? (
+                      <a
+                        href={item.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="premium-card__detail-link"
+                      >
+                        Projeyi aç →
+                      </a>
+                    ) : null}
+                  </div>
+                </div>
+              </motion.article>
+            );
+          })}
+        </section>
+      )}
     </div>
   );
 });

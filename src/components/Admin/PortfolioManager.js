@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { db, storage, ensureAuth } from '../../firebase';
 import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from 'firebase/firestore';
@@ -7,13 +7,17 @@ import { toast } from 'react-toastify';
 import {
   FaPlus, FaSearch, FaSortAmountDown, FaSortAmountUp,
   FaTh, FaList, FaEdit, FaTrash, FaExternalLinkAlt,
-  FaArrowLeft, FaImage, FaBriefcase,
+  FaArrowLeft, FaImage, FaBriefcase, FaVideo, FaTimes,
 } from 'react-icons/fa';
 import ImageUploader from './ImageUploader';
 import ConfirmDialog from './ConfirmDialog';
 import './PortfolioManager.scss';
 
 const DESC_MAX_LENGTH = 500;
+const PEEK_VIDEO_MAX = 80 * 1024 * 1024;
+const PEEK_VIDEO_TYPES = ['video/mp4', 'video/webm', 'video/quicktime'];
+const COVER_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+const COVER_IMAGE_MAX = 10 * 1024 * 1024;
 
 const PortfolioManager = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -37,12 +41,32 @@ const PortfolioManager = () => {
   const [projectUrl, setProjectUrl] = useState('');
   const [existingImageUrl, setExistingImageUrl] = useState('');
   const [existingCoverUrl, setExistingCoverUrl] = useState('');
+  const [existingCoverIsVideo, setExistingCoverIsVideo] = useState(false);
+  const [coverBlobUrl, setCoverBlobUrl] = useState(null);
+  const [coverMediaKind, setCoverMediaKind] = useState(null);
+  const [peekVideoFile, setPeekVideoFile] = useState(null);
+  const [peekBlobUrl, setPeekBlobUrl] = useState(null);
+  const [existingPeekVideoUrl, setExistingPeekVideoUrl] = useState('');
   const [formErrors, setFormErrors] = useState({});
 
   // Delete dialog
   const [deleteDialog, setDeleteDialog] = useState({ open: false, id: null, name: '' });
 
   const portfolioRef = useMemo(() => collection(db, 'portfolio'), []);
+  const peekVideoInputRef = useRef(null);
+  const coverMediaInputRef = useRef(null);
+
+  useEffect(() => {
+    return () => {
+      if (peekBlobUrl) URL.revokeObjectURL(peekBlobUrl);
+    };
+  }, [peekBlobUrl]);
+
+  useEffect(() => {
+    return () => {
+      if (coverBlobUrl) URL.revokeObjectURL(coverBlobUrl);
+    };
+  }, [coverBlobUrl]);
 
   const fetchItems = useCallback(async () => {
     setIsLoading(true);
@@ -95,6 +119,12 @@ const PortfolioManager = () => {
     setProjectUrl('');
     setExistingImageUrl('');
     setExistingCoverUrl('');
+    setExistingCoverIsVideo(false);
+    setCoverBlobUrl(null);
+    setCoverMediaKind(null);
+    setPeekVideoFile(null);
+    setPeekBlobUrl(null);
+    setExistingPeekVideoUrl('');
     setCurrentItem(null);
     setShowForm(false);
     setFormErrors({});
@@ -105,6 +135,71 @@ const PortfolioManager = () => {
     setShowForm(true);
   }, [resetForm]);
 
+  const handleCoverMediaSelect = useCallback((e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const isVideo = PEEK_VIDEO_TYPES.includes(file.type);
+    const isImage = COVER_IMAGE_TYPES.includes(file.type);
+    if (!isVideo && !isImage) {
+      toast.error('Kapak için JPG, PNG, GIF, WebP veya MP4, WebM, MOV seçin.');
+      return;
+    }
+    if (isVideo && file.size > PEEK_VIDEO_MAX) {
+      toast.error('Video boyutu en fazla 80MB olabilir.');
+      return;
+    }
+    if (isImage && file.size > COVER_IMAGE_MAX) {
+      toast.error('Görsel boyutu en fazla 10MB olabilir.');
+      return;
+    }
+    setCoverBlobUrl((prev) => {
+      if (prev) URL.revokeObjectURL(prev);
+      return URL.createObjectURL(file);
+    });
+    setCoverFile(file);
+    setCoverMediaKind(isVideo ? 'video' : 'image');
+  }, []);
+
+  const clearCoverMedia = useCallback(() => {
+    setCoverBlobUrl((prev) => {
+      if (prev) URL.revokeObjectURL(prev);
+      return null;
+    });
+    setCoverFile(null);
+    setCoverMediaKind(null);
+    setExistingCoverUrl('');
+    setExistingCoverIsVideo(false);
+    if (coverMediaInputRef.current) coverMediaInputRef.current.value = '';
+  }, []);
+
+  const handlePeekVideoSelect = useCallback((e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!PEEK_VIDEO_TYPES.includes(file.type)) {
+      toast.error('Peek videosu için MP4, WebM veya MOV kullanın.');
+      return;
+    }
+    if (file.size > PEEK_VIDEO_MAX) {
+      toast.error('Video boyutu en fazla 80MB olabilir.');
+      return;
+    }
+    setPeekBlobUrl((prev) => {
+      if (prev) URL.revokeObjectURL(prev);
+      return URL.createObjectURL(file);
+    });
+    setPeekVideoFile(file);
+  }, []);
+
+  const clearPeekVideo = useCallback(() => {
+    setPeekBlobUrl((prev) => {
+      if (prev) URL.revokeObjectURL(prev);
+      return null;
+    });
+    setPeekVideoFile(null);
+    setExistingPeekVideoUrl('');
+    if (peekVideoInputRef.current) peekVideoInputRef.current.value = '';
+  }, []);
+
   const openEditForm = useCallback((item) => {
     resetForm();
     setCurrentItem(item);
@@ -113,6 +208,10 @@ const PortfolioManager = () => {
     setProjectUrl(item.url || '');
     setExistingImageUrl(item.image || '');
     setExistingCoverUrl(item.cover || '');
+    setExistingCoverIsVideo(item.coverIsVideo === true);
+    setExistingPeekVideoUrl(item.peekVideo || '');
+    setPeekVideoFile(null);
+    setPeekBlobUrl(null);
     setShowForm(true);
   }, [resetForm]);
 
@@ -120,7 +219,7 @@ const PortfolioManager = () => {
     const errs = {};
     if (!name.trim()) errs.name = 'Proje adı zorunludur.';
     if (!description.trim()) errs.description = 'Açıklama zorunludur.';
-    if (!imageFile && !existingImageUrl) errs.image = 'Ana resim zorunludur.';
+    if (!imageFile && !existingImageUrl) errs.image = 'Ana görsel zorunludur.';
     if (!projectUrl.trim()) errs.url = 'Proje URL\'si zorunludur.';
     setFormErrors(errs);
     return Object.keys(errs).length === 0;
@@ -157,25 +256,50 @@ const PortfolioManager = () => {
       await ensureAuth();
 
       if (imageFile) {
-        if (currentItem?.image && currentItem.image !== existingCoverUrl) {
+        if (currentItem?.image) {
           await safeDeleteStorage(currentItem.image);
         }
         imageUrl = await uploadFile(imageFile, 'portfolio_images');
       }
 
+      let coverIsVideoOut = existingCoverIsVideo;
+
       if (coverFile) {
         if (currentItem?.cover && currentItem.cover !== existingImageUrl) {
           await safeDeleteStorage(currentItem.cover);
         }
-        coverUrl = await uploadFile(coverFile, 'portfolio_covers');
+        const isVid = coverMediaKind === 'video';
+        const prefix = isVid ? 'portfolio_videos' : 'portfolio_covers';
+        coverUrl = await uploadFile(coverFile, prefix);
+        coverIsVideoOut = isVid;
+      }
+
+      let coverOut = coverUrl || null;
+      if (!coverOut) {
+        coverOut = imageUrl;
+        coverIsVideoOut = false;
+      }
+
+      let peekVideoUrl = existingPeekVideoUrl || null;
+      if (peekVideoFile) {
+        if (currentItem?.peekVideo) {
+          await safeDeleteStorage(currentItem.peekVideo);
+        }
+        peekVideoUrl = await uploadFile(peekVideoFile, 'portfolio_videos');
+      } else if (!existingPeekVideoUrl && currentItem?.peekVideo) {
+        await safeDeleteStorage(currentItem.peekVideo);
+        peekVideoUrl = null;
       }
 
       const data = {
         name: name.trim(),
         description: description.trim(),
         image: imageUrl,
-        cover: coverUrl || imageUrl,
+        imageIsVideo: false,
+        cover: coverOut,
+        coverIsVideo: coverIsVideoOut,
         url: projectUrl.trim(),
+        peekVideo: peekVideoUrl,
       };
 
       if (currentItem) {
@@ -194,7 +318,7 @@ const PortfolioManager = () => {
     } finally {
       setIsSubmitting(false);
     }
-  }, [validateForm, existingImageUrl, existingCoverUrl, imageFile, coverFile, currentItem, name, description, projectUrl, portfolioRef, fetchItems, resetForm, uploadFile, safeDeleteStorage]);
+  }, [validateForm, existingImageUrl, existingCoverUrl, existingPeekVideoUrl, existingCoverIsVideo, coverMediaKind, imageFile, coverFile, peekVideoFile, currentItem, name, description, projectUrl, portfolioRef, fetchItems, resetForm, uploadFile, safeDeleteStorage]);
 
   const confirmDelete = useCallback(async () => {
     const { id } = deleteDialog;
@@ -208,6 +332,9 @@ const PortfolioManager = () => {
         await safeDeleteStorage(item.image);
         if (item.cover && item.cover !== item.image) {
           await safeDeleteStorage(item.cover);
+        }
+        if (item.peekVideo) {
+          await safeDeleteStorage(item.peekVideo);
         }
       }
       await deleteDoc(doc(db, 'portfolio', id));
@@ -224,6 +351,10 @@ const PortfolioManager = () => {
 
   // --- RENDER: FORM ---
   if (showForm) {
+    const coverPreviewUrl = coverBlobUrl || existingCoverUrl;
+    const showCoverAsVideo =
+      coverMediaKind === 'video' || (existingCoverIsVideo && !coverFile);
+
     return (
       <div className="pm-form-page">
         <button className="pm-back-btn" onClick={resetForm} type="button">
@@ -269,7 +400,7 @@ const PortfolioManager = () => {
 
           <div className={`pm-field ${formErrors.image ? 'has-error' : ''}`}>
             <ImageUploader
-              label="Ana Resim *"
+              label="Ana görsel *"
               existingUrl={existingImageUrl || undefined}
               onFileSelect={file => { setImageFile(file); setFormErrors(p => ({ ...p, image: undefined })); }}
               onClear={() => { setImageFile(null); setExistingImageUrl(''); }}
@@ -277,12 +408,82 @@ const PortfolioManager = () => {
             {formErrors.image && <span className="field-error">{formErrors.image}</span>}
           </div>
 
-          <div className="pm-field">
-            <ImageUploader
-              label="Kapak Resmi (Opsiyonel)"
-              existingUrl={existingCoverUrl || undefined}
-              onFileSelect={file => setCoverFile(file)}
-              onClear={() => { setCoverFile(null); setExistingCoverUrl(''); }}
+          <div className="pm-field pm-field--cover-media">
+            <label className="pm-label-with-icon" htmlFor="pm-cover-media">
+              <FaImage aria-hidden /> Kapak — görsel veya video (opsiyonel)
+            </label>
+            <p className="pm-field-hint">
+              Dışarıdaki tam alan her zaman ana görseldir. Buraya video yüklerseniz video yalnızca hover ile ortadaki &quot;peek&quot; alanında oynar; kapak görseli seçerseniz klasik davranış (dışta kapak görseli, içte ikinci görsel/peek).
+              Boş bırakırsanız kapak otomatik olarak ana görselle aynı olur.
+            </p>
+            {coverPreviewUrl ? (
+              <div className="pm-main-preview">
+                {showCoverAsVideo ? (
+                  <video
+                    src={coverPreviewUrl}
+                    controls
+                    muted
+                    playsInline
+                    className="pm-main-preview__media"
+                  />
+                ) : (
+                  <img src={coverPreviewUrl} alt="" className="pm-main-preview__media" />
+                )}
+                <button
+                  type="button"
+                  className="pm-peek-remove"
+                  onClick={clearCoverMedia}
+                  aria-label="Kapak medyasını kaldır"
+                >
+                  <FaTimes />
+                </button>
+              </div>
+            ) : null}
+            <input
+              ref={coverMediaInputRef}
+              id="pm-cover-media"
+              type="file"
+              accept="image/jpeg,image/png,image/gif,image/webp,video/mp4,video/webm,video/quicktime"
+              className="pm-file-input"
+              onChange={handleCoverMediaSelect}
+              disabled={isSubmitting}
+            />
+          </div>
+
+          <div className="pm-field pm-field--peek-video">
+            <label className="pm-label-with-icon" htmlFor="pm-peek-video">
+              <FaVideo aria-hidden /> Peek videosu (opsiyonel)
+            </label>
+            <p className="pm-field-hint">
+              Portföyde hover ile görünen iç alanda oynatılır; sessiz döngü önerilir. MP4, WebM veya MOV, en fazla 80MB.
+            </p>
+            {(peekBlobUrl || existingPeekVideoUrl) ? (
+              <div className="pm-peek-preview">
+                <video
+                  src={peekBlobUrl || existingPeekVideoUrl}
+                  controls
+                  muted
+                  playsInline
+                  className="pm-peek-preview__video"
+                />
+                <button
+                  type="button"
+                  className="pm-peek-remove"
+                  onClick={clearPeekVideo}
+                  aria-label="Peek videosunu kaldır"
+                >
+                  <FaTimes />
+                </button>
+              </div>
+            ) : null}
+            <input
+              ref={peekVideoInputRef}
+              id="pm-peek-video"
+              type="file"
+              accept="video/mp4,video/webm,video/quicktime"
+              className="pm-file-input"
+              onChange={handlePeekVideoSelect}
+              disabled={isSubmitting}
             />
           </div>
 
@@ -386,7 +587,15 @@ const PortfolioManager = () => {
             <div key={item.id} className="pm-card">
               <div className="card-thumb">
                 {item.cover || item.image ? (
-                  <img src={item.cover || item.image} alt={item.name} loading="lazy" />
+                  <img
+                    src={
+                      item.coverIsVideo && item.image
+                        ? item.image
+                        : item.cover || item.image
+                    }
+                    alt={item.name}
+                    loading="lazy"
+                  />
                 ) : (
                   <div className="thumb-placeholder"><FaImage /></div>
                 )}
