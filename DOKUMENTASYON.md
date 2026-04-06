@@ -1,5 +1,13 @@
 # Gorev Kaydi
 
+- 2026-04-06: Anasayfa kaplan goruntusu (logo) mobil/tablet (max-width: 960px) icin: dikeyde ters cevrildi (`scaleY(-1)`), ust kenara yaslandi (`justify-content: flex-start`, ust padding sifir + safe-area), ortalanma kaldirildi; masaustu gibi saga hizalama (`align-self: flex-end`, `margin-left: auto`, `justify-content: flex-end`). Dosya: `src/components/Home/index.scss`.
+
+- 2026-04-06 (2): Kaplan hâlâ tam dayali degildi cunku `App.scss` icindeki `.container` mobilde genis padding uyguluyordu. Cozum: `#home .container.home-page` ile ust ve sag padding sifirlandi (safe-area ustte), sol ve alt metin icin korundu; `.home-page` ic ice padding kaldirildi. Dosya: `src/components/Home/index.scss`.
+
+- 2026-04-06 (3): PNG icindeki seffaf bosluk ve kalan bosluk icin mobilde kaplan `scale(1.1–1.14, -1.1–1.14)`, `transform-origin: top right`, `object-position: top right`, ic `Logo` sarmalayıcısı saga-uste hizali, negatif margin (`-6px` ila `-12px`), `#home.page-section` ve `.home-page` icin `overflow: visible`. Dosya: `src/components/Home/index.scss`.
+
+- 2026-04-06 (4): Kaplan fazla yukari cikti; ust negatif margin kaldirildi, hafif pozitif `margin-top` (6–10px), `transform-origin` ve `object-position` `center right`, ic hizalama `center` + saga. Dosya: `src/components/Home/index.scss`.
+
 - 2025-01-XX: Portfolio bolumu mobil responsive duzenlemesi yapildi. Mobilde (768px ve alti) yatay scroll yerine grid layout kullanildi. 768px altinda 2 sutunlu grid, 480px altinda tek sutunlu grid yapisi kullaniliyor. Gorseller artik mobilde alt alta geliyor ve kaybolmuyor. Mobilde yatay scroll wheel event'i devre disi birakildi. Portfolio sayfasinin mobilde overflow sorunlari duzeltildi, sayfa icerige gore yukseklik aliyor ve scroll edilebilir hale getirildi.
 
 - 2025-10-31: Portfolyo bolumunde dikey scroll hareketini yatay kaydirma hijack mantigina donusturmek icin yatay kaydirma dinleyicisi ve stiller eklendi.

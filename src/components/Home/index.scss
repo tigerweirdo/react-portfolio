@@ -95,12 +95,28 @@
 }
 
 // Responsive - Tablet
+// Üst düzey App.scss .container padding’i kaplanı içeri iter; #home’da üst/sağ sıfırlanır, metin için sol/altta boşluk kalır.
+// PNG içi şeffaf boşluk + hizalama için: scale, top/right origin, negatif margin; taşma için overflow visible.
 @media screen and (max-width: 960px) {
+  #home.page-section {
+    overflow: visible;
+  }
+
+  #home .container.home-page {
+    padding-top: max(0px, env(safe-area-inset-top));
+    padding-right: 0;
+    padding-left: max(5%, 1.5rem);
+    padding-bottom: 2rem;
+    box-sizing: border-box;
+  }
+
   .home-page {
+    overflow: visible;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
+    align-items: stretch;
     text-align: center;
-    padding: 2rem 5%;
+    padding: 0;
     height: auto;
     min-height: 100vh;
     min-height: 100dvh;
@@ -137,16 +153,45 @@
       height: 160px;
       z-index: 10;
       opacity: 0.9;
-      margin: 0 auto;
+      margin: 10px -12px 0 auto;
+      align-self: flex-end;
       order: 1;
+      justify-content: flex-end;
+      align-items: center;
+
+      > .logo-container {
+        align-items: center;
+        justify-content: flex-end;
+        width: 100%;
+        height: 100%;
+      }
+
+      img {
+        width: auto;
+        max-width: none;
+        height: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        object-position: center right;
+        transform: scale(1.14, -1.14);
+        transform-origin: center right;
+        filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.12));
+      }
     }
   }
 }
 
 // Responsive - Mobil
 @media screen and (max-width: 768px) {
+  #home .container.home-page {
+    padding-top: max(0px, env(safe-area-inset-top));
+    padding-right: 0;
+    padding-left: 1.5rem;
+    padding-bottom: 1.5rem;
+  }
+
   .home-page {
-    padding: 1.5rem;
+    padding: 0;
 
     .text-zone {
       h1.main-headline {
@@ -167,14 +212,28 @@
     .logo-container {
       width: 130px;
       height: 130px;
+      margin: 8px -10px 0 auto;
+
+      img {
+        transform: scale(1.12, -1.12);
+        transform-origin: center right;
+        object-position: center right;
+      }
     }
   }
 }
 
 // Responsive - Küçük mobil
 @media screen and (max-width: 480px) {
+  #home .container.home-page {
+    padding-top: max(0px, env(safe-area-inset-top));
+    padding-right: 0;
+    padding-left: 1rem;
+    padding-bottom: 1rem;
+  }
+
   .home-page {
-    padding: 1rem;
+    padding: 0;
 
     .text-zone {
       h1.main-headline {
@@ -186,6 +245,13 @@
     .logo-container {
       width: 100px;
       height: 100px;
+      margin: 6px -8px 0 auto;
+
+      img {
+        transform: scale(1.1, -1.1);
+        transform-origin: center right;
+        object-position: center right;
+      }
     }
   }
 }
