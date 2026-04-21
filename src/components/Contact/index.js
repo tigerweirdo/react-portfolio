@@ -75,7 +75,7 @@ const Contact = memo(() => {
   const form = useRef()
   const containerRef = useRef(null)
   const controls = useAnimation()
-  const isInView = useInView(containerRef, { once: false, amount: 0.3 })
+  const isInView = useInView(containerRef, { once: true, amount: 0.3 })
   const reduceMotion = useReducedMotion()
   const narrowViewport = useNarrowViewport()
   const glassSimple = reduceMotion || narrowViewport
