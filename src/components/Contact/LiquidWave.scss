@@ -7,8 +7,8 @@
   z-index: 1;
   overflow: hidden;
   cursor: default;
-  /* Gradient alt kenarı ile viewport arası boşlukta aynı ton (şeffaflık/boşluk) */
-  background-color: #002fa7;
+  /* Dalganın üstünde kalan bölge beyaz; su canvas'ta mavi gradient olarak çiziliyor */
+  background-color: #ffffff;
 }
 
 .liquid-wave-canvas {

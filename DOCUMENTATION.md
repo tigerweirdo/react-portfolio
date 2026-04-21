@@ -844,3 +844,29 @@ Tüm 6 tespit edilen sorun düzeltildi. Scroll artık hem doğal hem de snap-tab
    - `#glassLens`: `feGaussianBlur` `stdDeviation` 50 → 32, `feDisplacementMap` `scale` 50 → 32 (geniş masaüstünde kalan tam cam modunda daha düşük GPU maliyeti).
 
 **Etkilenen dosyalar:** `src/components/Contact/LiquidWave.js`, `src/components/Contact/index.js`, `DOCUMENTATION.md`, `DOKUMENTASYON.md`
+
+---
+
+### Görev 27: Contact — LiquidWave kasma + mavi arka plan düzeltmesi (21 Nisan 2026)
+
+**Sorun:** Görev 26 sonrası dahi LiquidWave kasmaya devam ediyor (N=80 ve PASSES=4 ile kare başına çift fizik adımı → ~1280 iç döngü) ve Contact bölümüne girilince `document.body` mavi (`#002fa7`) oluyor; dalganın üstünde de mavi görünüyordu. Kullanıcı arka planın beyaz olması gerektiğini belirtti.
+
+**Yapılanlar:**
+
+1. **`src/components/Contact/LiquidWave.js` — fizik ve çizim yükü azaltıldı:**
+   - `N` 80 → **56** (parçacık sütun sayısı).
+   - `PASSES` 4 → **2** (yayılım adım sayısı).
+   - Kare başına **çift** `physics()` çağrısı **tekli**ye indirildi. Simülasyon hızını korumak için: `SPRING` 0.007 → 0.012, `SPREAD` 0.15 → 0.22, `DAMP` 0.995 → 0.992.
+   - `MAX_DPR = 1.5` sabiti eklendi; `resize()` bunu kullanıyor (retina ekranlarda piksel sayısı ~%44 düşer).
+   - `MAX_DROPS` 60 → **28**; scroll tetikli itme sayısı `N*0.4` → `N*0.18` ve maks kuvvet `12` → `8`.
+   - `getContext('2d', { alpha: true })` açıkça belirtildi.
+
+2. **`src/components/Contact/index.js` — body arka plan manipülasyonu kaldırıldı:**
+   - Bölüm görünür olduğunda `document.body.style.backgroundColor = '#002fa7'` ve cleanup’ta beyaza dönüş kodu tamamen silindi. `isInView` sadece `controls.start("visible")` için kullanılıyor.
+
+3. **`src/components/Contact/LiquidWave.scss` — container arka planı beyaz:**
+   - `.liquid-wave-container` arka planı `#002fa7` → **`#ffffff`**. Su canvas içinde mavi gradient olarak çizildiği için dalganın üstündeki bölge artık beyaz görünüyor (su tankı efekti).
+
+**Not:** Görev 25'te eklenen mavi container arka planı bu görevde ters çevrildi; dalgayı artık su gradient'ı kendi başına taşıyor.
+
+**Etkilenen dosyalar:** `src/components/Contact/LiquidWave.js`, `src/components/Contact/LiquidWave.scss`, `src/components/Contact/index.js`, `DOCUMENTATION.md`, `DOKUMENTASYON.md`

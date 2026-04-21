@@ -1,17 +1,19 @@
 import React, { useRef, useEffect, useCallback, useState } from 'react';
 import './LiquidWave.scss';
 
-const N = 80;
-const SPRING = 0.007;
-const DAMP = 0.995;
-const SPREAD = 0.15;
-const PASSES = 4;
+const N = 56;
+const SPRING = 0.012;
+const DAMP = 0.992;
+const SPREAD = 0.22;
+const PASSES = 2;
 const SY_RATIO = 0.25;
-const MAX_DROPS = 60;
+const MAX_DROPS = 28;
 const AIR_DRAG = 0.99;
 const GRAVITY = 0.24;
-/** ~30 FPS: fizik + çizim maliyetini yaklaşık yarıya indirir */
+/** ~30 FPS: render maliyetini yaklaşık yarıya indirir */
 const MIN_FRAME_MS = 1000 / 30;
+/** DPR sınırı: retina ekranlarda bile makul piksel sayısı */
+const MAX_DPR = 1.5;
 
 function usePrefersReducedMotion() {
   const [reduced, setReduced] = useState(() =>
@@ -59,13 +61,13 @@ const LiquidWave = () => {
     const cv = canvasRef.current;
     const ct = containerRef.current;
     if (!cv || !ct) return;
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const dpr = Math.min(window.devicePixelRatio || 1, MAX_DPR);
     const r = ct.getBoundingClientRect();
     cv.width = r.width * dpr;
     cv.height = r.height * dpr;
     cv.style.width = `${r.width}px`;
     cv.style.height = `${r.height}px`;
-    canvasCtxRef.current = cv.getContext('2d');
+    canvasCtxRef.current = cv.getContext('2d', { alpha: true });
     const s = st.current;
     s.w = r.width;
     s.ht = r.height;
@@ -200,7 +202,7 @@ const LiquidWave = () => {
     if (!cv) return;
     let ctx = canvasCtxRef.current;
     if (!ctx) {
-      ctx = cv.getContext('2d');
+      ctx = cv.getContext('2d', { alpha: true });
       canvasCtxRef.current = ctx;
     }
     if (!ctx) return;
@@ -303,8 +305,7 @@ const LiquidWave = () => {
     }
     lastFrameTsRef.current = t;
 
-    /* 30 FPS görüntülemede simülasyon hızını korumak için iki fizik adımı */
-    physics();
+    /* Tek fizik adımı: SPRING/SPREAD artırılarak simülasyon hızı korunuyor */
     physics();
     render();
     st.current.aid = requestAnimationFrame((n) => animateRef.current?.(n));
@@ -322,8 +323,8 @@ const LiquidWave = () => {
     const top = sc.scrollTop;
     const delta = Math.abs(top - s.lst);
     if (delta > 0) {
-      const force = Math.min((delta / dt) * 8, 12);
-      const count = Math.floor(N * 0.4);
+      const force = Math.min((delta / dt) * 6, 8);
+      const count = Math.floor(N * 0.18);
       for (let i = 0; i < count; i++) {
         const idx = Math.floor(Math.random() * N);
         s.v[idx] += (Math.random() - 0.5) * force;

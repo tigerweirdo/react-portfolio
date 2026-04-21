@@ -1,5 +1,7 @@
 # Gorev Kaydi
 
+- 2026-04-21 (2): Contact / LiquidWave kasma ve arka plan duzeltmesi. Performans: N 80→56, PASSES 4→2, cift physics adimi kaldirildi (tek adim; SPRING 0.007→0.012, SPREAD 0.15→0.22, DAMP 0.995→0.992 ile telafi), DPR sinir 2→1.5, MAX_DROPS 60→28, scroll itme sayisi N*0.4→N*0.18 ve maks kuvvet 12→8, getContext '2d' alpha:true. Arka plan: `document.body.style.backgroundColor` manipulasyonu Contact/index.js'ten kaldirildi (body her zaman beyaz); `.liquid-wave-container` arka plan rengi `#002fa7`→`#ffffff` (dalganin ustu beyaz, su canvas'ta mavi gradient). Dosyalar: `src/components/Contact/LiquidWave.js`, `src/components/Contact/LiquidWave.scss`, `src/components/Contact/index.js`.
+
 - 2026-04-21: Contact / LiquidWave performans: LiquidWave ~30 FPS tavan + cift physics adimi, 2D context onbellegi, document.visibility ile RAF durdurma; Contact glassSimple esigi 1024px, glassLens blur/displacement 32. Dosyalar: `LiquidWave.js`, `Contact/index.js`, DOCUMENTATION.md (Gorev 26).
 
 - 2026-04-06: Anasayfa kaplan goruntusu (logo) mobil/tablet (max-width: 960px) icin: dikeyde ters cevrildi (`scaleY(-1)`), ust kenara yaslandi (`justify-content: flex-start`, ust padding sifir + safe-area), ortalanma kaldirildi; masaustu gibi saga hizalama (`align-self: flex-end`, `margin-left: auto`, `justify-content: flex-end`). Dosya: `src/components/Home/index.scss`.
