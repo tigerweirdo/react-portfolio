@@ -9,6 +9,8 @@ function useNarrowViewport() {
   const [narrow, setNarrow] = useState(() =>
     typeof window !== 'undefined' ? window.matchMedia('(max-width: 1024px)').matches : false
   )
+  const [isScrolling, setIsScrolling] = useState(false)
+
   useEffect(() => {
     const mq = window.matchMedia('(max-width: 1024px)')
     const fn = () => setNarrow(mq.matches)
@@ -16,7 +18,32 @@ function useNarrowViewport() {
     mq.addEventListener('change', fn)
     return () => mq.removeEventListener('change', fn)
   }, [])
-  return narrow
+
+  // Scroll sırasında ağır SVG efektini geçici olarak kapat
+  useEffect(() => {
+    let scrollTimeout
+    const handleScroll = () => {
+      setIsScrolling(true)
+      clearTimeout(scrollTimeout)
+      scrollTimeout = setTimeout(() => {
+        setIsScrolling(false)
+      }, 150)
+    }
+
+    // Biraz gecikmeli ekleyelim ki DOM tam yüklensin
+    setTimeout(() => {
+      const sc = document.querySelector('.scroll-container')
+      sc?.addEventListener('scroll', handleScroll, { passive: true })
+    }, 500)
+
+    return () => {
+      const sc = document.querySelector('.scroll-container')
+      sc?.removeEventListener('scroll', handleScroll)
+      clearTimeout(scrollTimeout)
+    }
+  }, [])
+
+  return narrow || isScrolling
 }
 
 const containerVariants = {

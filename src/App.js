@@ -34,9 +34,15 @@ const App = () => {
   const appContainerRef = useRef(null);
   const portfolioSectionRef = useRef(null);
   const portfolioLazyObserverRef = useRef(null);
+  const contactSectionRef = useRef(null);
+  const contactLazyObserverRef = useRef(null);
 
   const [loadPortfolio, setLoadPortfolio] = useState(
     () => typeof window !== 'undefined' && window.location.hash === '#portfolio'
+  );
+
+  const [loadContact, setLoadContact] = useState(
+    () => typeof window !== 'undefined' && window.location.hash === '#contact'
   );
 
   // Admin route detection - window.location ile direkt kontrol
@@ -66,6 +72,8 @@ const App = () => {
     const onHash = () => {
       if (window.location.hash === '#portfolio') {
         setLoadPortfolio(true);
+      } else if (window.location.hash === '#contact') {
+        setLoadContact(true);
       }
     };
     window.addEventListener('hashchange', onHash);
@@ -103,6 +111,38 @@ const App = () => {
       portfolioLazyObserverRef.current = null;
     };
   }, [isAdminRoute, loadPortfolio]);
+
+  // Contact bölümü görünüme yaklaşınca Contact lazy chunk'ını tetikle
+  useEffect(() => {
+    if (isAdminRoute || loadContact) return undefined;
+
+    const timer = setTimeout(() => {
+      const el = contactSectionRef.current;
+      if (!el) return;
+
+      const scrollRoot = appContainerRef.current ?? null;
+      const obs = new IntersectionObserver(
+        (entries) => {
+          if (entries.some((e) => e.isIntersecting)) {
+            setLoadContact(true);
+          }
+        },
+        {
+          root: scrollRoot,
+          rootMargin: '280px 0px 280px 0px',
+          threshold: 0,
+        }
+      );
+      obs.observe(el);
+      contactLazyObserverRef.current = obs;
+    }, 300);
+
+    return () => {
+      clearTimeout(timer);
+      contactLazyObserverRef.current?.disconnect();
+      contactLazyObserverRef.current = null;
+    };
+  }, [isAdminRoute, loadContact]);
 
   // Intersection Observer for active section tracking
   useEffect(() => {
@@ -294,19 +334,27 @@ const App = () => {
                 </section>
 
                 <section
+                  ref={contactSectionRef}
                   id="contact"
                   className={`page-section ${activeSection === 'contact' ? 'active' : ''}`}
                 >
-                  <Suspense
-                    fallback={(
-                      <div
-                        className="section-lazy-fallback"
-                        aria-hidden="true"
-                      />
-                    )}
-                  >
-                    <Contact />
-                  </Suspense>
+                  {!loadContact ? (
+                    <div
+                      className="section-lazy-fallback"
+                      aria-hidden="true"
+                    />
+                  ) : (
+                    <Suspense
+                      fallback={(
+                        <div
+                          className="section-lazy-fallback"
+                          aria-hidden="true"
+                        />
+                      )}
+                    >
+                      <Contact />
+                    </Suspense>
+                  )}
                 </section>
               </div>
             </div>
