@@ -26,3 +26,14 @@
     height: 250px;
   }
 }
+
+/* prefers-reduced-motion: canvas yerine statik gradient — sıfır RAF */
+.liquid-wave-static {
+  background: linear-gradient(
+    180deg,
+    #4facfe 0%,
+    #0061ff 45%,
+    #002fa7 100%
+  );
+  pointer-events: none;
+}

@@ -184,6 +184,14 @@ body {
   box-sizing: border-box;
 }
 
+// About / Contact — lazy chunk yüklenirken yer tutar
+.section-lazy-fallback {
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  box-sizing: border-box;
+}
+
 // Work — lazy: chunk yüklenmeden önce yer tutar / Suspense fallback
 .portfolio-lazy-placeholder {
   width: 100%;

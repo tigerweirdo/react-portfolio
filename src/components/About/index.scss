@@ -137,6 +137,14 @@
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .Rolly,
+  .eyes,
+  .Shaddow {
+    animation: none !important;
+  }
+}
+
 // Responsive - Tablet
 @media (max-width: 1024px) {
   .container.about-page {

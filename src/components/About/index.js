@@ -1,5 +1,5 @@
 import { useEffect, useRef, memo } from 'react'
-import { motion, useInView, useAnimation, useScroll, useTransform } from 'framer-motion'
+import { motion, useInView, useAnimation, useScroll, useTransform, useReducedMotion } from 'framer-motion'
 import './index.scss';
 
 // Static variant objeleri - bileşen dışında tanımlanarak her render'da yeniden oluşturulması engellenir
@@ -34,6 +34,7 @@ const About = memo(() => {
   const controls = useAnimation();
   const ref = useRef(null);
   const isInView = useInView(ref, { once: false, amount: 0.3 });
+  const reduceMotion = useReducedMotion();
 
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -49,6 +50,9 @@ const About = memo(() => {
     }
   }, [controls, isInView]);
 
+  const pageStyle = reduceMotion ? { opacity: 1 } : { opacity };
+  const robotStyle = reduceMotion ? { y: 0 } : { y };
+
   return (
     <motion.div 
       ref={ref}
@@ -56,16 +60,16 @@ const About = memo(() => {
       initial="hidden"
       animate={controls}
       variants={containerVariants}
-      style={{ opacity }}
+      style={pageStyle}
     >
       <motion.div 
         className="robot123"
         variants={robotVariants}
-        whileHover={{ 
+        whileHover={reduceMotion ? undefined : { 
           scale: 1.01,
           transition: { duration: 0.3 }
         }}
-        style={{ y }}
+        style={robotStyle}
       >
         <svg className="Rolly" width="295" height="305" viewBox="0 0 295 305" fill="none" xmlns="http://www.w3.org/2000/svg">
           <motion.circle 
@@ -73,7 +77,7 @@ const About = memo(() => {
             cy="257" 
             r="46" 
             fill="url(#paint1_radial)"
-            animate={{
+            animate={reduceMotion ? false : {
               scale: [1, 1.05, 1],
               transition: {
                 duration: 2,
@@ -102,7 +106,7 @@ const About = memo(() => {
             rx="5.5" 
             ry="11.5" 
             fill="black"
-            animate={{
+            animate={reduceMotion ? false : {
               scaleY: [1, 0.1, 1],
               transition: {
                 duration: 0.3,
@@ -119,7 +123,7 @@ const About = memo(() => {
             rx="5.5" 
             ry="11.5" 
             fill="black"
-            animate={{
+            animate={reduceMotion ? false : {
               scaleY: [1, 0.1, 1],
               transition: {
                 duration: 0.3,

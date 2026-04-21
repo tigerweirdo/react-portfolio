@@ -1,19 +1,36 @@
-import React, { useRef, useEffect, useCallback } from 'react';
+import React, { useRef, useEffect, useCallback, useState } from 'react';
 import './LiquidWave.scss';
 
-const N = 140; // Slightly fewer points for smoother curves
-const SPRING = 0.007; // Extremely soft tension for heavy/viscous feel
-const DAMP = 0.995; // Very low damping, waves oscillate for a long time
-const SPREAD = 0.15; // Low spread, waves don't travel far
+const N = 140;
+const SPRING = 0.007;
+const DAMP = 0.995;
+const SPREAD = 0.15;
 const PASSES = 4;
 const SY_RATIO = 0.25;
 const MAX_DROPS = 60;
 const AIR_DRAG = 0.99;
-const GRAVITY = 0.24; // Stronger gravity for punchy drops
+const GRAVITY = 0.24;
+
+function usePrefersReducedMotion() {
+  const [reduced, setReduced] = useState(() =>
+    typeof window !== 'undefined'
+      ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      : false
+  );
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const fn = () => setReduced(mq.matches);
+    mq.addEventListener('change', fn);
+    return () => mq.removeEventListener('change', fn);
+  }, []);
+  return reduced;
+}
 
 const LiquidWave = () => {
+  const prefersReducedMotion = usePrefersReducedMotion();
   const canvasRef = useRef(null);
   const containerRef = useRef(null);
+  const [isVisible, setIsVisible] = useState(false);
   const st = useRef({
     h: new Float32Array(N),
     v: new Float32Array(N),
@@ -75,20 +92,24 @@ const LiquidWave = () => {
     const s = st.current;
     const { h, v, ld, rd } = s;
 
-    // Spring physics
     for (let i = 0; i < N; i++) {
       v[i] += -SPRING * h[i];
       v[i] *= DAMP;
       h[i] += v[i];
     }
 
-    // Spread
     for (let p = 0; p < PASSES; p++) {
       for (let i = 0; i < N; i++) {
         ld[i] = 0;
         rd[i] = 0;
-        if (i > 0) { ld[i] = SPREAD * (h[i] - h[i - 1]); v[i - 1] += ld[i]; }
-        if (i < N - 1) { rd[i] = SPREAD * (h[i] - h[i + 1]); v[i + 1] += rd[i]; }
+        if (i > 0) {
+          ld[i] = SPREAD * (h[i] - h[i - 1]);
+          v[i - 1] += ld[i];
+        }
+        if (i < N - 1) {
+          rd[i] = SPREAD * (h[i] - h[i + 1]);
+          v[i + 1] += rd[i];
+        }
       }
       for (let i = 0; i < N; i++) {
         if (i > 0) h[i - 1] += ld[i];
@@ -96,14 +117,12 @@ const LiquidWave = () => {
       }
     }
 
-    // Ambient motion
     s.t += 0.02;
     const t = s.t;
     for (let i = 0; i < N; i++) {
       v[i] += Math.sin(i * 0.1 + t * 0.5) * 0.015;
     }
 
-    // Drops physics
     for (let i = s.drops.length - 1; i >= 0; i--) {
       const d = s.drops[i];
 
@@ -114,7 +133,6 @@ const LiquidWave = () => {
       d.y += d.vy;
       d.life -= 0.015;
 
-      // Bounce off walls
       if (d.x < 0 || d.x > s.w) {
         d.vx *= -0.6;
         d.x = Math.max(0, Math.min(d.x, s.w));
@@ -122,23 +140,22 @@ const LiquidWave = () => {
 
       const surfAtDrop = getSurfaceY(s, d.x);
 
-      // Hit surface
       if (d.vy > 0 && d.y >= surfAtDrop) {
         const col = Math.floor((d.x / s.w) * N);
         if (col >= 0 && col < N) {
-          const impactForce = d.vy * d.sz * 0.6; // Stronger impact
+          const impactForce = d.vy * d.sz * 0.6;
           const impactRad = Math.min(Math.ceil(d.sz * 2.0), 10);
-          
-          // Create wave
+
           for (let r = -impactRad; r <= impactRad; r++) {
             const idx = col + r;
             if (idx >= 0 && idx < N) {
-              const falloff = Math.cos((Math.abs(r) / (impactRad + 1)) * Math.PI * 0.5);
+              const falloff = Math.cos(
+                (Math.abs(r) / (impactRad + 1)) * Math.PI * 0.5
+              );
               s.v[idx] += impactForce * falloff;
             }
           }
 
-          // Create splash ring
           s.splashes.push({
             x: d.x,
             y: surfAtDrop,
@@ -146,10 +163,9 @@ const LiquidWave = () => {
             maxRadius: 10 + d.sz * 5,
             alpha: 0.8,
             life: 1.0,
-            width: 3 + d.sz // Thicker lines for cartoon look
+            width: 3 + d.sz,
           });
 
-          // Secondary splash
           if (!d.isSplash && d.vy > 2.0) {
             spawnSplash(s, d.x, surfAtDrop, d.vy * d.sz * 0.4);
           }
@@ -162,11 +178,10 @@ const LiquidWave = () => {
       if (d.life <= 0) s.drops.splice(i, 1);
     }
 
-    // Splash rings physics
     for (let i = s.splashes.length - 1; i >= 0; i--) {
       const sp = s.splashes[i];
       sp.life -= 0.05;
-      sp.radius += (sp.maxRadius - sp.radius) * 0.2; // Snappy expansion
+      sp.radius += (sp.maxRadius - sp.radius) * 0.2;
       if (sp.life <= 0) s.splashes.splice(i, 1);
     }
   }, [getSurfaceY, spawnSplash]);
@@ -185,13 +200,11 @@ const LiquidWave = () => {
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, w, ht);
 
-    // Build surface path
     const points = [];
     for (let i = 0; i < N; i++) {
       points.push({ x: i * cw, y: sy - hts[i] });
     }
 
-    // Draw main liquid body
     ctx.beginPath();
     ctx.moveTo(-10, ht + 10);
     ctx.lineTo(-10, points[0].y);
@@ -204,16 +217,14 @@ const LiquidWave = () => {
     ctx.lineTo(w + 10, ht + 10);
     ctx.closePath();
 
-    // Cartoon style gradient - sharper transitions
     const wg = ctx.createLinearGradient(0, sy - 40, 0, ht);
-    wg.addColorStop(0, '#4facfe'); // Bright blue top
-    wg.addColorStop(0.1, '#00f2fe'); // Cyan highlight
-    wg.addColorStop(0.4, '#0061ff'); // Deep blue body
-    wg.addColorStop(1, '#002fa7'); // Dark bottom
+    wg.addColorStop(0, '#4facfe');
+    wg.addColorStop(0.1, '#00f2fe');
+    wg.addColorStop(0.4, '#0061ff');
+    wg.addColorStop(1, '#002fa7');
     ctx.fillStyle = wg;
     ctx.fill();
 
-    // Top highlight rim (Cartoon outline effect)
     ctx.save();
     ctx.beginPath();
     ctx.moveTo(points[0].x, points[0].y);
@@ -227,7 +238,6 @@ const LiquidWave = () => {
     ctx.stroke();
     ctx.restore();
 
-    // Draw splashes (Rings)
     if (splashes.length > 0) {
       for (let i = 0; i < splashes.length; i++) {
         const sp = splashes[i];
@@ -239,29 +249,25 @@ const LiquidWave = () => {
       }
     }
 
-    // Draw drops with Squash & Stretch
     if (drops.length > 0) {
       for (let i = 0; i < drops.length; i++) {
         const d = drops[i];
-        const sz = d.sz * 2.5; // Bigger drops for cartoon look
-        
-        // Calculate squash and stretch based on velocity
+        const sz = d.sz * 2.5;
         const speed = Math.sqrt(d.vx * d.vx + d.vy * d.vy);
         const angle = Math.atan2(d.vy, d.vx);
-        const stretch = 1 + Math.min(speed * 0.15, 0.8); // Cap stretch
-        const squash = 1 / Math.sqrt(stretch); // Conserve volume
+        const stretch = 1 + Math.min(speed * 0.15, 0.8);
+        const squash = 1 / Math.sqrt(stretch);
 
         ctx.save();
         ctx.translate(d.x, d.y);
         ctx.rotate(angle);
         ctx.scale(stretch, squash);
-        
+
         ctx.beginPath();
         ctx.arc(0, 0, sz, 0, Math.PI * 2);
-        ctx.fillStyle = '#00f2fe'; // Bright cyan drops
+        ctx.fillStyle = '#00f2fe';
         ctx.fill();
 
-        // Highlight dot (Glossy look)
         ctx.beginPath();
         ctx.arc(-sz * 0.3, -sz * 0.3, sz * 0.3, 0, Math.PI * 2);
         ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
@@ -270,7 +276,6 @@ const LiquidWave = () => {
         ctx.restore();
       }
     }
-
   }, []);
 
   const animate = useCallback(() => {
@@ -278,15 +283,6 @@ const LiquidWave = () => {
     render();
     st.current.aid = requestAnimationFrame(animate);
   }, [physics, render]);
-
-  // Interaction handlers (Mouse/Touch) - REMOVED
-  /*
-  const onMM = useCallback((e) => { ... }, [disturb]);
-  const onMD = useCallback((e) => { ... }, [disturb]);
-  const onML = useCallback(() => { ... }, []);
-  const onTM = useCallback((e) => { ... }, [disturb]);
-  const onTE = useCallback(() => { ... }, []);
-  */
 
   const onScroll = useCallback(() => {
     const sc = document.querySelector('.scroll-container');
@@ -308,26 +304,70 @@ const LiquidWave = () => {
     s.lsT = now;
   }, []);
 
+  /** Contact görünür değilken veya reduced-motion: RAF ve scroll dinleyicisi yok — CPU boşa yanmaz */
   useEffect(() => {
-    resize();
+    if (prefersReducedMotion) return undefined;
+
+    const el = containerRef.current;
+    const root = document.querySelector('.scroll-container');
+    if (!el) return undefined;
+
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting);
+      },
+      {
+        root: root || null,
+        rootMargin: '100px 0px 100px 0px',
+        threshold: 0.02,
+      }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [prefersReducedMotion]);
+
+  useEffect(() => {
+    if (prefersReducedMotion) return undefined;
+
     const s = st.current;
+    const stop = () => {
+      if (s.aid != null) {
+        cancelAnimationFrame(s.aid);
+        s.aid = null;
+      }
+    };
+
+    if (!isVisible) {
+      stop();
+      return undefined;
+    }
+
+    resize();
     const sc = document.querySelector('.scroll-container');
-    if (sc) sc.addEventListener('scroll', onScroll, { passive: true });
+    sc?.addEventListener('scroll', onScroll, { passive: true });
     const ro = new ResizeObserver(resize);
     if (containerRef.current) ro.observe(containerRef.current);
+
     s.aid = requestAnimationFrame(animate);
+
     return () => {
-      if (s.aid) cancelAnimationFrame(s.aid);
-      if (sc) sc.removeEventListener('scroll', onScroll);
+      stop();
+      sc?.removeEventListener('scroll', onScroll);
       ro.disconnect();
     };
-  }, [resize, animate, onScroll]);
+  }, [prefersReducedMotion, isVisible, resize, animate, onScroll]);
+
+  if (prefersReducedMotion) {
+    return (
+      <div
+        className="liquid-wave-container liquid-wave-static"
+        aria-hidden="true"
+      />
+    );
+  }
 
   return (
-    <div
-      ref={containerRef}
-      className="liquid-wave-container"
-    >
+    <div ref={containerRef} className="liquid-wave-container">
       <canvas ref={canvasRef} className="liquid-wave-canvas" />
     </div>
   );

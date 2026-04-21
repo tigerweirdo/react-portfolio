@@ -1,8 +1,22 @@
 import { useEffect, useState, useCallback, useRef, memo } from 'react'
-import { motion, useInView, useAnimation } from 'framer-motion'
+import { motion, useInView, useAnimation, useReducedMotion } from 'framer-motion'
 import emailjs from '@emailjs/browser'
 import LiquidWave from './LiquidWave'
 import './index.scss'
+
+function useNarrowViewport() {
+  const [narrow, setNarrow] = useState(() =>
+    typeof window !== 'undefined' ? window.matchMedia('(max-width: 768px)').matches : false
+  )
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 768px)')
+    const fn = () => setNarrow(mq.matches)
+    setNarrow(mq.matches)
+    mq.addEventListener('change', fn)
+    return () => mq.removeEventListener('change', fn)
+  }, [])
+  return narrow
+}
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -43,8 +57,8 @@ const inputVariants = {
   }
 }
 
-const GlassWrap = ({ children, className = '' }) => (
-  <div className={`glass-wrap ${className}`}>
+const GlassWrap = ({ children, className = '', simple }) => (
+  <div className={`glass-wrap ${className}${simple ? ' glass-wrap--simple' : ''}`}>
     <div className="glass-filter" />
     <div className="glass-overlay" />
     <div className="glass-specular" />
@@ -61,6 +75,9 @@ const Contact = memo(() => {
   const containerRef = useRef(null)
   const controls = useAnimation()
   const isInView = useInView(containerRef, { once: false, amount: 0.3 })
+  const reduceMotion = useReducedMotion()
+  const narrowViewport = useNarrowViewport()
+  const glassSimple = reduceMotion || narrowViewport
 
   useEffect(() => {
     emailjs.init('3stLvJAm6BvTLpIsx')
@@ -187,7 +204,7 @@ const Contact = memo(() => {
                 className="half"
                 variants={inputVariants}
               >
-                <GlassWrap>
+                <GlassWrap simple={glassSimple}>
                   <input
                     placeholder="Name"
                     type="text"
@@ -201,7 +218,7 @@ const Contact = memo(() => {
                 className="half"
                 variants={inputVariants}
               >
-                <GlassWrap>
+                <GlassWrap simple={glassSimple}>
                   <input
                     placeholder="Email"
                     type="email"
@@ -212,7 +229,7 @@ const Contact = memo(() => {
                 </GlassWrap>
               </motion.li>
               <motion.li variants={inputVariants}>
-                <GlassWrap>
+                <GlassWrap simple={glassSimple}>
                   <input
                     placeholder="Subject"
                     type="text"
@@ -223,7 +240,7 @@ const Contact = memo(() => {
                 </GlassWrap>
               </motion.li>
               <motion.li variants={inputVariants}>
-                <GlassWrap>
+                <GlassWrap simple={glassSimple}>
                   <textarea
                     placeholder="Message"
                     name="message"
@@ -238,7 +255,7 @@ const Contact = memo(() => {
                 value="temmuzcetiner@gmail.com"
               />
               <motion.li variants={inputVariants} className="submit-row">
-                <GlassWrap className="glass-wrap--btn">
+                <GlassWrap className="glass-wrap--btn" simple={glassSimple}>
                   {renderSubmitButton()}
                 </GlassWrap>
                 {renderStatusMessage()}

@@ -1,14 +1,17 @@
 import React, { useState, useEffect, useRef, useCallback, lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import Home from './components/Home';
-import About from './components/About';
-import Contact from './components/Contact';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './App.scss';
 
-// Work bölümü — ilk bundle küçük kalsın; görünüme yaklaşınca chunk yüklenir (App içi state + IO)
+// Aşağıdaki bölümler ayrı chunk — ana paket daha hafif parse edilir
+const About = lazy(() =>
+  import(/* webpackChunkName: "about" */ './components/About')
+);
+const Contact = lazy(() =>
+  import(/* webpackChunkName: "contact" */ './components/Contact')
+);
 const Portfolio = lazy(() =>
   import(/* webpackChunkName: "portfolio-work" */ './components/Portfolio')
 );
@@ -22,19 +25,7 @@ const PortfolioManager = lazy(() => import('./components/Admin/PortfolioManager'
 // Gizli admin slug - .env'den okunuyor
 const ADMIN_SLUG = process.env.REACT_APP_ADMIN_SLUG || 'p-x7k9';
 
-// Page transition variants - very subtle
-const pageTransition = {
-  initial: { opacity: 1 },
-  animate: {
-    opacity: 1,
-    transition: {
-      duration: 0.3
-    }
-  },
-  exit: {
-    opacity: 1
-  }
-};
+const SECTION_IDS = ['home', 'about', 'portfolio', 'contact'];
 
 const App = () => {
   const [activeSection, setActiveSection] = useState('home');
@@ -43,7 +34,6 @@ const App = () => {
   const appContainerRef = useRef(null);
   const portfolioSectionRef = useRef(null);
   const portfolioLazyObserverRef = useRef(null);
-  const sectionsRef = useRef(['home', 'about', 'portfolio', 'contact']);
 
   const [loadPortfolio, setLoadPortfolio] = useState(
     () => typeof window !== 'undefined' && window.location.hash === '#portfolio'
@@ -134,11 +124,10 @@ const App = () => {
 
     const observer = new IntersectionObserver(observerCallback, observerOptions);
     const currentAppContainer = appContainerRef.current;
-    const sections = sectionsRef.current;
 
     const timer = setTimeout(() => {
       if (currentAppContainer) {
-        sections.forEach(sectionId => {
+        SECTION_IDS.forEach(sectionId => {
           const element = document.getElementById(sectionId);
           if (element) {
             observer.observe(element);
@@ -150,7 +139,7 @@ const App = () => {
     return () => {
       clearTimeout(timer);
       if (currentAppContainer) {
-        sections.forEach(sectionId => {
+        SECTION_IDS.forEach(sectionId => {
           const element = document.getElementById(sectionId);
           if (element) {
             observer.unobserve(element);
@@ -183,13 +172,7 @@ const App = () => {
   if (!authChecked) {
     return (
       <div className="loading-auth">
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.3 }}
-        >
-          Kimlik doğrulama durumu kontrol ediliyor...
-        </motion.div>
+        Kimlik doğrulama durumu kontrol ediliyor...
       </div>
     );
   }
@@ -260,27 +243,33 @@ const App = () => {
                 ref={appContainerRef}
                 className="scroll-container"
               >
-                <motion.section
+                <section
                   id="home"
                   className={`page-section ${activeSection === 'home' ? 'active' : ''}`}
-                  {...pageTransition}
                 >
                   <Home scrollToSection={scrollToSection} />
-                </motion.section>
+                </section>
 
-                <motion.section
+                <section
                   id="about"
                   className={`page-section ${activeSection === 'about' ? 'active' : ''}`}
-                  {...pageTransition}
                 >
-                  <About />
-                </motion.section>
+                  <Suspense
+                    fallback={(
+                      <div
+                        className="section-lazy-fallback"
+                        aria-hidden="true"
+                      />
+                    )}
+                  >
+                    <About />
+                  </Suspense>
+                </section>
 
-                <motion.section
+                <section
                   ref={portfolioSectionRef}
                   id="portfolio"
                   className={`page-section ${activeSection === 'portfolio' ? 'active' : ''}`}
-                  {...pageTransition}
                 >
                   {!loadPortfolio ? (
                     <div
@@ -302,15 +291,23 @@ const App = () => {
                       <Portfolio />
                     </Suspense>
                   )}
-                </motion.section>
+                </section>
 
-                <motion.section
+                <section
                   id="contact"
                   className={`page-section ${activeSection === 'contact' ? 'active' : ''}`}
-                  {...pageTransition}
                 >
-                  <Contact />
-                </motion.section>
+                  <Suspense
+                    fallback={(
+                      <div
+                        className="section-lazy-fallback"
+                        aria-hidden="true"
+                      />
+                    )}
+                  >
+                    <Contact />
+                  </Suspense>
+                </section>
               </div>
             </div>
           )}

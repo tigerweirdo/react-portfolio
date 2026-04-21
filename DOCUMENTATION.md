@@ -689,3 +689,49 @@ Tüm 6 tespit edilen sorun düzeltildi. Scroll artık hem doğal hem de snap-tab
    - `.portfolio-lazy-placeholder`, `.portfolio-lazy-fallback` — en az `100dvh` ile yer tutma ve kısa yükleme gösterimi.
 
 **Etkilenen dosyalar:** `src/App.js`, `src/App.scss`, `DOCUMENTATION.md`
+
+---
+
+### Görev 19: App Sadeleştirme + About/Contact Code Splitting (21 Nisan 2026)
+
+**Sorun:** `pageTransition` tüm opacity değerleri 1 ile fiilen animasyon yapmıyordu; `motion.section` gereksiz Framer yükü ve karmaşıklık. About + Contact ana paketteydi.
+
+**Yapılanlar:**
+
+1. **`src/App.js`**
+   - `pageTransition` ve `motion.section` kaldırıldı; bölümler düz `<section>`.
+   - `framer-motion` import’u App’ten çıkarıldı (auth yükleme metni düz metin).
+   - `About` ve `Contact` `React.lazy` + `webpackChunkName` (`about`, `contact`) ile ayrı chunk; `Suspense` + `.section-lazy-fallback` yer tutucu.
+   - Statik `sectionsRef` dizisi yerine modül düzeyinde `SECTION_IDS` sabiti.
+
+2. **`src/App.scss`**
+   - `.section-lazy-fallback` — About/Contact chunk’ı gelene kadar minimum tam ekran yükseklik.
+
+**Not:** About içindeki `useScroll` / SVG animasyonları ve Contact’taki `LiquidWave` + cam efektleri hâlâ ağır olabilir; ileride `prefers-reduced-motion` ile sadeleştirme ayrı görev olabilir.
+
+**Etkilenen dosyalar:** `src/App.js`, `src/App.scss`, `DOCUMENTATION.md`
+
+---
+
+### Görev 20: Performans — LiquidWave RAF Durdurma, Cam ve About Hafifletme (21 Nisan 2026)
+
+**Sorun:** Contact’taki `LiquidWave` sayfa açılır açılmaz sürekli `requestAnimationFrame` + fizik çalıştırıyordu; kullanıcı başka bölümdeyken bile CPU yanlıyordu. Formda her alanda `filter: url(#glassLens)` + `backdrop-filter` ağırdı. About’ta sürekli SVG / scroll bağlı animasyonlar vardı.
+
+**Yapılanlar:**
+
+1. **`LiquidWave.js`**
+   - `IntersectionObserver` (root: `.scroll-container`): Contact alanı görünür değilken RAF iptal, scroll dinleyicisi yok.
+   - `prefers-reduced-motion: reduce` ise canvas yerine statik gradient (`.liquid-wave-static`) — sıfır animasyon.
+
+2. **`LiquidWave.scss`**
+   - `.liquid-wave-static` gradient arka plan.
+
+3. **`Contact/index.js` + `index.scss`**
+   - `glass-wrap--simple`: `backdrop-filter` ve SVG `filter` kapatılır; `reduceMotion` veya **≤768px** genişlikte otomatik (mobilde daha opak `.glass-overlay`).
+   - `useNarrowViewport` hook.
+
+4. **`About/index.js` + `index.scss`**
+   - `useReducedMotion`: parallax `y` / scroll `opacity` sabit; göz ve daire sonsuz animasyonları `animate={false}`; `whileHover` kapatıldı.
+   - CSS’te `prefers-reduced-motion` için `.Rolly` / `.eyes` / `.Shaddow` animasyonları kapalı.
+
+**Etkilenen dosyalar:** `src/components/Contact/LiquidWave.js`, `LiquidWave.scss`, `Contact/index.js`, `Contact/index.scss`, `About/index.js`, `About/index.scss`, `DOCUMENTATION.md`
