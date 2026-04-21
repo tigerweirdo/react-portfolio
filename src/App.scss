@@ -1,12 +1,13 @@
 // animate.css ve loaders.css kaldırıldı - sadece kullanılan keyframe'ler aşağıda tanımlı
 @import './variables';
 
+/* Gövde metni: LCP’yi kilitlememek için isteğe bağlı — sistem fontu önce */
 @font-face {
   font-family: 'Helvetica Neue';
   src: url('./assets/fonts/helvetica-neu.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
-  font-display: swap;
+  font-display: optional;
 }
 
 @font-face {
@@ -18,14 +19,7 @@
   font-display: swap;
 }
 
-@font-face {
-  font-family: 'Coolvetica';
-  src: url('./assets/fonts/CoolveticaRg-Regular.woff2') format('woff2'),
-    url('./assets/fonts/CoolveticaRg-Regular.woff') format('woff');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
+/* Coolvetica: public/fonts/fonts.css + index.html preload (webpack zinciri yok) */
 
 // animate.css'ten sadece kullanılan fadeInUp keyframe'i
 @keyframes fadeInUp {

@@ -1,0 +1,10 @@
+/* Webpack işlemez — sabit URL; index.html preload ile aynı dosya */
+@font-face {
+  font-family: 'Coolvetica';
+  src:
+    url('/fonts/CoolveticaRg-Regular.woff2') format('woff2'),
+    url('/fonts/CoolveticaRg-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}

@@ -735,3 +735,27 @@ Tüm 6 tespit edilen sorun düzeltildi. Scroll artık hem doğal hem de snap-tab
    - CSS’te `prefers-reduced-motion` için `.Rolly` / `.eyes` / `.Shaddow` animasyonları kapalı.
 
 **Etkilenen dosyalar:** `src/components/Contact/LiquidWave.js`, `LiquidWave.scss`, `Contact/index.js`, `Contact/index.scss`, `About/index.js`, `About/index.scss`, `DOCUMENTATION.md`
+
+---
+
+### Görev 21: LCP / Kritik İstek Zinciri — Font Preload ve GTM Erteleme (21 Nisan 2026)
+
+**Sorun:** Lighthouse: kritik yol uzun (CSS → @font-face → Coolvetica / Helvetica sırayla); GTM `<head>` içinde ilk boyamayla yarışıyordu.
+
+**Yapılanlar:**
+
+1. **`public/fonts/`** — `CoolveticaRg-Regular.woff2` ve `.woff` kopyalandı.
+
+2. **`public/fonts/fonts.css`** — Coolvetica `@font-face` burada (Webpack `url('/fonts/...')` yolunu `src/` altında aradığı için SCSS’te sabit kök kullanılamıyordu). Küçük bu dosya, ana bundle CSS’ten önce yüklenir.
+
+3. **`public/index.html`** — `rel="preload"` (woff2) + `link rel="stylesheet"` (`fonts.css`) — LCP başlık fontu ana JS/CSS zincirinden ayrıldı; çift indirme yok.
+
+4. **`App.scss`** — Coolvetica `@font-face` kaldırıldı (artık `fonts.css`); `Helvetica Neue`: `font-display: optional`.
+
+5. **`public/index.html`** — `window.load` sonrası GTM.
+
+6. **`theme-color` meta** — satır sonu kırılması kaldırıldı.
+
+**Not:** Canlı sitede `fonts.googleapis.com` görünüyorsa eski deploy veya başka katmandır; bu repoda Google Fonts yok. Chrome eklentisi uyarıları Lighthouse’ta yok sayılabilir.
+
+**Etkilenen dosyalar:** `public/index.html`, `public/fonts/*`, `src/App.scss`, `DOCUMENTATION.md`
