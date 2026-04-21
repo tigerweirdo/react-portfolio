@@ -798,3 +798,17 @@ Tüm 6 tespit edilen sorun düzeltildi. Scroll artık hem doğal hem de snap-tab
 - `peekVideo` yoksa `activeSrc` temizlenir.
 
 **Etkilenen dosyalar:** `src/components/Portfolio/PeekInner.js`, `DOCUMENTATION.md`
+
+---
+
+### Görev 24: LiquidWave — scroll throttle, animate ref, N=80 (21 Nisan 2026)
+
+**İstek:** `onScroll` içindeki yoğun işi throttle; `animate` için stale closure / effect yeniden çalışmasını önle; fizik maliyetini düşür.
+
+**Yapılanlar (`LiquidWave.js`):**
+
+1. `onScroll` başında 32 ms throttle (`scrollWorkLastRunRef`).
+2. `animate` `useCallback` kaldırıldı; `animateRef.current` her render’da güncellenir, rAF `requestAnimationFrame(() => animateRef.current?.())` ile döner — `useEffect` bağımlılıklarından `physics`/`render`/`animate` çıktı.
+3. `N` 140 → 80.
+
+**Etkilenen dosyalar:** `src/components/Contact/LiquidWave.js`, `DOCUMENTATION.md`

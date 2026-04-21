@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useCallback, useState } from 'react';
 import './LiquidWave.scss';
 
-const N = 140;
+const N = 80;
 const SPRING = 0.007;
 const DAMP = 0.995;
 const SPREAD = 0.15;
@@ -30,6 +30,10 @@ const LiquidWave = () => {
   const prefersReducedMotion = usePrefersReducedMotion();
   const canvasRef = useRef(null);
   const containerRef = useRef(null);
+  /** Throttle: ağır scroll gövdesi en fazla ~31/s */
+  const scrollWorkLastRunRef = useRef(0);
+  /** rAF döngüsü — useEffect bağımlılığı olmadan güncel physics/render kullanır */
+  const animateRef = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
   const st = useRef({
     h: new Float32Array(N),
@@ -278,17 +282,22 @@ const LiquidWave = () => {
     }
   }, []);
 
-  const animate = useCallback(() => {
+  animateRef.current = () => {
     physics();
     render();
-    st.current.aid = requestAnimationFrame(animate);
-  }, [physics, render]);
+    st.current.aid = requestAnimationFrame(() => {
+      animateRef.current?.();
+    });
+  };
 
   const onScroll = useCallback(() => {
+    const now = Date.now();
+    if (now - scrollWorkLastRunRef.current < 32) return;
+    scrollWorkLastRunRef.current = now;
+
     const sc = document.querySelector('.scroll-container');
     if (!sc) return;
     const s = st.current;
-    const now = Date.now();
     const dt = Math.max(now - s.lsT, 1);
     const top = sc.scrollTop;
     const delta = Math.abs(top - s.lst);
@@ -348,14 +357,14 @@ const LiquidWave = () => {
     const ro = new ResizeObserver(resize);
     if (containerRef.current) ro.observe(containerRef.current);
 
-    s.aid = requestAnimationFrame(animate);
+    s.aid = requestAnimationFrame(() => animateRef.current?.());
 
     return () => {
       stop();
       sc?.removeEventListener('scroll', onScroll);
       ro.disconnect();
     };
-  }, [prefersReducedMotion, isVisible, resize, animate, onScroll]);
+  }, [prefersReducedMotion, isVisible, resize, onScroll]);
 
   if (prefersReducedMotion) {
     return (
