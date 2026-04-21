@@ -184,6 +184,28 @@ body {
   box-sizing: border-box;
 }
 
+// Work — lazy: chunk yüklenmeden önce yer tutar / Suspense fallback
+.portfolio-lazy-placeholder {
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  flex: 1 0 auto;
+  box-sizing: border-box;
+}
+
+.portfolio-lazy-fallback {
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  color: $secondary-text-color;
+  font-size: 0.875rem;
+  font-family: 'Helvetica Neue', sans-serif;
+}
+
 // Loading state
 .loading-auth {
   display: flex;

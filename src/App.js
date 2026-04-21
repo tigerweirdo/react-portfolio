@@ -3,11 +3,15 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { motion } from 'framer-motion';
 import Home from './components/Home';
 import About from './components/About';
-import Portfolio from './components/Portfolio';
 import Contact from './components/Contact';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './App.scss';
+
+// Work bölümü — ilk bundle küçük kalsın; görünüme yaklaşınca chunk yüklenir (App içi state + IO)
+const Portfolio = lazy(() =>
+  import(/* webpackChunkName: "portfolio-work" */ './components/Portfolio')
+);
 
 // Lazy load admin components
 const Login = lazy(() => import('./components/Admin/Login'));
@@ -37,7 +41,13 @@ const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [authChecked, setAuthChecked] = useState(false);
   const appContainerRef = useRef(null);
+  const portfolioSectionRef = useRef(null);
+  const portfolioLazyObserverRef = useRef(null);
   const sectionsRef = useRef(['home', 'about', 'portfolio', 'contact']);
+
+  const [loadPortfolio, setLoadPortfolio] = useState(
+    () => typeof window !== 'undefined' && window.location.hash === '#portfolio'
+  );
 
   // Admin route detection - window.location ile direkt kontrol
   const pathname = window.location.pathname;
@@ -60,6 +70,49 @@ const App = () => {
       document.body.classList.remove('admin-page');
     }
   }, [isAdminRoute]);
+
+  // #portfolio ile doğrudan açılışta veya hash değişince Work chunk'ını yükle
+  useEffect(() => {
+    const onHash = () => {
+      if (window.location.hash === '#portfolio') {
+        setLoadPortfolio(true);
+      }
+    };
+    window.addEventListener('hashchange', onHash);
+    return () => window.removeEventListener('hashchange', onHash);
+  }, []);
+
+  // Work bölümü görünüme yaklaşınca (scroll) Portfolio lazy chunk'ını tetikle
+  useEffect(() => {
+    if (isAdminRoute || loadPortfolio) return undefined;
+
+    const timer = setTimeout(() => {
+      const el = portfolioSectionRef.current;
+      if (!el) return;
+
+      const scrollRoot = appContainerRef.current ?? null;
+      const obs = new IntersectionObserver(
+        (entries) => {
+          if (entries.some((e) => e.isIntersecting)) {
+            setLoadPortfolio(true);
+          }
+        },
+        {
+          root: scrollRoot,
+          rootMargin: '280px 0px 280px 0px',
+          threshold: 0,
+        }
+      );
+      obs.observe(el);
+      portfolioLazyObserverRef.current = obs;
+    }, 300);
+
+    return () => {
+      clearTimeout(timer);
+      portfolioLazyObserverRef.current?.disconnect();
+      portfolioLazyObserverRef.current = null;
+    };
+  }, [isAdminRoute, loadPortfolio]);
 
   // Intersection Observer for active section tracking
   useEffect(() => {
@@ -224,11 +277,31 @@ const App = () => {
                 </motion.section>
 
                 <motion.section
+                  ref={portfolioSectionRef}
                   id="portfolio"
                   className={`page-section ${activeSection === 'portfolio' ? 'active' : ''}`}
                   {...pageTransition}
                 >
-                  <Portfolio />
+                  {!loadPortfolio ? (
+                    <div
+                      className="portfolio-lazy-placeholder"
+                      aria-hidden="true"
+                    />
+                  ) : (
+                    <Suspense
+                      fallback={(
+                        <div
+                          className="portfolio-lazy-fallback"
+                          role="status"
+                          aria-live="polite"
+                        >
+                          Work yükleniyor…
+                        </div>
+                      )}
+                    >
+                      <Portfolio />
+                    </Suspense>
+                  )}
                 </motion.section>
 
                 <motion.section

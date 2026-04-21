@@ -2,20 +2,21 @@ import React, { useRef, useEffect, memo } from "react";
 
 /**
  * Hover "peek" alanı: opsiyonel video veya ikinci görsel.
+ * Video oynatma yalnızca playbackEnabled true iken — aksi halde duraklatılır
+ * (aynı anda birden fazla peek videosunun decode/oynatılmasını önler).
  */
-const PeekInner = memo(({ peekVideo, innerSrc, isOpen }) => {
+const PeekInner = memo(({ peekVideo, innerSrc, playbackEnabled }) => {
   const videoRef = useRef(null);
 
   useEffect(() => {
     const el = videoRef.current;
     if (!el || !peekVideo) return;
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (isOpen || reduceMotion) {
-      el.pause();
-    } else {
+    if (playbackEnabled) {
       el.play?.().catch(() => {});
+    } else {
+      el.pause();
     }
-  }, [peekVideo, isOpen]);
+  }, [peekVideo, playbackEnabled]);
 
   if (peekVideo) {
     return (
@@ -26,8 +27,8 @@ const PeekInner = memo(({ peekVideo, innerSrc, isOpen }) => {
         muted
         loop
         playsInline
-        autoPlay
-        preload="metadata"
+        preload={playbackEnabled ? "metadata" : "none"}
+        autoPlay={false}
         aria-hidden="true"
       />
     );

@@ -646,3 +646,46 @@ Tüm 6 tespit edilen sorun düzeltildi. Scroll artık hem doğal hem de snap-tab
 - **Admin liste küçük resim:** Her zaman görsel; kapak video iken ana görsel gösterilir.
 
 **Etkilenen dosyalar:** `src/components/Portfolio/CardBackground.js`, `src/components/Portfolio/index.js`, `src/components/Admin/PortfolioManager.js`, `src/components/Admin/PortfolioManager.scss`, `DOCUMENTATION.md`
+
+---
+
+### Görev 17: Work (Portfolio) Performansı — Peek Videoları ve Blur (21 Nisan 2026)
+
+**Sorun:** Work bölümünde kasma; özellikle birden fazla projede peek videosu varken tüm videoların aynı anda decode/oynatılması ve detay katmanındaki güçlü `backdrop-filter` GPU yükü.
+
+**Yapılanlar:**
+
+1. **`src/components/Portfolio/PeekInner.js`**
+   - `playbackEnabled` prop’u: yalnızca true iken `play()`; aksi halde `pause()`.
+   - `preload`: oynatma kapalıyken `none` (gereksiz ön yükleme azaltıldı); `autoPlay` kapatıldı.
+
+2. **`src/components/Portfolio/index.js`**
+   - `PortfolioCardItem`: `useInView` ile kart görünürken, `useMediaQuery("(min-width: 768px) and (hover: hover) and (pointer: fine)")` ile masaüstü “ince işaretçi” ortamında, `onPointerEnter` / `onPointerLeave` ile hover birleştirilerek peek videosu **en fazla hover anında** oynatılıyor (aynı anda birden çok video yok).
+   - `useReducedMotion`: giriş animasyonu ve peek oynatma devre dışı.
+   - Liste öğesi `memo` ile sarıldı; `openIndex` değişiminde yalnız ilgili kartlar güncellenir.
+
+3. **`src/components/Portfolio/index.scss`**
+   - Detay overlay `backdrop-filter` 20px → 12px (daha düşük GPU maliyeti).
+
+**Etkilenen dosyalar:** `src/components/Portfolio/index.js`, `src/components/Portfolio/PeekInner.js`, `src/components/Portfolio/index.scss`, `DOCUMENTATION.md`
+
+---
+
+### Görev 18: Work Bölümü — React.lazy + Kaydırmada Yükleme (21 Nisan 2026)
+
+**İstek:** Work (Portfolio) kodunu ilk bundle’dan ayırıp, kullanıcı bölüme yaklaştığında yüklemek.
+
+**Yapılanlar:**
+
+1. **`src/App.js`**
+   - `Portfolio` statik import yerine `lazy(() => import(/* webpackChunkName: "portfolio-work" */ './components/Portfolio'))`.
+   - `loadPortfolio` state: başlangıçta `location.hash === '#portfolio'` ise true (doğrudan Work’e link).
+   - `hashchange` ile `#portfolio` gelince chunk tetiklenir.
+   - `IntersectionObserver` (`root`: scroll container, `rootMargin: ~280px`): Work bölümü görünüme yaklaşınca `loadPortfolio` true; böylece chunk gerçekten kaydırma ile istenir.
+   - Chunk gelene kadar `.portfolio-lazy-placeholder`; `Suspense` fallback: “Work yükleniyor…” (`aria-live="polite"`).
+   - `portfolioSectionRef` ile gözlemlenen hedef: `#portfolio` `motion.section`.
+
+2. **`src/App.scss`**
+   - `.portfolio-lazy-placeholder`, `.portfolio-lazy-fallback` — en az `100dvh` ile yer tutma ve kısa yükleme gösterimi.
+
+**Etkilenen dosyalar:** `src/App.js`, `src/App.scss`, `DOCUMENTATION.md`
