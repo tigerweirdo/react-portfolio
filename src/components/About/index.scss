@@ -137,6 +137,15 @@
   }
 }
 
+/* Ekran dışında sürekli animasyon / animationiteration maliyeti yok */
+.about-page:not(.about-page--in-view) {
+  .Rolly,
+  .eyes,
+  .Shaddow {
+    animation-play-state: paused;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .Rolly,
   .eyes,

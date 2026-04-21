@@ -47,19 +47,41 @@
       background-color: transparent;
       outline: none;
       cursor: pointer;
-      transition: all 0.2s ease;
+      position: relative;
+      isolation: isolate;
+      /* Sadece transform + opacity (dolgu ::after ile) — layout tetiklemez */
+      transition: transform 0.2s ease;
       text-transform: uppercase;
 
-      &:hover {
+      &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
         background: $btn-hover-bg-color;
+        opacity: 0;
+        transition: opacity 0.2s ease;
+        z-index: 0;
+        pointer-events: none;
+      }
+
+      & > * {
+        position: relative;
+        z-index: 1;
+      }
+
+      &:hover {
         color: $primary-color;
         border-color: $accent-color-1;
-        transform: translateY(-1px);
+        transform: translate3d(0, -1px, 0);
         box-shadow: 0 2px 8px rgba($primary-color, 0.1);
+
+        &::after {
+          opacity: 1;
+        }
       }
 
       &:active {
-        transform: translateY(0);
+        transform: translate3d(0, 0, 0);
       }
 
       &:focus-visible {

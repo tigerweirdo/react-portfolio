@@ -759,3 +759,26 @@ Tüm 6 tespit edilen sorun düzeltildi. Scroll artık hem doğal hem de snap-tab
 **Not:** Canlı sitede `fonts.googleapis.com` görünüyorsa eski deploy veya başka katmandır; bu repoda Google Fonts yok. Chrome eklentisi uyarıları Lighthouse’ta yok sayılabilir.
 
 **Etkilenen dosyalar:** `public/index.html`, `public/fonts/*`, `src/App.scss`, `DOCUMENTATION.md`
+
+---
+
+### Görev 22: Animasyon Denetimi — transform/opacity, JS, ekran dışı (21 Nisan 2026)
+
+**İstek:** Kritik yol dışı property’leri animasyonlardan çıkarmak; sürekli ekran dışı animasyonları durdurmak.
+
+**Tespit özeti (ana site):**
+
+| Dosya | Sorun | Çözüm |
+|--------|--------|--------|
+| `Home/index.scss` `.flat-button` | `transition: all` + background/color/border/shadow | `transform` + `::after` ile `opacity` dolgu; `translate3d` |
+| `Contact/index.scss` `.glass-wrap` | `transition: box-shadow` | Geçiş kaldırıldı (anlık gölge) |
+| `Contact/index.scss` form `li` | `fadeInUp` sürekli (chunk yüklenince) | `animation-play-state: paused` + `.contact-page--in-view` ile `running` |
+| `index.scss` scrollbar thumb | `background-color` transition | Geçiş kaldırıldı |
+| `App.scss` scrollbar thumb | `background` transition | Geçiş kaldırıldı |
+| `Portfolio/index.scss` `.premium-card__close` | color, background, border transition | Sadece `opacity` + `transform` |
+| `Portfolio/index.scss` `.premium-card__detail-link` | `color` transition | Kaldırıldı (anında hover) |
+| `About/index.js` + `About/index.scss` | Framer + CSS sürekli animasyon ekran dışında | `about-page--in-view`; `!isInView` iken Framer `animate={false}`; CSS `animation-play-state: paused` |
+
+**Zaten uygun / dokunulmayan:** `App.scss` `fadeInUp`, `sectionFadeIn`, `Portfolio` çoğunlukla `transform`/`opacity`; `LiquidWave` rAF (ayrı optimizasyon); admin SCSS (kapsam dışı bırakıldı).
+
+**Etkilenen dosyalar:** `src/components/Home/index.scss`, `Contact/index.js`, `Contact/index.scss`, `src/index.scss`, `src/App.scss`, `Portfolio/index.scss`, `About/index.js`, `About/index.scss`, `DOCUMENTATION.md`

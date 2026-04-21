@@ -54,7 +54,7 @@
   box-shadow:
     0 4px 8px rgba(0, 0, 0, 0.06),
     0 0 14px rgba(0, 0, 0, 0.03);
-  transition: box-shadow 0.2s ease;
+  /* box-shadow geçişi layerize maliyeti — hover/focus anında sabit */
 
   &:focus-within {
     box-shadow:
@@ -120,6 +120,18 @@
 
 // ── Form ──
 
+/* Görünürken form satır animasyonu çalışsın — ekran dışında paused */
+.contact-page.contact-page--in-view .contact-form ul li {
+  animation-play-state: running;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .contact-form ul li {
+    animation: none !important;
+    opacity: 1;
+  }
+}
+
 .contact-form {
   width: 100%;
   max-width: 600px;
@@ -142,6 +154,7 @@
       position: relative;
       animation: fadeInUp 2s 2s;
       animation-fill-mode: forwards;
+      animation-play-state: paused;
       width: 100%;
     }
 

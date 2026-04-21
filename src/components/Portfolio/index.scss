@@ -294,12 +294,7 @@ $overlay-scrim: rgba($primary-color, 0.72);
   border-radius: 50%;
   cursor: pointer;
   opacity: 0;
-  transition:
-    color 0.2s ease,
-    opacity 0.4s ease,
-    background 0.2s ease,
-    border-color 0.2s ease,
-    transform 0.2s ease;
+  transition: opacity 0.4s ease, transform 0.2s ease;
 
   @media screen and (min-width: 768px) {
     top: 28px;
@@ -381,7 +376,6 @@ $overlay-scrim: rgba($primary-color, 0.72);
   text-transform: uppercase;
   color: rgba($background-color, 0.6);
   text-decoration: none;
-  transition: color 0.2s ease;
 
   &:hover {
     color: $background-color;

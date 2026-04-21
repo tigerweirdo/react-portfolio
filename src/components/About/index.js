@@ -53,10 +53,12 @@ const About = memo(() => {
   const pageStyle = reduceMotion ? { opacity: 1 } : { opacity };
   const robotStyle = reduceMotion ? { y: 0 } : { y };
 
+  const inViewClass = isInView ? 'about-page--in-view' : '';
+
   return (
     <motion.div 
       ref={ref}
-      className="container about-page"
+      className={`container about-page ${inViewClass}`}
       initial="hidden"
       animate={controls}
       variants={containerVariants}
@@ -77,7 +79,7 @@ const About = memo(() => {
             cy="257" 
             r="46" 
             fill="url(#paint1_radial)"
-            animate={reduceMotion ? false : {
+            animate={reduceMotion || !isInView ? false : {
               scale: [1, 1.05, 1],
               transition: {
                 duration: 2,
@@ -106,7 +108,7 @@ const About = memo(() => {
             rx="5.5" 
             ry="11.5" 
             fill="black"
-            animate={reduceMotion ? false : {
+            animate={reduceMotion || !isInView ? false : {
               scaleY: [1, 0.1, 1],
               transition: {
                 duration: 0.3,
@@ -123,7 +125,7 @@ const About = memo(() => {
             rx="5.5" 
             ry="11.5" 
             fill="black"
-            animate={reduceMotion ? false : {
+            animate={reduceMotion || !isInView ? false : {
               scaleY: [1, 0.1, 1],
               transition: {
                 duration: 0.3,

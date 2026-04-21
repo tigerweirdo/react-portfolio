@@ -158,7 +158,7 @@ const Contact = memo(() => {
         initial={false}
         animate={{
           opacity: submitStatus ? 1 : 0,
-          y: submitStatus ? 0 : -10
+          y: submitStatus ? 0 : -10,
         }}
         transition={{
           duration: 0.3,
@@ -180,7 +180,7 @@ const Contact = memo(() => {
   return (
     <motion.div
       ref={containerRef}
-      className="container contact-page"
+      className={`container contact-page${isInView ? ' contact-page--in-view' : ''}`}
       initial="hidden"
       animate={controls}
       variants={containerVariants}
