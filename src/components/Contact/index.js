@@ -4,12 +4,13 @@ import emailjs from '@emailjs/browser'
 import LiquidWave from './LiquidWave'
 import './index.scss'
 
+/** Cam efekti: ≤1024px ve reduced-motion’da ağır SVG displacement + backdrop kapalı */
 function useNarrowViewport() {
   const [narrow, setNarrow] = useState(() =>
-    typeof window !== 'undefined' ? window.matchMedia('(max-width: 768px)').matches : false
+    typeof window !== 'undefined' ? window.matchMedia('(max-width: 1024px)').matches : false
   )
   useEffect(() => {
-    const mq = window.matchMedia('(max-width: 768px)')
+    const mq = window.matchMedia('(max-width: 1024px)')
     const fn = () => setNarrow(mq.matches)
     setNarrow(mq.matches)
     mq.addEventListener('change', fn)
@@ -270,8 +271,8 @@ const Contact = memo(() => {
           <feComponentTransfer in="SourceAlpha" result="alpha">
             <feFuncA type="identity" />
           </feComponentTransfer>
-          <feGaussianBlur in="alpha" stdDeviation="50" result="blur" />
-          <feDisplacementMap in="SourceGraphic" in2="blur" scale="50" xChannelSelector="A" yChannelSelector="A" />
+          <feGaussianBlur in="alpha" stdDeviation="32" result="blur" />
+          <feDisplacementMap in="SourceGraphic" in2="blur" scale="32" xChannelSelector="A" yChannelSelector="A" />
         </filter>
       </svg>
 

@@ -825,3 +825,22 @@ Tüm 6 tespit edilen sorun düzeltildi. Scroll artık hem doğal hem de snap-tab
 2. **`LiquidWave.scss`** — `.liquid-wave-container` için `background-color: #002fa7` (gradient altı ile aynı dip rengi).
 
 **Etkilenen dosyalar:** `src/App.scss`, `src/components/Contact/LiquidWave.scss`, `DOCUMENTATION.md`
+
+---
+
+### Görev 26: Contact performans — LiquidWave FPS tavanı, sekme görünürlüğü, cam yükü (21 Nisan 2026)
+
+**Sorun:** Contact bölümünde LiquidWave sürekli 60 FPS fizik + tam canvas çizimi ile formdaki çoklu cam katmanları (`backdrop-filter` + SVG displacement) üst üste binince yüksek CPU/GPU kullanımı ve kasma.
+
+**Yapılanlar:**
+
+1. **`src/components/Contact/LiquidWave.js`**
+   - 2D bağlamı `resize` sonrası `canvasCtxRef` ile önbellekleme; `render` içinde yedek `getContext`.
+   - Görünürken animasyon ~30 FPS ile sınırlandı (`MIN_FRAME_MS`); simülasyon hızı için kare başına iki `physics()` adımı.
+   - `visibilitychange`: sekme gizliyken `cancelAnimationFrame`, tekrar görünürken döngü yeniden başlatılıyor.
+
+2. **`src/components/Contact/index.js`**
+   - `glass-wrap--simple` eşiği `768px` → `1024px` (tablet / küçük laptop’ta ağır cam kapalı).
+   - `#glassLens`: `feGaussianBlur` `stdDeviation` 50 → 32, `feDisplacementMap` `scale` 50 → 32 (geniş masaüstünde kalan tam cam modunda daha düşük GPU maliyeti).
+
+**Etkilenen dosyalar:** `src/components/Contact/LiquidWave.js`, `src/components/Contact/index.js`, `DOCUMENTATION.md`, `DOKUMENTASYON.md`

@@ -1,5 +1,7 @@
 # Gorev Kaydi
 
+- 2026-04-21: Contact / LiquidWave performans: LiquidWave ~30 FPS tavan + cift physics adimi, 2D context onbellegi, document.visibility ile RAF durdurma; Contact glassSimple esigi 1024px, glassLens blur/displacement 32. Dosyalar: `LiquidWave.js`, `Contact/index.js`, DOCUMENTATION.md (Gorev 26).
+
 - 2026-04-06: Anasayfa kaplan goruntusu (logo) mobil/tablet (max-width: 960px) icin: dikeyde ters cevrildi (`scaleY(-1)`), ust kenara yaslandi (`justify-content: flex-start`, ust padding sifir + safe-area), ortalanma kaldirildi; masaustu gibi saga hizalama (`align-self: flex-end`, `margin-left: auto`, `justify-content: flex-end`). Dosya: `src/components/Home/index.scss`.
 
 - 2026-04-06 (2): Kaplan hâlâ tam dayali degildi cunku `App.scss` icindeki `.container` mobilde genis padding uyguluyordu. Cozum: `#home .container.home-page` ile ust ve sag padding sifirlandi (safe-area ustte), sol ve alt metin icin korundu; `.home-page` ic ice padding kaldirildi. Dosya: `src/components/Home/index.scss`.

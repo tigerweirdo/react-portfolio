@@ -10,6 +10,8 @@ const SY_RATIO = 0.25;
 const MAX_DROPS = 60;
 const AIR_DRAG = 0.99;
 const GRAVITY = 0.24;
+/** ~30 FPS: fizik + çizim maliyetini yaklaşık yarıya indirir */
+const MIN_FRAME_MS = 1000 / 30;
 
 function usePrefersReducedMotion() {
   const [reduced, setReduced] = useState(() =>
@@ -29,6 +31,8 @@ function usePrefersReducedMotion() {
 const LiquidWave = () => {
   const prefersReducedMotion = usePrefersReducedMotion();
   const canvasRef = useRef(null);
+  const canvasCtxRef = useRef(null);
+  const lastFrameTsRef = useRef(0);
   const containerRef = useRef(null);
   /** Throttle: ağır scroll gövdesi en fazla ~31/s */
   const scrollWorkLastRunRef = useRef(0);
@@ -61,6 +65,7 @@ const LiquidWave = () => {
     cv.height = r.height * dpr;
     cv.style.width = `${r.width}px`;
     cv.style.height = `${r.height}px`;
+    canvasCtxRef.current = cv.getContext('2d');
     const s = st.current;
     s.w = r.width;
     s.ht = r.height;
@@ -193,7 +198,11 @@ const LiquidWave = () => {
   const render = useCallback(() => {
     const cv = canvasRef.current;
     if (!cv) return;
-    const ctx = cv.getContext('2d');
+    let ctx = canvasCtxRef.current;
+    if (!ctx) {
+      ctx = cv.getContext('2d');
+      canvasCtxRef.current = ctx;
+    }
     if (!ctx) return;
 
     const s = st.current;
@@ -282,12 +291,23 @@ const LiquidWave = () => {
     }
   }, []);
 
-  animateRef.current = () => {
+  animateRef.current = (now) => {
+    const t =
+      typeof now === 'number' && Number.isFinite(now)
+        ? now
+        : performance.now();
+    const prev = lastFrameTsRef.current;
+    if (prev > 0 && t - prev < MIN_FRAME_MS) {
+      st.current.aid = requestAnimationFrame((n) => animateRef.current?.(n));
+      return;
+    }
+    lastFrameTsRef.current = t;
+
+    /* 30 FPS görüntülemede simülasyon hızını korumak için iki fizik adımı */
+    physics();
     physics();
     render();
-    st.current.aid = requestAnimationFrame(() => {
-      animateRef.current?.();
-    });
+    st.current.aid = requestAnimationFrame((n) => animateRef.current?.(n));
   };
 
   const onScroll = useCallback(() => {
@@ -352,14 +372,29 @@ const LiquidWave = () => {
     }
 
     resize();
+    lastFrameTsRef.current = 0;
+
+    const onVisibility = () => {
+      if (document.hidden) {
+        stop();
+      } else if (s.aid == null) {
+        lastFrameTsRef.current = 0;
+        s.aid = requestAnimationFrame((n) => animateRef.current?.(n));
+      }
+    };
+    document.addEventListener('visibilitychange', onVisibility);
+
     const sc = document.querySelector('.scroll-container');
     sc?.addEventListener('scroll', onScroll, { passive: true });
     const ro = new ResizeObserver(resize);
     if (containerRef.current) ro.observe(containerRef.current);
 
-    s.aid = requestAnimationFrame(() => animateRef.current?.());
+    if (!document.hidden) {
+      s.aid = requestAnimationFrame((n) => animateRef.current?.(n));
+    }
 
     return () => {
+      document.removeEventListener('visibilitychange', onVisibility);
       stop();
       sc?.removeEventListener('scroll', onScroll);
       ro.disconnect();
