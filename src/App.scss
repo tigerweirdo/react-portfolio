@@ -153,6 +153,17 @@ body {
     }
   }
 
+  /* Body mavi iken (#002fa7) beyaz section zemini dalganın altında şerit bırakıyordu */
+  &#contact {
+    background: transparent;
+
+    > .container {
+      min-height: 100vh;
+      min-height: 100dvh;
+      align-self: stretch;
+    }
+  }
+
   &.active {
     will-change: transform, opacity;
 

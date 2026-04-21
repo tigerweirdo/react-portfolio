@@ -812,3 +812,16 @@ Tüm 6 tespit edilen sorun düzeltildi. Scroll artık hem doğal hem de snap-tab
 3. `N` 140 → 80.
 
 **Etkilenen dosyalar:** `src/components/Contact/LiquidWave.js`, `DOCUMENTATION.md`
+
+---
+
+### Görev 25: Contact — LiquidWave altındaki beyaz şerit (21 Nisan 2026)
+
+**Sorun:** `#contact` `.page-section` zemini `$background-color` (beyaz) boyuyordu; Contact’ta `body` mavi olsa bile dalganın altında beyaz alan görünüyordu.
+
+**Yapılanlar:**
+
+1. **`src/App.scss`** — `&#contact`: `background: transparent`; doğrudan çocuk `.container` için `min-height: 100dvh` + `align-self: stretch` (içerik kısa kalsa da bölüm dolusu).
+2. **`LiquidWave.scss`** — `.liquid-wave-container` için `background-color: #002fa7` (gradient altı ile aynı dip rengi).
+
+**Etkilenen dosyalar:** `src/App.scss`, `src/components/Contact/LiquidWave.scss`, `DOCUMENTATION.md`
