@@ -1,33 +1,47 @@
-import React, { useRef, useEffect, memo } from "react";
+import React, { useRef, useEffect, useState, memo } from "react";
 
 /**
  * Hover "peek" alanı: opsiyonel video veya ikinci görsel.
- * Video oynatma yalnızca playbackEnabled true iken — aksi halde duraklatılır
- * (aynı anda birden fazla peek videosunun decode/oynatılmasını önler).
+ * Video src yalnızca oynatma aktifken set edilir — gereksiz indirme/decode önlenir.
  */
 const PeekInner = memo(({ peekVideo, innerSrc, playbackEnabled }) => {
   const videoRef = useRef(null);
+  const [activeSrc, setActiveSrc] = useState(null);
 
   useEffect(() => {
-    const el = videoRef.current;
-    if (!el || !peekVideo) return;
+    if (!peekVideo) {
+      setActiveSrc(null);
+      return;
+    }
     if (playbackEnabled) {
-      el.play?.().catch(() => {});
+      setActiveSrc(peekVideo);
     } else {
-      el.pause();
+      const el = videoRef.current;
+      if (el) {
+        el.pause();
+        el.currentTime = 0;
+      }
+      setActiveSrc(null);
     }
   }, [peekVideo, playbackEnabled]);
+
+  useEffect(() => {
+    if (!activeSrc || !playbackEnabled) return;
+    const el = videoRef.current;
+    if (!el) return;
+    el.play?.().catch(() => {});
+  }, [activeSrc, playbackEnabled]);
 
   if (peekVideo) {
     return (
       <video
         ref={videoRef}
         className="premium-card__inner-img premium-card__inner-video"
-        src={peekVideo}
+        src={activeSrc ?? undefined}
         muted
         loop
         playsInline
-        preload={playbackEnabled ? "metadata" : "none"}
+        preload="none"
         autoPlay={false}
         aria-hidden="true"
       />

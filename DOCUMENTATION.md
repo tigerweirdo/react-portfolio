@@ -782,3 +782,19 @@ Tüm 6 tespit edilen sorun düzeltildi. Scroll artık hem doğal hem de snap-tab
 **Zaten uygun / dokunulmayan:** `App.scss` `fadeInUp`, `sectionFadeIn`, `Portfolio` çoğunlukla `transform`/`opacity`; `LiquidWave` rAF (ayrı optimizasyon); admin SCSS (kapsam dışı bırakıldı).
 
 **Etkilenen dosyalar:** `src/components/Home/index.scss`, `Contact/index.js`, `Contact/index.scss`, `src/index.scss`, `src/App.scss`, `Portfolio/index.scss`, `About/index.js`, `About/index.scss`, `DOCUMENTATION.md`
+
+---
+
+### Görev 23: PeekInner — `activeSrc` ile video yükleme kontrolü (21 Nisan 2026)
+
+**İstek:** `playbackEnabled` false iken bile `src` set edilmesin; hover sonrası durdur, sıfırla, src kaldır.
+
+**Yapılanlar (`PeekInner.js`):**
+
+- Yerel state `activeSrc` (başlangıç `null`).
+- `playbackEnabled` true → `activeSrc = peekVideo`; ikinci `useEffect` ile `play()`.
+- `playbackEnabled` false → `pause()`, `currentTime = 0`, `activeSrc = null`.
+- `preload` sabit `"none"` (yük tamamen `src` ile).
+- `peekVideo` yoksa `activeSrc` temizlenir.
+
+**Etkilenen dosyalar:** `src/components/Portfolio/PeekInner.js`, `DOCUMENTATION.md`
