@@ -104,6 +104,9 @@ body {
   scroll-snap-type: none;
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
+  // Scroll'a bağlı efektlerin (parallax) bölüm offset'ini doğru ölçebilmesi için
+  // bölümlerin offsetParent'ı bu container olmalı.
+  position: relative;
 
   &::-webkit-scrollbar {
     width: 6px;

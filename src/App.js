@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useRef, useCallback, lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Home from './components/Home';
+import ScrollProgress from './components/Scrollytelling/ScrollProgress';
+import SectionNav from './components/Scrollytelling/SectionNav';
+import { ScrollContainerProvider } from './context/ScrollContainerContext';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './App.scss';
@@ -278,7 +281,13 @@ const App = () => {
         <Route
           path="/"
           element={(
+            <ScrollContainerProvider value={appContainerRef}>
             <div className="one-page-app">
+              <ScrollProgress containerRef={appContainerRef} />
+              <SectionNav
+                activeSection={activeSection}
+                onNavigate={scrollToSection}
+              />
               <div
                 ref={appContainerRef}
                 className="scroll-container"
@@ -358,6 +367,7 @@ const App = () => {
                 </section>
               </div>
             </div>
+            </ScrollContainerProvider>
           )}
         />
         <Route path="/admin/*" element={<Navigate to="/" replace />} />

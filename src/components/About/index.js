@@ -1,5 +1,6 @@
 import { useEffect, useRef, memo } from 'react'
 import { motion, useInView, useAnimation, useScroll, useTransform, useReducedMotion } from 'framer-motion'
+import { useScrollContainer } from '../../context/ScrollContainerContext'
 import './index.scss';
 
 // Static variant objeleri - bileşen dışında tanımlanarak her render'da yeniden oluşturulması engellenir
@@ -35,14 +36,19 @@ const About = memo(() => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: false, amount: 0.3 });
   const reduceMotion = useReducedMotion();
+  const scrollContainerRef = useScrollContainer();
 
+  // Gerçek scroll `.scroll-container` içinde döndüğü için container ref'i veriyoruz;
+  // aksi halde window scroll'u dinlenir ve robot parallax'ı hiç güncellenmez.
   const { scrollYProgress } = useScroll({
+    container: scrollContainerRef,
     target: ref,
     offset: ["start end", "end start"]
   });
 
-  const y = useTransform(scrollYProgress, [0, 1], [100, -100]);
-  const opacity = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0, 1, 1, 0]);
+  // Yalnızca dekoratif parallax scroll'a bağlı; içeriğin görünürlüğü (opacity)
+  // güvenilir olması için inView/controls ile yönetiliyor — asla kaybolmaz.
+  const y = useTransform(scrollYProgress, [0, 1], [60, -60]);
 
   useEffect(() => {
     if (isInView) {
@@ -50,19 +56,17 @@ const About = memo(() => {
     }
   }, [controls, isInView]);
 
-  const pageStyle = reduceMotion ? { opacity: 1 } : { opacity };
   const robotStyle = reduceMotion ? { y: 0 } : { y };
 
   const inViewClass = isInView ? 'about-page--in-view' : '';
 
   return (
-    <motion.div 
+    <motion.div
       ref={ref}
       className={`container about-page ${inViewClass}`}
       initial="hidden"
       animate={controls}
       variants={containerVariants}
-      style={pageStyle}
     >
       <motion.div 
         className="robot123"
