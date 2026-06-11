@@ -35,27 +35,14 @@ const Home = memo(({ scrollToSection }) => {
           CONTACT ME
         </motion.button>
       </div>
-      <motion.div
+      <motion.div 
         className="logo-container"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.6, delay: 0.3 }}
-      >
+      > 
         <Logo />
       </motion.div>
-
-      <motion.button
-        type="button"
-        className="scroll-cue"
-        onClick={() => scrollToSection('about')}
-        aria-label="Aşağı kaydır"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.6, delay: 0.9 }}
-      >
-        <span className="scroll-cue__text">Scroll</span>
-        <span className="scroll-cue__line" aria-hidden="true" />
-      </motion.button>
     </div>
   );
 });
