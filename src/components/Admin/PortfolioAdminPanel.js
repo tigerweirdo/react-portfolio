@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { db, storage, ensureAuth } from '../../firebase';
+import { db, ensureAuth } from '../../firebase';
+import { storage } from '../../firebase-storage';
 import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from 'firebase/firestore';
 import { ref as storageRef, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage"; // Storage fonksiyonları import edildi
 import { toast } from 'react-toastify'; // toast import edildi

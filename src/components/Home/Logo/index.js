@@ -1,7 +1,8 @@
 import React, { useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './index.scss';
-import imagePath from '../../../assets/images/1.png';
+import imageWebp from '../../../assets/images/1.webp';
+import imagePng from '../../../assets/images/1.png';
 
 const SECRET_CLICK_COUNT = 5;
 const SECRET_CLICK_TIMEOUT = 2000; // 2 saniye içinde 5 tıklama
@@ -31,7 +32,16 @@ const Logo = () => {
 
   return (
     <div className="logo-container" onClick={handleSecretClick}>
-      <img src={imagePath} alt="Dynamic" />
+      <picture>
+        <source srcSet={imageWebp} type="image/webp" />
+        <img
+          src={imagePng}
+          alt="Dynamic"
+          width="1024"
+          height="1024"
+          decoding="async"
+        />
+      </picture>
     </div>
   );
 }

@@ -1,7 +1,8 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, signInAnonymously } from 'firebase/auth';
-import { getStorage } from 'firebase/storage';
 import { getFirestore } from 'firebase/firestore';
+// NOT: firebase/storage yalnızca admin'de kullanılıyor; public bundle'a girmemesi
+// için ayrı modülde (./firebase-storage). Burada import ETMİYORUZ.
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY || "AIzaSyCEnUhLvqbZTFfLFhsDUUORyWbYFHG0V18",
@@ -12,13 +13,12 @@ const firebaseConfig = {
   appId: process.env.REACT_APP_FIREBASE_APP_ID || "1:247723789432:web:59e198796f96dee415f18d"
 };
 
-let app, auth, db, storage, firebaseEnabled = false;
+let app, auth, db, firebaseEnabled = false;
 
 try {
   app = initializeApp(firebaseConfig);
   auth = getAuth(app);
   db = getFirestore(app);
-  storage = getStorage(app);
   firebaseEnabled = true;
   console.log("[Firebase] Initialized successfully");
 } catch (error) {
@@ -26,7 +26,7 @@ try {
   firebaseEnabled = false;
 }
 
-export { auth, db, storage, firebaseEnabled };
+export { app, auth, db, firebaseEnabled };
 
 export const ensureAuth = async () => {
   if (!firebaseEnabled) return;

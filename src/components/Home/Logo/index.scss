@@ -11,10 +11,16 @@
   align-items: center;
   justify-content: center;
 
+  // <picture> kutu üretmesin; <img> doğrudan flex çocuğu gibi davransın
+  // (WebP + PNG fallback eklenince mevcut hizalama bozulmasın diye)
+  picture {
+    display: contents;
+  }
+
   img {
-    max-width: 100%; 
-    height: auto; 
-    display: block; 
+    max-width: 100%;
+    height: auto;
+    display: block;
   }
 }
 
