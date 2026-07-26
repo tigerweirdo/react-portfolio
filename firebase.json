@@ -2,9 +2,12 @@
   "firestore": {
     "rules": "firestore.rules"
   },
-  "storage": {
-    "rules": "storage.rules"
-  },
+  "storage": [
+    {
+      "bucket": "portfolio-b0e27.appspot.com",
+      "rules": "storage.rules"
+    }
+  ],
   "hosting": {
     "public": "build",
     "rewrites": [
