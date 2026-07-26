@@ -1,5 +1,5 @@
 // animate.css ve loaders.css kaldırıldı - sadece kullanılan keyframe'ler aşağıda tanımlı
-@import './variables';
+@use './variables' as *;
 
 /* Gövde metni: LCP’yi kilitlememek için isteğe bağlı — sistem fontu önce */
 @font-face {
@@ -60,14 +60,11 @@ html {
   }
 }
 
+// Yalnızca layout. Tipografi ve renk index.scss'teki tek `body`
+// kuralında tanımlıdır — burada tekrar edilmez.
 body {
-  margin: 0;
-  padding: 0;
   overflow: auto;
   overflow-x: hidden;
-  font-family: 'Helvetica Neue', sans-serif;
-  background-color: $background-color;
-  color: $text-color;
   height: auto;
   width: 100%;
   position: static;
@@ -115,7 +112,7 @@ body {
 
   &::-webkit-scrollbar-thumb {
     background: rgba($accent-color-1, 0.3);
-    border-radius: 3px;
+    border-radius: $radius-sm;
 
     &:hover {
       background: rgba($primary-color, 0.5);
@@ -153,7 +150,7 @@ body {
     }
   }
 
-  /* Body mavi iken (#002fa7) beyaz section zemini dalganın altında şerit bırakıyordu */
+  /* Body mavi iken ($wave-deep) beyaz section zemini dalganın altında şerit bırakıyordu */
   &#contact {
     background: transparent;
 
@@ -164,13 +161,16 @@ body {
     }
   }
 
-  &.active {
-    will-change: transform, opacity;
-
-    .container {
-      animation: sectionFadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-    }
-  }
+  // NOT: burada eskiden `&.active .container { animation: sectionFadeIn }`
+  // vardı. `active` sınıfı scroll konumuna göre eklenip kaldırıldığı için
+  // CSS animasyonu HER seferinde baştan başlıyordu: en alta inildiğinde
+  // Contact bölümü aktif olur olmaz tüm içerik yeniden fade-in yapıyor,
+  // bölüm bir daha yükleniyormuş gibi görünüyordu.
+  //
+  // Her bölümün zaten kendi giriş animasyonu var (About stagger,
+  // Contact form, Portfolio kartları); bu ikinci katman yalnızca gürültüydü.
+  // Kalıcı `will-change` de her aktif bölüm için gereksiz bir compositor
+  // katmanı ayırıyordu.
 }
 
 // Container styles
@@ -178,7 +178,7 @@ body {
   width: 100%;
   height: 100%;
   max-width: none;
-  padding: 2rem;
+  padding: $space-6;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -214,8 +214,8 @@ body {
   justify-content: center;
   box-sizing: border-box;
   color: $secondary-text-color;
-  font-size: 0.875rem;
-  font-family: 'Helvetica Neue', sans-serif;
+  font-size: $fs-small;
+  font-family: $font-body;
 }
 
 // Loading state
@@ -224,33 +224,21 @@ body {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  font-size: 18px;
+  font-size: $fs-body-lg;
   color: $primary-color;
   background-color: $background-color;
 }
 
-// Daha smooth animasyonlar
-@keyframes sectionFadeIn {
-  0% {
-    opacity: 0.8;
-    transform: translate3d(0, 20px, 0);
-  }
-
-  100% {
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
-  }
-}
 
 // RESPONSIVE - Tablet
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: #{$bp-lg}) {
   .container {
     padding: 2rem 1.5rem;
   }
 }
 
 // RESPONSIVE - Mobil
-@media screen and (max-width: 768px) {
+@media screen and (max-width: #{$bp-md}) {
   .page-section {
     min-height: 100vh;
     min-height: 100dvh;
@@ -274,7 +262,7 @@ body {
 }
 
 // RESPONSIVE - Küçük mobil
-@media screen and (max-width: 480px) {
+@media screen and (max-width: #{$bp-sm}) {
   .page-section {
     .container {
       padding: 2.5rem 1rem;
@@ -307,18 +295,5 @@ body {
     scroll-behavior: auto;
   }
 
-  .page-section {
-    &.active .container {
-      animation: none;
-    }
-  }
 
-  @keyframes sectionFadeIn {
-
-    0%,
-    100% {
-      opacity: 1;
-      transform: none;
-    }
-  }
 }

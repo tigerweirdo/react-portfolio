@@ -1,9 +1,13 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, signInAnonymously } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
-// NOT: firebase/storage yalnızca admin'de kullanılıyor; public bundle'a girmemesi
-// için ayrı modülde (./firebase-storage). Burada import ETMİYORUZ.
 
+// NOT: firebase/auth ve firebase/storage yalnızca admin tarafında kullanılıyor.
+// Public bundle'a girmemeleri için ayrı modüllerdeler (./firebase-auth,
+// ./firebase-storage). Burada import ETMİYORUZ.
+//
+// Buradaki değerler Firebase'in "web app config"idir; tasarımı gereği
+// istemciye açıktır ve gizli anahtar değildir. Asıl koruma firestore.rules
+// ve storage.rules dosyalarındadır.
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY || "AIzaSyCEnUhLvqbZTFfLFhsDUUORyWbYFHG0V18",
   authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN || "portfolio-b0e27.firebaseapp.com",
@@ -13,32 +17,19 @@ const firebaseConfig = {
   appId: process.env.REACT_APP_FIREBASE_APP_ID || "1:247723789432:web:59e198796f96dee415f18d"
 };
 
-let app, auth, db, firebaseEnabled = false;
+let app = null;
+let db = null;
+let firebaseEnabled = false;
 
 try {
   app = initializeApp(firebaseConfig);
-  auth = getAuth(app);
   db = getFirestore(app);
   firebaseEnabled = true;
-  console.log("[Firebase] Initialized successfully");
 } catch (error) {
-  console.warn("[Firebase] Initialization failed, app will run without Firebase:", error.message);
+  console.warn("[Firebase] Başlatılamadı, site Firebase'siz çalışacak:", error.message);
+  app = null;
+  db = null;
   firebaseEnabled = false;
 }
 
-export { app, auth, db, firebaseEnabled };
-
-export const ensureAuth = async () => {
-  if (!firebaseEnabled) return;
-  if (!auth.currentUser) {
-    try {
-      const result = await signInAnonymously(auth);
-      console.log("[Firebase] Anonim giriş başarılı, UID:", result.user.uid);
-    } catch (authError) {
-      console.error("[Firebase] Anonim giriş BAŞARISIZ:", authError.code, authError.message);
-      throw authError;
-    }
-  } else {
-    console.log("[Firebase] Zaten giriş yapılmış, UID:", auth.currentUser.uid);
-  }
-};
+export { app, db, firebaseEnabled };

@@ -1,11 +1,36 @@
 import React, { useRef, useEffect, useCallback, useState } from 'react';
 import './LiquidWave.scss';
 
-const N = 56;
-const SPRING = 0.012;
-const DAMP = 0.992;
-const SPREAD = 0.22;
+/** Yüzey çözünürlüğü. 56 kolon 1280px'de ~23px/kolon demekti — su için fazla kaba. */
+const N = 96;
+/**
+ * Etkileşimli dalgacıklar (scroll / damla çarpması) için yay-kütle sistemi.
+ * Eski değerler (SPRING 0.012, DAMP 0.992) bozulmaları çok uzun süre
+ * canlı tutuyordu; sonuç jelatinimsi, lastik bir yüzeydi. Su daha sert
+ * geri gelir ve daha hızlı sönümlenir.
+ */
+const SPRING = 0.022;
+const DAMP = 0.976;
+const SPREAD = 0.18;
 const PASSES = 2;
+
+/**
+ * Ortam kabarması (swell): birbirine oranı irrasyonel, farklı dalga boyu ve
+ * hızda katmanların toplamı. Tek bir sinüs "duran dalga" gibi görünür;
+ * üst üste binen ve farklı yönlere ilerleyen katmanlar gözle
+ * tekrar yakalanamayan, organik bir su yüzeyi verir.
+ *
+ * len : dalga boyu (genişliğin oranı)   spd : açısal hız   dir : ilerleme yönü
+ */
+const SWELL = [
+  { amp: 4.5, len: 0.90,  spd: 0.50, phase: 0.0, dir: -1 },
+  { amp: 2.4, len: 0.47,  spd: 0.85, phase: 1.7, dir: -1 },
+  { amp: 1.2, len: 0.26,  spd: 1.30, phase: 3.1, dir: +1 }, // ters yön → girişim
+  { amp: 0.6, len: 0.145, spd: 2.00, phase: 0.6, dir: -1 },
+];
+/** Tüm yüzeyin çok yavaş alçalıp yükselmesi — "nefes alma" */
+const TIDE_AMP = 1.6;
+const TIDE_SPD = 0.13;
 const SY_RATIO = 0.25;
 const MAX_DROPS = 28;
 const AIR_DRAG = 0.99;
@@ -74,11 +99,30 @@ const LiquidWave = () => {
     s.dpr = dpr;
   }, []);
 
-  const getSurfaceY = useCallback((s, worldX) => {
-    const col = Math.floor((worldX / s.w) * N);
-    const clamped = Math.max(0, Math.min(col, N - 1));
-    return s.ht * SY_RATIO - s.h[clamped];
+  /**
+   * Ortam kabarmasının verilen kolondaki yüksekliği. Yay sistemine
+   * enerji pompalamak yerine analitik olarak hesaplanıp yüzeye eklenir:
+   * böylece ortam hareketi ile çarpma dalgacıkları birbirine karışmaz.
+   */
+  const swellAt = useCallback((s, col) => {
+    const u = col / (N - 1);
+    const t = s.t;
+    let y = TIDE_AMP * Math.sin(t * TIDE_SPD);
+    for (let k = 0; k < SWELL.length; k++) {
+      const { amp, len, spd, phase, dir } = SWELL[k];
+      y += amp * Math.sin((2 * Math.PI * u) / len + dir * spd * t + phase);
+    }
+    return y;
   }, []);
+
+  const getSurfaceY = useCallback(
+    (s, worldX) => {
+      const col = Math.floor((worldX / s.w) * N);
+      const clamped = Math.max(0, Math.min(col, N - 1));
+      return s.ht * SY_RATIO - (s.h[clamped] + swellAt(s, clamped));
+    },
+    [swellAt]
+  );
 
   const spawnSplash = useCallback((s, x, surfY, impactForce) => {
     const cnt = Math.min(Math.floor(impactForce * 2.5), 10);
@@ -128,11 +172,11 @@ const LiquidWave = () => {
       }
     }
 
-    s.t += 0.02;
-    const t = s.t;
-    for (let i = 0; i < N; i++) {
-      v[i] += Math.sin(i * 0.1 + t * 0.5) * 0.015;
-    }
+    // Ortam hareketi artık burada üretilmiyor. Eskiden tek bir sinüs
+    // doğrudan hız dizisine ekleniyordu (v[i] += sin(i*0.1 + t*0.5)) ve
+    // yüzeyi tek frekanslı, mekanik bir salınıma kilitliyordu.
+    // Kabarma render/çarpışma anında swellAt() ile ekleniyor.
+    s.t += 0.05;
 
     for (let i = s.drops.length - 1; i >= 0; i--) {
       const d = s.drops[i];
@@ -215,19 +259,45 @@ const LiquidWave = () => {
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, w, ht);
 
+    // Yüzey noktaları = etkileşimli dalgacık + ortam kabarması
     const points = [];
     for (let i = 0; i < N; i++) {
-      points.push({ x: i * cw, y: sy - hts[i] });
+      points.push({ x: i * cw, y: sy - (hts[i] + swellAt(s, i)) });
     }
 
+    // Bir yüzey eğrisini AÇIK OLAN alt yola ekler. `lift` ile aynı eğri
+    // dikeyde kaydırılarak arka katman elde edilir.
+    //
+    // DİKKAT: burada `moveTo` KULLANILMAZ. Çağıran taraf poligonu zaten
+    // sol kenardan başlatmış oluyor; `moveTo` yeni bir alt yol (subpath)
+    // açar ve poligonu ortadan ikiye böler — sonuç, su kütlesi yerine
+    // çapraz bir kama olur.
+    const tracePath = (lift) => {
+      ctx.lineTo(points[0].x, points[0].y + lift);
+      for (let i = 1; i < points.length; i++) {
+        const mx = (points[i - 1].x + points[i].x) * 0.5;
+        const my = (points[i - 1].y + points[i].y) * 0.5 + lift;
+        ctx.quadraticCurveTo(points[i - 1].x, points[i - 1].y + lift, mx, my);
+      }
+    };
+
+    // --- Arka katman: paralaks kabarma. Tek bir düz yüzey yerine
+    //     üst üste iki su kütlesi görmek hacim/derinlik hissi verir.
+    ctx.beginPath();
+    ctx.moveTo(-10, ht + 10);
+    ctx.lineTo(-10, points[0].y + 9);
+    tracePath(9);
+    ctx.lineTo(w + 10, points[points.length - 1].y + 9);
+    ctx.lineTo(w + 10, ht + 10);
+    ctx.closePath();
+    ctx.fillStyle = 'rgba(0, 47, 167, 0.55)';
+    ctx.fill();
+
+    // --- Ana su kütlesi
     ctx.beginPath();
     ctx.moveTo(-10, ht + 10);
     ctx.lineTo(-10, points[0].y);
-    for (let i = 1; i < points.length; i++) {
-      const mx = (points[i - 1].x + points[i].x) * 0.5;
-      const my = (points[i - 1].y + points[i].y) * 0.5;
-      ctx.quadraticCurveTo(points[i - 1].x, points[i - 1].y, mx, my);
-    }
+    tracePath(0);
     ctx.lineTo(w + 10, points[points.length - 1].y);
     ctx.lineTo(w + 10, ht + 10);
     ctx.closePath();
@@ -240,17 +310,23 @@ const LiquidWave = () => {
     ctx.fillStyle = wg;
     ctx.fill();
 
+    // --- Tepe ışığı: sabit 4px beyaz çizgi lastik bir kontur gibi
+    //     duruyordu. Çizgi kalınlığı/opaklığı yerel eğime göre değişince
+    //     ışık yalnızca dalga tepelerinde parlar.
     ctx.save();
-    ctx.beginPath();
-    ctx.moveTo(points[0].x, points[0].y);
+    ctx.lineCap = 'round';
     for (let i = 1; i < points.length; i++) {
-      const mx = (points[i - 1].x + points[i].x) * 0.5;
-      const my = (points[i - 1].y + points[i].y) * 0.5;
-      ctx.quadraticCurveTo(points[i - 1].x, points[i - 1].y, mx, my);
+      const p0 = points[i - 1];
+      const p1 = points[i];
+      const slope = Math.min(Math.abs(p1.y - p0.y) / cw, 1);
+      const crest = 1 - slope;            // düz tepeler parlar, dik yamaçlar sönük
+      ctx.beginPath();
+      ctx.moveTo(p0.x, p0.y);
+      ctx.lineTo(p1.x, p1.y);
+      ctx.strokeStyle = `rgba(255, 255, 255, ${0.14 + crest * 0.34})`;
+      ctx.lineWidth = 1.4 + crest * 1.8;
+      ctx.stroke();
     }
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
-    ctx.lineWidth = 4;
-    ctx.stroke();
     ctx.restore();
 
     if (splashes.length > 0) {
@@ -291,7 +367,7 @@ const LiquidWave = () => {
         ctx.restore();
       }
     }
-  }, []);
+  }, [swellAt]);
 
   animateRef.current = (now) => {
     const t =

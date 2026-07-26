@@ -1,13 +1,4 @@
-$a-bg:        #0d0d0d;
-$a-surface:   #161616;
-$a-surface2:  #1f1f1f;
-$a-border:    rgba(240, 237, 232, 0.08);
-$a-border2:   rgba(240, 237, 232, 0.14);
-$a-text:      #f0ede8;
-$a-muted:     rgba(240, 237, 232, 0.40);
-$a-danger:    #e05c5c;
-$a-radius:    6px;
-$a-transition: 0.2s ease;
+@use '../../variables' as *;
 
 .confirm-overlay {
   position: fixed;
@@ -17,8 +8,8 @@ $a-transition: 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px;
-  animation: confirmFadeIn 0.15s ease;
+  padding: $space-5;
+  animation: confirmFadeIn $dur-fast $ease-standard;
 }
 
 @keyframes confirmFadeIn {
@@ -41,11 +32,11 @@ $a-transition: 0.2s ease;
   background: $a-surface;
   border: 1px solid $a-border2;
   border-radius: $a-radius;
-  padding: 40px;
+  padding: $space-7;
   max-width: 420px;
   width: 100%;
   position: relative;
-  animation: confirmSlideUp 0.2s ease;
+  animation: confirmSlideUp $dur-fast ease;
 
   .confirm-close {
     position: absolute;
@@ -54,9 +45,9 @@ $a-transition: 0.2s ease;
     background: none;
     border: none;
     color: $a-muted;
-    font-size: 0.9rem;
+    font-size: $fs-small;
     cursor: pointer;
-    padding: 4px;
+    padding: $space-1;
     display: flex;
     align-items: center;
     transition: color $a-transition;
@@ -68,16 +59,16 @@ $a-transition: 0.2s ease;
   .confirm-icon-wrapper {
     width: 48px;
     height: 48px;
-    border-radius: 50%;
+    border-radius: $radius-full;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 20px;
+    margin-bottom: $space-5;
     background: rgba(224, 92, 92, 0.12);
   }
 
   .confirm-icon {
-    font-size: 1.3rem;
+    font-size: $fs-xl;
     color: $a-danger;
   }
 
@@ -86,36 +77,36 @@ $a-transition: 0.2s ease;
       background: rgba(217, 119, 6, 0.12);
     }
     .confirm-icon {
-      color: #d97706;
+      color: $a-warning;
     }
   }
 
   .confirm-title {
-    font-family: 'Coolvetica', sans-serif;
-    font-size: 1.8rem;
+    font-family: $font-display;
+    font-size: $fs-h2;
     color: $a-text;
     font-weight: 400;
-    margin: 0 0 12px;
+    margin: 0 0 $space-3;
   }
 
   .confirm-message {
-    font-family: 'Helvetica Neue', sans-serif;
-    font-size: 0.85rem;
+    font-family: $font-body;
+    font-size: $fs-small;
     color: $a-muted;
     line-height: 1.6;
-    margin: 0 0 32px;
+    margin: 0 0 $space-6;
   }
 
   .confirm-actions {
     display: flex;
-    gap: 12px;
+    gap: $space-3;
 
     button {
       flex: 1;
-      padding: 12px;
+      padding: $space-3;
       border-radius: $a-radius;
-      font-family: 'Helvetica Neue', sans-serif;
-      font-size: 0.85rem;
+      font-family: $font-body;
+      font-size: $fs-small;
       cursor: pointer;
       transition: opacity $a-transition;
     }
@@ -131,7 +122,7 @@ $a-transition: 0.2s ease;
 
     .confirm-ok-btn {
       border: none;
-      color: #fff;
+      color: $a-on-accent;
 
       &.danger {
         background: $a-danger;
@@ -139,7 +130,7 @@ $a-transition: 0.2s ease;
       }
 
       &.warning {
-        background: #d97706;
+        background: $a-warning;
         &:hover:not(:disabled) { opacity: 0.85; }
       }
 
@@ -148,8 +139,8 @@ $a-transition: 0.2s ease;
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: #{$bp-sm}) {
   .confirm-dialog {
-    padding: 28px 24px;
+    padding: $space-6 $space-5;
   }
 }

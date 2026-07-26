@@ -1,15 +1,4 @@
-$a-bg:        #0d0d0d;
-$a-surface:   #161616;
-$a-surface2:  #1f1f1f;
-$a-border:    rgba(240, 237, 232, 0.08);
-$a-border2:   rgba(240, 237, 232, 0.14);
-$a-text:      #f0ede8;
-$a-muted:     rgba(240, 237, 232, 0.40);
-$a-accent:    #f0ede8;
-$a-danger:    #e05c5c;
-$a-success:   #5cb85c;
-$a-radius:    6px;
-$a-transition: 0.2s ease;
+@use '../../variables' as *;
 
 // ===========================
 // LOADING
@@ -27,14 +16,14 @@ $a-transition: 0.2s ease;
 .pm-add-btn {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 10px 20px;
+  gap: $space-2;
+  padding: $space-3 $space-5;
   background: $a-text;
   color: $a-bg;
   border: none;
   border-radius: $a-radius;
-  font-family: 'Helvetica Neue', sans-serif;
-  font-size: 0.85rem;
+  font-family: $font-body;
+  font-size: $fs-small;
   font-weight: 500;
   letter-spacing: 0.5px;
   cursor: pointer;
@@ -51,21 +40,21 @@ $a-transition: 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 0;
+  padding: $space-4 0;
   border-bottom: 1px solid $a-border;
   margin-bottom: 0;
-  gap: 16px;
+  gap: $space-4;
 }
 
 .pm-search {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: $space-3;
   flex: 1;
 
   svg {
     color: $a-muted;
-    font-size: 0.8rem;
+    font-size: $fs-sm;
     flex-shrink: 0;
   }
 
@@ -74,8 +63,8 @@ $a-transition: 0.2s ease;
     border: none;
     outline: none;
     color: $a-text;
-    font-family: 'Helvetica Neue', sans-serif;
-    font-size: 0.85rem;
+    font-family: $font-body;
+    font-size: $fs-small;
     width: 100%;
 
     &::placeholder { color: $a-muted; }
@@ -85,16 +74,16 @@ $a-transition: 0.2s ease;
 .pm-controls {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: $space-2;
 
   button {
     background: none;
     border: 1px solid $a-border;
     color: $a-muted;
-    padding: 6px 10px;
+    padding: $space-2 $space-3;
     border-radius: $a-radius;
     cursor: pointer;
-    font-size: 0.75rem;
+    font-size: $fs-xs;
     transition: all $a-transition;
     display: flex;
     align-items: center;
@@ -112,10 +101,10 @@ $a-transition: 0.2s ease;
 .pm-items.grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1px;
+  gap: $hairline;
   background: $a-border;
   border: 1px solid $a-border;
-  margin-top: 20px;
+  margin-top: $space-5;
 
   .pm-card {
     background: $a-bg;
@@ -128,11 +117,11 @@ $a-transition: 0.2s ease;
     }
 
     .card-body {
-      padding: 16px;
+      padding: $space-4;
     }
 
     .card-actions {
-      padding: 12px 16px;
+      padding: $space-3 $space-4;
     }
   }
 }
@@ -147,8 +136,8 @@ $a-transition: 0.2s ease;
     display: grid;
     grid-template-columns: 80px 1fr auto auto;
     align-items: center;
-    gap: 20px;
-    padding: 16px 0;
+    gap: $space-5;
+    padding: $space-4 0;
     border-bottom: 1px solid $a-border;
     background: transparent;
 
@@ -189,7 +178,7 @@ $a-transition: 0.2s ease;
       height: 100%;
       object-fit: cover;
       display: block;
-      transition: transform 0.4s ease;
+      transition: transform $dur-base ease;
     }
 
     &:hover img {
@@ -203,7 +192,7 @@ $a-transition: 0.2s ease;
       align-items: center;
       justify-content: center;
       color: $a-muted;
-      font-size: 1.5rem;
+      font-size: $fs-h3;
     }
   }
 
@@ -212,21 +201,21 @@ $a-transition: 0.2s ease;
   }
 
   .card-name {
-    font-family: 'Coolvetica', sans-serif;
-    font-size: 1.2rem;
+    font-family: $font-display;
+    font-size: $fs-lg;
     font-weight: 400;
     color: $a-text;
-    margin: 0 0 6px;
+    margin: 0 0 $space-2;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
 
   .card-desc {
-    font-family: 'Helvetica Neue', sans-serif;
-    font-size: 0.78rem;
+    font-family: $font-body;
+    font-size: $fs-sm;
     color: $a-muted;
-    margin: 0 0 8px;
+    margin: 0 0 $space-2;
     line-height: 1.5;
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -238,8 +227,8 @@ $a-transition: 0.2s ease;
     display: inline-flex;
     align-items: center;
     gap: 5px;
-    font-family: 'Helvetica Neue', sans-serif;
-    font-size: 0.72rem;
+    font-family: $font-body;
+    font-size: $fs-xs;
     color: $a-muted;
     text-decoration: none;
     letter-spacing: 0.5px;
@@ -251,22 +240,22 @@ $a-transition: 0.2s ease;
   .card-actions {
     display: flex;
     border-top: 1px solid $a-border;
-    gap: 8px;
+    gap: $space-2;
 
     button {
       flex: 1;
-      padding: 8px;
+      padding: $space-2;
       background: none;
       border: 1px solid $a-border;
       color: $a-muted;
       border-radius: $a-radius;
       cursor: pointer;
-      font-family: 'Helvetica Neue', sans-serif;
-      font-size: 0.75rem;
+      font-family: $font-body;
+      font-size: $fs-xs;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
+      gap: $space-2;
       transition: all $a-transition;
 
       &.action-edit:hover { color: $a-text; border-color: $a-border2; }
@@ -280,30 +269,30 @@ $a-transition: 0.2s ease;
 // ===========================
 .pm-empty {
   text-align: center;
-  padding: 60px 24px;
+  padding: $space-8 $space-5;
   border: 1px solid $a-border;
   border-radius: $a-radius;
-  margin-top: 20px;
+  margin-top: $space-5;
 
   .empty-icon {
-    font-size: 2rem;
+    font-size: $fs-h2;
     color: $a-muted;
-    margin-bottom: 16px;
+    margin-bottom: $space-4;
   }
 
   h3 {
-    font-family: 'Coolvetica', sans-serif;
-    font-size: 1.4rem;
+    font-family: $font-display;
+    font-size: $fs-h3;
     font-weight: 400;
     color: $a-text;
-    margin: 0 0 6px;
+    margin: 0 0 $space-2;
   }
 
   p {
-    font-family: 'Helvetica Neue', sans-serif;
-    font-size: 0.85rem;
+    font-family: $font-body;
+    font-size: $fs-small;
     color: $a-muted;
-    margin: 0 0 20px;
+    margin: 0 0 $space-5;
   }
 }
 
@@ -317,17 +306,17 @@ $a-transition: 0.2s ease;
 .pm-back-btn {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: $space-2;
   background: none;
   border: none;
   color: $a-muted;
-  font-family: 'Helvetica Neue', sans-serif;
-  font-size: 0.8rem;
+  font-family: $font-body;
+  font-size: $fs-sm;
   letter-spacing: 1px;
   text-transform: uppercase;
   cursor: pointer;
   padding: 0;
-  margin-bottom: 40px;
+  margin-bottom: $space-7;
   transition: color $a-transition;
 
   &:hover { color: $a-text; }
@@ -338,16 +327,16 @@ $a-transition: 0.2s ease;
 }
 
 .pm-field {
-  margin-bottom: 32px;
+  margin-bottom: $space-6;
 
   label {
     display: block;
-    font-family: 'Courier New', monospace;
-    font-size: 0.65rem;
+    font-family: $font-mono;
+    font-size: $fs-label;
     color: $a-muted;
     letter-spacing: 2px;
     text-transform: uppercase;
-    margin-bottom: 8px;
+    margin-bottom: $space-2;
   }
 
   input, textarea {
@@ -356,10 +345,10 @@ $a-transition: 0.2s ease;
     border: none;
     border-bottom: 1px solid $a-border2;
     outline: none;
-    padding: 12px 0;
+    padding: $space-3 0;
     color: $a-text;
-    font-family: 'Helvetica Neue', sans-serif;
-    font-size: 0.95rem;
+    font-family: $font-body;
+    font-size: $fs-small;
     box-sizing: border-box;
     transition: border-color $a-transition;
 
@@ -383,22 +372,22 @@ $a-transition: 0.2s ease;
 
   .field-error {
     display: block;
-    font-family: 'Helvetica Neue', sans-serif;
-    font-size: 0.75rem;
+    font-family: $font-body;
+    font-size: $fs-xs;
     color: $a-danger;
-    margin-top: 6px;
+    margin-top: $space-2;
   }
 
   .field-meta {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
-    margin-top: 4px;
+    margin-top: $space-1;
   }
 
   .char-counter {
-    font-family: 'Courier New', monospace;
-    font-size: 0.68rem;
+    font-family: $font-mono;
+    font-size: $fs-label;
     color: rgba(240, 237, 232, 0.25);
     margin-left: auto;
   }
@@ -407,7 +396,7 @@ $a-transition: 0.2s ease;
 .pm-label-with-icon {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: $space-2;
 
   svg {
     flex-shrink: 0;
@@ -416,16 +405,16 @@ $a-transition: 0.2s ease;
 }
 
 .pm-field-hint {
-  font-family: 'Helvetica Neue', sans-serif;
-  font-size: 0.78rem;
+  font-family: $font-body;
+  font-size: $fs-sm;
   color: $a-muted;
   line-height: 1.45;
-  margin: 0 0 12px 0;
+  margin: 0 0 $space-3 0;
 }
 
 .pm-file-input {
-  margin-top: 4px;
-  font-size: 0.8rem;
+  margin-top: $space-1;
+  font-size: $fs-sm;
   color: $a-muted;
   cursor: pointer;
   width: 100%;
@@ -434,7 +423,7 @@ $a-transition: 0.2s ease;
 
 .pm-peek-preview {
   position: relative;
-  margin-bottom: 12px;
+  margin-bottom: $space-3;
   max-width: 360px;
   border-radius: $a-radius;
   overflow: hidden;
@@ -446,7 +435,7 @@ $a-transition: 0.2s ease;
   width: 100%;
   max-height: 200px;
   object-fit: contain;
-  background: #000;
+  background: $media-bg;
 }
 
 .pm-peek-remove {
@@ -459,7 +448,7 @@ $a-transition: 0.2s ease;
   align-items: center;
   justify-content: center;
   border: none;
-  border-radius: 50%;
+  border-radius: $radius-full;
   background: rgba(0, 0, 0, 0.55);
   color: $a-text;
   cursor: pointer;
@@ -472,7 +461,7 @@ $a-transition: 0.2s ease;
 
 .pm-main-preview {
   position: relative;
-  margin-bottom: 12px;
+  margin-bottom: $space-3;
   max-width: 100%;
   border-radius: $a-radius;
   overflow: hidden;
@@ -484,26 +473,26 @@ $a-transition: 0.2s ease;
   width: 100%;
   max-height: 280px;
   object-fit: contain;
-  background: #000;
+  background: $media-bg;
 }
 
 .pm-form-actions {
   display: flex;
   justify-content: flex-end;
-  gap: 12px;
-  margin-top: 40px;
-  padding-top: 24px;
+  gap: $space-3;
+  margin-top: $space-7;
+  padding-top: $space-5;
   border-top: 1px solid $a-border;
 }
 
 .pm-cancel-btn {
-  padding: 12px 24px;
+  padding: $space-3 $space-5;
   border: 1px solid $a-border2;
   border-radius: $a-radius;
   background: transparent;
   color: $a-muted;
-  font-family: 'Helvetica Neue', sans-serif;
-  font-size: 0.85rem;
+  font-family: $font-body;
+  font-size: $fs-small;
   cursor: pointer;
   transition: color $a-transition;
 
@@ -512,12 +501,12 @@ $a-transition: 0.2s ease;
 }
 
 .pm-submit-btn {
-  padding: 14px 40px;
+  padding: $space-4 $space-7;
   background: $a-text;
   color: $a-bg;
   border: none;
-  font-family: 'Coolvetica', sans-serif;
-  font-size: 1.1rem;
+  font-family: $font-display;
+  font-size: $fs-lg;
   cursor: pointer;
   border-radius: $a-radius;
   transition: opacity $a-transition;
@@ -529,7 +518,7 @@ $a-transition: 0.2s ease;
 // ===========================
 // RESPONSIVE
 // ===========================
-@media (max-width: 768px) {
+@media (max-width: #{$bp-md}) {
   .pm-toolbar {
     flex-direction: column;
     align-items: stretch;
@@ -545,7 +534,7 @@ $a-transition: 0.2s ease;
 
   .pm-items.list .pm-card {
     grid-template-columns: 60px 1fr auto;
-    gap: 12px;
+    gap: $space-3;
 
     .card-thumb {
       width: 60px;
@@ -553,12 +542,12 @@ $a-transition: 0.2s ease;
 
     .card-actions {
       flex-direction: column;
-      gap: 4px;
+      gap: $space-1;
     }
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: #{$bp-sm}) {
   .pm-items.grid {
     grid-template-columns: 1fr;
   }

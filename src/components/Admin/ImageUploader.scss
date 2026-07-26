@@ -1,23 +1,14 @@
-$a-bg:        #0d0d0d;
-$a-surface:   #161616;
-$a-surface2:  #1f1f1f;
-$a-border:    rgba(240, 237, 232, 0.08);
-$a-border2:   rgba(240, 237, 232, 0.14);
-$a-text:      #f0ede8;
-$a-muted:     rgba(240, 237, 232, 0.40);
-$a-danger:    #e05c5c;
-$a-radius:    6px;
-$a-transition: 0.2s ease;
+@use '../../variables' as *;
 
 .image-uploader {
   .uploader-label {
     display: block;
-    font-family: 'Courier New', monospace;
-    font-size: 0.65rem;
+    font-family: $font-mono;
+    font-size: $fs-label;
     color: $a-muted;
     letter-spacing: 2px;
     text-transform: uppercase;
-    margin-bottom: 8px;
+    margin-bottom: $space-2;
   }
 
   .uploader-hidden-input {
@@ -28,7 +19,7 @@ $a-transition: 0.2s ease;
 .uploader-dropzone {
   border: 1px dashed $a-border2;
   border-radius: $a-radius;
-  padding: 32px;
+  padding: $space-6;
   text-align: center;
   cursor: pointer;
   transition: border-color $a-transition, background $a-transition;
@@ -44,19 +35,19 @@ $a-transition: 0.2s ease;
   }
 
   .dropzone-icon {
-    font-size: 2rem;
+    font-size: $fs-h2;
     color: $a-muted;
-    margin-bottom: 12px;
+    margin-bottom: $space-3;
     display: block;
     margin-left: auto;
     margin-right: auto;
   }
 
   .dropzone-text {
-    font-family: 'Helvetica Neue', sans-serif;
-    font-size: 0.8rem;
+    font-family: $font-body;
+    font-size: $fs-sm;
     color: $a-muted;
-    margin: 0 0 4px;
+    margin: 0 0 $space-1;
     line-height: 1.5;
   }
 
@@ -67,8 +58,8 @@ $a-transition: 0.2s ease;
   }
 
   .dropzone-hint {
-    font-family: 'Helvetica Neue', sans-serif;
-    font-size: 0.72rem;
+    font-family: $font-body;
+    font-size: $fs-xs;
     color: rgba(240, 237, 232, 0.25);
     margin: 0;
   }
@@ -96,7 +87,7 @@ $a-transition: 0.2s ease;
     right: 8px;
     width: 28px;
     height: 28px;
-    border-radius: 50%;
+    border-radius: $radius-full;
     background: rgba(13, 13, 13, 0.8);
     border: 1px solid $a-border2;
     color: $a-text;
@@ -104,7 +95,7 @@ $a-transition: 0.2s ease;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.7rem;
+    font-size: $fs-xs;
     transition: background $a-transition;
 
     &:hover { background: $a-danger; }
@@ -118,10 +109,10 @@ $a-transition: 0.2s ease;
     background: rgba(13, 13, 13, 0.8);
     border: 1px solid $a-border2;
     color: $a-text;
-    padding: 5px 14px;
+    padding: $space-1 $space-4;
     border-radius: $a-radius;
-    font-family: 'Helvetica Neue', sans-serif;
-    font-size: 0.75rem;
+    font-family: $font-body;
+    font-size: $fs-xs;
     cursor: pointer;
     transition: background $a-transition;
     white-space: nowrap;
@@ -132,29 +123,29 @@ $a-transition: 0.2s ease;
 
 .uploader-error {
   color: $a-danger;
-  font-family: 'Helvetica Neue', sans-serif;
-  font-size: 0.78rem;
-  margin: 6px 0 0;
+  font-family: $font-body;
+  font-size: $fs-sm;
+  margin: $space-2 0 0;
   padding: 0;
 }
 
 .uploader-empty-hint {
   display: flex;
   align-items: center;
-  gap: 6px;
-  margin-top: 6px;
-  font-family: 'Helvetica Neue', sans-serif;
-  font-size: 0.78rem;
+  gap: $space-2;
+  margin-top: $space-2;
+  font-family: $font-body;
+  font-size: $fs-sm;
   color: rgba(240, 237, 232, 0.25);
 
   .empty-icon {
-    font-size: 0.85rem;
+    font-size: $fs-small;
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: #{$bp-sm}) {
   .uploader-dropzone {
-    padding: 24px 16px;
+    padding: $space-5 $space-4;
   }
 
   .uploader-preview img {

@@ -4,12 +4,25 @@ import emailjs from '@emailjs/browser'
 import LiquidWave from './LiquidWave'
 import './index.scss'
 
-/** Cam efekti: ≤1024px ve reduced-motion’da ağır SVG displacement + backdrop kapalı */
+/**
+ * Cam efekti: ≤1024px ve reduced-motion'da ağır SVG displacement + backdrop kapalı.
+ *
+ * NOT: burada eskiden bir `isScrolling` durumu vardı ve scroll sırasında cam
+ * efektini geçici olarak sadeye düşürüyordu. Sonuç: her scroll'da form
+ * "sade → cam → sade" diye görünüm değiştiriyor, kullanıcıya bölüm defalarca
+ * yeniden yükleniyormuş gibi geliyordu. Görünüm artık scroll'dan bağımsız ve
+ * sabit; performans zaten viewport genişliğine göre ayarlanıyor.
+ *
+ * Ayrıca eski sürüm scroll dinleyicisini setTimeout(500) içinde ekliyor ama
+ * temizlikte hemen kaldırmaya çalışıyordu — 500ms dolmadan unmount olursa
+ * dinleyici ölü bileşene bağlı kalıyordu.
+ */
 function useNarrowViewport() {
   const [narrow, setNarrow] = useState(() =>
-    typeof window !== 'undefined' ? window.matchMedia('(max-width: 1024px)').matches : false
+    typeof window !== 'undefined'
+      ? window.matchMedia('(max-width: 1024px)').matches
+      : false
   )
-  const [isScrolling, setIsScrolling] = useState(false)
 
   useEffect(() => {
     const mq = window.matchMedia('(max-width: 1024px)')
@@ -19,31 +32,7 @@ function useNarrowViewport() {
     return () => mq.removeEventListener('change', fn)
   }, [])
 
-  // Scroll sırasında ağır SVG efektini geçici olarak kapat
-  useEffect(() => {
-    let scrollTimeout
-    const handleScroll = () => {
-      setIsScrolling(true)
-      clearTimeout(scrollTimeout)
-      scrollTimeout = setTimeout(() => {
-        setIsScrolling(false)
-      }, 150)
-    }
-
-    // Biraz gecikmeli ekleyelim ki DOM tam yüklensin
-    setTimeout(() => {
-      const sc = document.querySelector('.scroll-container')
-      sc?.addEventListener('scroll', handleScroll, { passive: true })
-    }, 500)
-
-    return () => {
-      const sc = document.querySelector('.scroll-container')
-      sc?.removeEventListener('scroll', handleScroll)
-      clearTimeout(scrollTimeout)
-    }
-  }, [])
-
-  return narrow || isScrolling
+  return narrow
 }
 
 const containerVariants = {

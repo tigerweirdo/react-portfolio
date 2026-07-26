@@ -16,18 +16,22 @@
     flex: 1;
     max-width: 60%;
     z-index: 2;
-    padding-right: 20px;
+    padding-right: $space-5;
 
+    // Hero = tipografik ölçeğin en üst basamağı; ayrı bir font ailesi değil.
+    // Eskiden 'Impact' kullanılıyordu: platformdan platforma değişen bir
+    // sistem fontu (Linux'ta çoğu zaman hiç yok) ve preload edilen marka
+    // fontu Coolvetica'yı kullanmıyordu. -webkit-text-stroke de Impact'in
+    // fallback kaymasını telafi etmek içindi; artık gereksiz.
     h1.main-headline {
       color: $text-color;
-      font-family: 'Impact', 'Arial Black', 'Franklin Gothic Bold', 'Helvetica Neue', sans-serif;
-      font-size: clamp(3.5rem, 8vw, 7.5rem);
-      line-height: 1;
-      font-weight: 900;
-      margin: 50px 0 30px 0;
-      letter-spacing: -0.03em;
+      font-family: $font-display;
+      font-size: $fs-hero;
+      line-height: $lh-tight;
+      font-weight: $fw-regular;
+      margin: $space-6 0 $space-5 0;
+      letter-spacing: $tracking-tighter;
       text-transform: uppercase;
-      -webkit-text-stroke: 0.8px $text-color;
 
       &::before {
         content: none !important;
@@ -36,21 +40,21 @@
 
     .flat-button {
       color: $primary-color;
-      font-size: 13px;
-      font-weight: 700;
-      letter-spacing: 4px;
-      font-family: 'Arial Black', sans-serif;
+      font-size: $fs-sm;
+      font-weight: $fw-bold;
+      letter-spacing: $tracking-wide;
+      font-family: $font-mono;
       text-decoration: none;
-      padding: 10px 18px;
+      padding: $space-3 $space-4;
       border: 1px solid $btn-border-color;
-      margin-top: 30px;
+      margin-top: $space-5;
       background-color: transparent;
       outline: none;
       cursor: pointer;
       position: relative;
       isolation: isolate;
       /* Sadece transform + opacity (dolgu ::after ile) — layout tetiklemez */
-      transition: transform 0.2s ease;
+      transition: transform $dur-fast $ease-standard;
       text-transform: uppercase;
 
       &::after {
@@ -59,7 +63,7 @@
         inset: 0;
         background: $btn-hover-bg-color;
         opacity: 0;
-        transition: opacity 0.2s ease;
+        transition: opacity $dur-fast $ease-standard;
         z-index: 0;
         pointer-events: none;
       }
@@ -73,7 +77,7 @@
         color: $primary-color;
         border-color: $accent-color-1;
         transform: translate3d(0, -1px, 0);
-        box-shadow: 0 2px 8px rgba($primary-color, 0.1);
+        box-shadow: $shadow-sm;
 
         &::after {
           opacity: 1;
@@ -119,7 +123,7 @@
 // Responsive - Tablet
 // Üst düzey App.scss .container padding’i kaplanı içeri iter; #home’da üst/sağ sıfırlanır, metin için sol/altta boşluk kalır.
 // PNG içi şeffaf boşluk + hizalama için: scale, top/right origin, negatif margin; taşma için overflow visible.
-@media screen and (max-width: 960px) {
+@media screen and (max-width: #{$bp-lg}) {
   #home.page-section {
     overflow: visible;
   }
@@ -147,20 +151,19 @@
       width: 100%;
       padding-right: 0;
       order: 2;
-      margin-top: 20px;
+      margin-top: $space-5;
       position: relative;
       z-index: 12;
 
       h1.main-headline {
-        font-size: clamp(2.8rem, 10vw, 5rem);
-        letter-spacing: -0.03em;
-        line-height: 1.1;
-        margin: 20px 0;
-        -webkit-text-stroke: 0.5px $text-color;
+        font-size: $fs-hero-md;
+        letter-spacing: $tracking-tighter;
+        line-height: $lh-tight;
+        margin: $space-5 0;
       }
 
       .flat-button {
-        margin: 30px auto 0;
+        margin: $space-6 auto 0;
         display: block;
         width: fit-content;
       }
@@ -175,7 +178,7 @@
       height: 160px;
       z-index: 10;
       opacity: 0.9;
-      margin: 10px -12px 0 auto;
+      margin: $space-3 (-$space-3) 0 auto;
       align-self: flex-end;
       order: 1;
       justify-content: flex-end;
@@ -204,7 +207,7 @@
 }
 
 // Responsive - Mobil
-@media screen and (max-width: 768px) {
+@media screen and (max-width: #{$bp-md}) {
   #home .container.home-page {
     padding-top: max(0px, env(safe-area-inset-top));
     padding-right: 0;
@@ -217,24 +220,23 @@
 
     .text-zone {
       h1.main-headline {
-        font-size: clamp(2.2rem, 9vw, 4rem);
-        letter-spacing: -0.02em;
-        -webkit-text-stroke: 0.4px $text-color;
-        margin: 15px 0;
+        font-size: $fs-hero-md;
+        letter-spacing: $tracking-tighter;
+        margin: $space-4 0;
       }
 
       .flat-button {
-        font-size: 12px;
-        letter-spacing: 3px;
-        padding: 10px 16px;
-        margin: 20px auto 0;
+        font-size: $fs-xs;
+        letter-spacing: $tracking-wide;
+        padding: $space-3 $space-4;
+        margin: $space-5 auto 0;
       }
     }
 
     .logo-container {
       width: 130px;
       height: 130px;
-      margin: 8px -10px 0 auto;
+      margin: $space-2 (-$space-3) 0 auto;
 
       img {
         transform: scale(1.12, -1.12);
@@ -246,7 +248,7 @@
 }
 
 // Responsive - Küçük mobil
-@media screen and (max-width: 480px) {
+@media screen and (max-width: #{$bp-sm}) {
   #home .container.home-page {
     padding-top: max(0px, env(safe-area-inset-top));
     padding-right: 0;
@@ -259,15 +261,14 @@
 
     .text-zone {
       h1.main-headline {
-        font-size: clamp(2rem, 11vw, 3.2rem);
-        -webkit-text-stroke: 0.3px $text-color;
+        font-size: $fs-hero-sm;
       }
     }
 
     .logo-container {
       width: 100px;
       height: 100px;
-      margin: 6px -8px 0 auto;
+      margin: $space-2 (-$space-2) 0 auto;
 
       img {
         transform: scale(1.1, -1.1);

@@ -1,8 +1,32 @@
 import React, { useState } from 'react';
 import './Login.scss';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { signInAdmin } from '../../firebase-auth';
 
-const Login = ({ onLoginSuccess }) => {
+// Firebase'in döndürdüğü hata kodlarını kullanıcıya gösterilecek metne çevirir.
+// Kullanıcı sayımı yapılmasını engellemek için "kullanıcı yok" ve "yanlış şifre"
+// aynı mesajı verir.
+const errorMessage = (code) => {
+  switch (code) {
+    case 'auth/invalid-email':
+      return 'Geçersiz e-posta adresi.';
+    case 'auth/user-disabled':
+      return 'Bu hesap devre dışı bırakılmış.';
+    case 'auth/too-many-requests':
+      return 'Çok fazla deneme yapıldı. Lütfen biraz sonra tekrar deneyin.';
+    case 'auth/network-request-failed':
+      return 'Ağ hatası. Bağlantınızı kontrol edip tekrar deneyin.';
+    case 'auth/unavailable':
+    case 'auth/configuration-not-found':
+    case 'auth/operation-not-allowed':
+      return 'Firebase kimlik doğrulama yapılandırılmamış. Firebase Console → Authentication bölümünden E-posta/Şifre yöntemini etkinleştirin.';
+    default:
+      return 'E-posta veya şifre hatalı. Lütfen tekrar deneyin.';
+  }
+};
+
+const Login = () => {
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -10,23 +34,26 @@ const Login = ({ onLoginSuccess }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!password.trim()) {
-      setError('Lütfen şifrenizi girin.');
+
+    if (!email.trim() || !password) {
+      setError('Lütfen e-posta ve şifrenizi girin.');
       return;
     }
 
     setIsLoading(true);
     setError('');
 
-    await new Promise(resolve => setTimeout(resolve, 600));
-
-    const adminPassword = process.env.REACT_APP_ADMIN_PASSWORD || '5489031744HmHH.';
-    if (password === adminPassword) {
-      onLoginSuccess();
-    } else {
-      setError('Yanlış şifre. Lütfen tekrar deneyin.');
+    try {
+      // Doğrulama Firebase tarafında yapılır; şifre hiçbir zaman istemci
+      // paketine gömülmez. Başarılı olduğunda App'teki onAuthStateChanged
+      // aboneliği tetiklenir ve admin paneline yönlendirilir.
+      await signInAdmin(email.trim(), password);
+    } catch (err) {
+      setError(errorMessage(err?.code || err?.message));
+      setPassword('');
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   return (
@@ -40,13 +67,26 @@ const Login = ({ onLoginSuccess }) => {
         <form onSubmit={handleSubmit} className="login-form" noValidate>
           <div className={`login-input-wrapper ${error ? 'has-error' : ''}`}>
             <input
+              type="email"
+              value={email}
+              onChange={(e) => { setEmail(e.target.value); setError(''); }}
+              placeholder="E-posta adresiniz"
+              autoComplete="username"
+              required
+              disabled={isLoading}
+              autoFocus
+            />
+          </div>
+
+          <div className={`login-input-wrapper ${error ? 'has-error' : ''}`}>
+            <input
               type={showPassword ? 'text' : 'password'}
               value={password}
               onChange={(e) => { setPassword(e.target.value); setError(''); }}
               placeholder="Şifrenizi girin"
+              autoComplete="current-password"
               required
               disabled={isLoading}
-              autoFocus
             />
             <button
               type="button"

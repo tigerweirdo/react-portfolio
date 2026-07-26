@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { db, ensureAuth } from '../../firebase';
+import { db } from '../../firebase';
+import { requireAdmin } from '../../firebase-auth';
 import { storage } from '../../firebase-storage';
 import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from 'firebase/firestore';
 import { ref as storageRef, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
@@ -72,7 +73,7 @@ const PortfolioManager = () => {
   const fetchItems = useCallback(async () => {
     setIsLoading(true);
     try {
-      await ensureAuth();
+      requireAdmin();
       const snap = await getDocs(portfolioRef);
       setItems(snap.docs.map(d => ({ id: d.id, ...d.data() })));
     } catch (err) {
@@ -228,7 +229,7 @@ const PortfolioManager = () => {
 
   const uploadFile = useCallback(async (file, pathPrefix) => {
     if (!file) return null;
-    await ensureAuth();
+    requireAdmin();
     const fileRef = storageRef(storage, `${pathPrefix}/${Date.now()}_${file.name}`);
     await uploadBytes(fileRef, file);
     return getDownloadURL(fileRef);
@@ -254,7 +255,7 @@ const PortfolioManager = () => {
     let coverUrl = existingCoverUrl;
 
     try {
-      await ensureAuth();
+      requireAdmin();
 
       if (imageFile) {
         if (currentItem?.image) {
@@ -327,7 +328,7 @@ const PortfolioManager = () => {
 
     setIsSubmitting(true);
     try {
-      await ensureAuth();
+      requireAdmin();
       const item = items.find(i => i.id === id);
       if (item) {
         await safeDeleteStorage(item.image);

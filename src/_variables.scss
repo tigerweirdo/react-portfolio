@@ -1,11 +1,199 @@
-$primary-color: #202124;      // Koyu gri (Google'ın kullandığı tonlara yakın)
-$accent-color-1: #5f6368;    // Orta-koyu gri (Vurgu ve ikonlar için)
-$accent-color-2: #e8eaed;    // Çok açık gri (Sınırlar, arka planlar için)
-$accent-color-3: #f8f9fa;    // Neredeyse beyaz (Hover, aktif durumlar için hafif tonlama)
-$text-color: #202124;        // Ana metin rengi (Koyu gri, $primary-color ile aynı)
-$background-color: #ffffff;  // Saf Beyaz (Ana arka plan)
-$secondary-text-color: #5f6368; // İkincil metinler (Orta-koyu gri, $accent-color-1 ile aynı)
-$btn-border-color: #dadce0;  // Buton ve input kenarlığı (Açık gri)
-$btn-hover-bg-color: #f8f9fa; // Buton hover (Neredeyse beyaz, $accent-color-3 ile aynı)
-$gradient-start-color: #FFFFFF; // Gradient yok, düz renk
-$icon-color: #5f6368;        // İkonlar (Orta-koyu gri, $accent-color-1 ile aynı)
+// ============================================================
+// TASARIM TOKEN'LARI — tek kaynak (single source of truth)
+//
+// Kural: hiçbir bileşen ham değer (hex, px, cubic-bezier, font adı)
+// yazmaz; her şey buradan gelir. Bir değeri değiştirmek istiyorsan
+// tek yer burasıdır.
+//
+// Bu dosya YALNIZCA değişken içerir — hiç CSS çıktısı üretmez.
+// Bu yüzden her yerde güvenle `@use` edilebilir.
+// ============================================================
+
+
+// ------------------------------------------------------------
+// 1. TİPOGRAFİ — aileler
+// ------------------------------------------------------------
+// Coolvetica marka fontudur ve index.html'de preload edilir.
+// Tüm başlıklar (hero dahil) bunu kullanır: tek tipografik ses,
+// platformlar arası tutarlı render, preload'ın karşılığı alınır.
+$font-display: 'Coolvetica', 'Helvetica Neue', Arial, sans-serif;
+$font-body:    'Helvetica Neue', Arial, sans-serif;
+$font-mono:    'Courier New', ui-monospace, monospace;
+
+
+// ------------------------------------------------------------
+// 2. TİPOGRAFİ — ölçek
+// Hero ayrı bir aile değil, ölçeğin en üst basamağıdır.
+// ------------------------------------------------------------
+// Display basamakları
+$fs-hero:      clamp(3rem, 8vw, 7rem);        // ana sayfa hero + admin giriş başlığı
+$fs-stat:      clamp(3rem, 6vw, 5rem);        // admin sayaç rakamları
+$fs-h1:        clamp(2.5rem, 6vw, 3.75rem);   // bölüm başlıkları (About / Work / Contact)
+$fs-h2:        clamp(1.5rem, 4vw, 2rem);
+$fs-h3:        1.375rem;                      // 22px — admin bölüm başlığı
+
+// Gövde basamakları (sabit adımlar — admin ve public ortak)
+$fs-xl:        1.25rem;                       // 20px
+$fs-lg:        1.125rem;                      // 18px
+$fs-base:      1rem;                          // 16px — form girdileri
+$fs-body-lg:   clamp(1rem, 1.2vw, 1.125rem);
+$fs-body:      clamp(0.9375rem, 1.1vw, 1rem);
+$fs-small:     0.875rem;                      // 14px
+$fs-sm:        0.8125rem;                     // 13px
+$fs-xs:        0.75rem;                       // 12px
+$fs-label:     0.625rem;                      // 10px — mono etiketler
+$fs-label-sm:  0.5625rem;                     // 9px  — mono etiketler (mobil)
+
+// Mobil hero/başlık basamakları
+$fs-hero-md:   clamp(2.5rem, 10vw, 5rem);
+$fs-hero-sm:   clamp(2rem, 11vw, 3.5rem);
+$fs-h1-md:     clamp(2rem, 8vw, 3rem);
+$fs-h1-sm:     clamp(1.75rem, 10vw, 2.25rem);
+
+// Satır yüksekliği
+$lh-tight:  1.1;
+$lh-snug:   1.3;
+$lh-normal: 1.6;
+$lh-loose:  1.75;
+
+// Harf aralığı
+$tracking-tighter: -0.03em;
+$tracking-tight:   -0.01em;
+$tracking-normal:  0;
+$tracking-wide:    0.2em;
+$tracking-wider:   0.4em;
+
+// Font ağırlıkları
+$fw-light:   300;
+$fw-regular: 400;
+$fw-medium:  500;
+$fw-bold:    700;
+
+
+// ------------------------------------------------------------
+// 3. RENK — public site (açık tema)
+// ------------------------------------------------------------
+$primary-color:        #202124;  // Koyu gri — başlıklar, ana metin
+$accent-color-1:       #5f6368;  // Orta-koyu gri — ikincil metin, ikonlar, focus
+$accent-color-2:       #e8eaed;  // Çok açık gri — skeleton, ayırıcılar
+$accent-color-3:       #f8f9fa;  // Neredeyse beyaz — hover zemini
+$text-color:           #202124;
+$background-color:     #ffffff;
+$secondary-text-color: #5f6368;
+$btn-border-color:     #dadce0;
+$btn-hover-bg-color:   #f8f9fa;
+$icon-color:           #5f6368;
+
+
+// ------------------------------------------------------------
+// 4. RENK — admin paneli (koyu tema)
+// Kasıtlı olarak koyudur: admin, public siteden görsel olarak
+// ayrışmalı. Ama ölçek/hareket/yarıçap token'ları ortaktır.
+//
+// ÖNEMLİ: bu blok daha önce 6 admin .scss dosyasına birebir
+// kopyalanmıştı. Artık tek yerde.
+// ------------------------------------------------------------
+$a-bg:       #0d0d0d;
+$a-surface:  #161616;
+$a-surface2: #1f1f1f;
+$a-border:   rgba(240, 237, 232, 0.08);
+$a-border2:  rgba(240, 237, 232, 0.14);
+$a-text:     #f0ede8;
+$a-muted:    rgba(240, 237, 232, 0.50);   // 0.40 -> 0.50: WCAG AA (4.5:1)
+$a-accent:       #f0ede8;
+$a-danger:       #e05c5c;
+$a-danger-hover: #e87878;
+$a-success:      #5cb85c;
+$a-warning:      #d97706;
+$a-on-accent:    #ffffff;   // uyarı/tehlike butonu üstündeki metin
+
+
+// ------------------------------------------------------------
+// 4b. RENK — durum & medya (tema bağımsız)
+// ------------------------------------------------------------
+$color-success: #217f39;   // form gönderildi (AA: kendi %8 zemininde 4.55:1)
+$color-error:   #da0c00;   // form hatası (AA: kendi %8 zemininde 4.55:1)
+$media-bg:      #000000;   // video/görsel letterbox zemini
+
+// Contact bölümündeki dalga gradyanı
+$wave-top:  #4facfe;
+$wave-mid:  #0061ff;
+$wave-deep: #002fa7;
+
+
+// ------------------------------------------------------------
+// 5. BOŞLUK — 4px tabanlı ölçek
+// ------------------------------------------------------------
+$space-05: 0.125rem;  //   2px — hairline
+$space-1:  0.25rem;   //   4px
+$space-2:  0.5rem;    //   8px
+$space-3:  0.75rem;   //  12px
+$space-4:  1rem;      //  16px
+$space-5:  1.5rem;    //  24px
+$space-6:  2rem;      //  32px
+$space-7:  3rem;      //  48px
+$space-8:  4rem;      //  64px
+$space-9:  6rem;      //  96px
+$space-10: 8rem;      // 128px
+
+// Saç teli: ızgara ayırıcıları ve kenarlıklar (ritim değil, çizgi)
+$hairline: 1px;
+
+
+// ------------------------------------------------------------
+// 6. KÖŞE YARIÇAPI
+// ------------------------------------------------------------
+$radius-sm:   3px;
+$radius-md:   6px;
+$radius-lg:   16px;
+$radius-full: 50%;
+$a-radius:    $radius-md;   // admin dosyalarındaki mevcut kullanım adı
+
+
+// ------------------------------------------------------------
+// 7. HAREKET
+// İki eğri yeter: standart (UI geri bildirimi) ve
+// vurgulu (giriş/çıkış, sinematik geçişler).
+// ------------------------------------------------------------
+$ease-standard:   cubic-bezier(0.4, 0, 0.2, 1);
+$ease-emphasized: cubic-bezier(0.16, 1, 0.3, 1);
+
+// UI geçiş basamakları
+$dur-fast:   0.2s;   // hover, focus, renk değişimi
+$dur-base:   0.4s;   // küçük giriş/çıkış
+$dur-medium: 0.6s;   // bölüm/kart geçişi
+$dur-slow:   1s;     // vurgulu reveal
+$dur-slower: 1.5s;   // sinematik (kart zoom, shimmer)
+
+// Ambiyans döngüleri (UI geri bildirimi değil — karakter animasyonları).
+// Bilinçli olarak ayrı bir aile: bunlar sonsuz döner, UI geçişi değildir.
+$dur-ambient:      3s;
+$dur-ambient-slow: 5s;
+
+$a-transition: $dur-fast $ease-standard;   // admin dosyalarındaki mevcut kullanım adı
+
+
+// ------------------------------------------------------------
+// 8. KIRILIM NOKTALARI
+// ------------------------------------------------------------
+$bp-sm: 480px;
+$bp-md: 768px;
+$bp-lg: 1024px;
+$bp-xl: 1280px;
+
+
+// ------------------------------------------------------------
+// 9. KATMANLAR (z-index)
+// ------------------------------------------------------------
+$z-base:    1;
+$z-raised:  10;
+$z-overlay: 40;
+$z-modal:   100;
+
+
+// ------------------------------------------------------------
+// 10. GÖLGE
+// ------------------------------------------------------------
+$shadow-sm: 0 2px 8px rgba($primary-color, 0.10);
+$shadow-md: 0 6px 20px rgba($primary-color, 0.12);
+$shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.45);

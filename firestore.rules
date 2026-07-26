@@ -1,9 +1,29 @@
 rules_version = '2';
+
+// Portfolyo herkese açık bir vitrindir: okuma serbest, yazma yalnızca
+// gerçek bir e-posta/şifre hesabıyla giriş yapmış admin'e aittir.
+//
+// ÖNEMLİ: Eski kural "allow write: if request.auth != null" idi. Site
+// ziyaretçileri anonim olarak oturum açtığı için bu, HERKESE yazma ve silme
+// yetkisi veriyordu. Artık anonim oturum hiç açılmıyor ve yazma için
+// sign_in_provider == 'password' şartı aranıyor.
+
 service cloud.firestore {
   match /databases/{database}/documents {
+
+    function isAdmin() {
+      return request.auth != null
+        && request.auth.token.firebase.sign_in_provider == 'password';
+    }
+
     match /portfolio/{document=**} {
-      allow read: if request.auth != null;
-      allow write: if request.auth != null;
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Açıkça izin verilmeyen her şey kapalı.
+    match /{document=**} {
+      allow read, write: if false;
     }
   }
 }

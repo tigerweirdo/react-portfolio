@@ -20,20 +20,20 @@
 
     h1 {
       color: $primary-color;
-      font-size: clamp(2.5rem, 6vw, 60px);
-      font-family: 'Coolvetica';
-      font-weight: 400;
+      font-size: $fs-h1;
+      font-family: $font-display;
+      font-weight: $fw-regular;
       margin-top: 0;
-      margin-bottom: 30px;
-      line-height: 1.1;
+      margin-bottom: $space-5;
+      line-height: $lh-tight;
     }
 
     p {
       color: $text-color;
-      font-size: clamp(15px, 1.2vw, 18px);
-      line-height: 1.6;
-      margin-bottom: 20px;
-      font-family: 'Helvetica Neue', sans-serif;
+      font-size: $fs-body-lg;
+      line-height: $lh-normal;
+      margin-bottom: $space-4;
+      font-family: $font-body;
       opacity: 1;
       min-width: fit-content;
       font-weight: 500;
@@ -67,18 +67,18 @@
 }
 
 .eyes {
-  animation: blink 3s linear infinite;
+  animation: blink $dur-ambient linear infinite;
 }
 
 .Rolly {
-  animation: RollAround 5s ease-in-out infinite;
+  animation: RollAround $dur-ambient-slow ease-in-out infinite;
   max-width: 100%;
   height: auto;
   display: block;
 }
 
 .Shaddow {
-  animation: MoveShaddow 5s ease-in-out infinite;
+  animation: MoveShaddow $dur-ambient-slow ease-in-out infinite;
   position: relative;
   top: -12px;
   z-index: -1;
@@ -155,7 +155,7 @@
 }
 
 // Responsive - Tablet
-@media (max-width: 1024px) {
+@media (max-width: #{$bp-lg}) {
   .container.about-page {
     flex-direction: column;
     text-align: center;
@@ -170,8 +170,8 @@
       padding: 0;
 
       h1 {
-        font-size: clamp(2rem, 8vw, 48px);
-        margin-bottom: 20px;
+        font-size: $fs-h1-md;
+        margin-bottom: $space-5;
       }
 
       p {
@@ -195,7 +195,7 @@
 }
 
 // Responsive - Mobil
-@media (max-width: 768px) {
+@media (max-width: #{$bp-md}) {
   .container.about-page {
     padding: 2rem 1.5rem;
     gap: 2rem;
@@ -210,25 +210,25 @@
 
     .text-zone {
       h1 {
-        font-size: clamp(1.8rem, 10vw, 36px);
+        font-size: $fs-h1-sm;
       }
       
       p {
-        font-size: 14px;
+        font-size: $fs-body;
       }
     }
   }
 }
 
 // Responsive - Küçük mobil
-@media (max-width: 480px) {
+@media (max-width: #{$bp-sm}) {
   .container.about-page {
     padding: 1.5rem 1rem;
 
     .text-zone {
       p {
-        font-size: 14px;
-        line-height: 1.65;
+        font-size: $fs-body;
+        line-height: $lh-normal;
       }
     }
   }

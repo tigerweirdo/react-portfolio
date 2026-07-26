@@ -1,3 +1,5 @@
+@use '../../variables' as *;
+
 .liquid-wave-container {
   position: absolute;
   bottom: 0;
@@ -8,7 +10,7 @@
   overflow: hidden;
   cursor: default;
   /* Dalganın üstünde kalan bölge beyaz; su canvas'ta mavi gradient olarak çiziliyor */
-  background-color: #ffffff;
+  background-color: $background-color;
 }
 
 .liquid-wave-canvas {
@@ -17,13 +19,13 @@
   height: 100%;
 }
 
-@media (max-width: 768px) {
+@media (max-width: #{$bp-md}) {
   .liquid-wave-container {
     height: 300px;
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: #{$bp-sm}) {
   .liquid-wave-container {
     height: 250px;
   }
@@ -33,9 +35,9 @@
 .liquid-wave-static {
   background: linear-gradient(
     180deg,
-    #4facfe 0%,
-    #0061ff 45%,
-    #002fa7 100%
+    $wave-top 0%,
+    $wave-mid 45%,
+    $wave-deep 100%
   );
   pointer-events: none;
 }

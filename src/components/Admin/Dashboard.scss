@@ -1,14 +1,4 @@
-$a-bg:        #0d0d0d;
-$a-surface:   #161616;
-$a-surface2:  #1f1f1f;
-$a-border:    rgba(240, 237, 232, 0.08);
-$a-border2:   rgba(240, 237, 232, 0.14);
-$a-text:      #f0ede8;
-$a-muted:     rgba(240, 237, 232, 0.40);
-$a-accent:    #f0ede8;
-$a-danger:    #e05c5c;
-$a-radius:    6px;
-$a-transition: 0.2s ease;
+@use '../../variables' as *;
 
 // ===========================
 // LOADING
@@ -34,21 +24,21 @@ $a-transition: 0.2s ease;
   display: grid;
   grid-template-columns: 1fr 1fr;
   border-bottom: 1px solid $a-border;
-  margin-bottom: 40px;
+  margin-bottom: $space-7;
 }
 
 .stat-item {
-  padding: 32px 0;
+  padding: $space-6 0;
   cursor: pointer;
   transition: opacity $a-transition;
 
   &:first-child {
     border-right: 1px solid $a-border;
-    padding-right: 32px;
+    padding-right: $space-6;
   }
 
   &:last-child {
-    padding-left: 32px;
+    padding-left: $space-6;
   }
 
   &:hover {
@@ -56,17 +46,17 @@ $a-transition: 0.2s ease;
   }
 
   .stat-code {
-    font-family: 'Courier New', monospace;
-    font-size: 0.65rem;
+    font-family: $font-mono;
+    font-size: $fs-label;
     color: $a-muted;
     letter-spacing: 2px;
-    margin-bottom: 8px;
+    margin-bottom: $space-2;
     display: block;
   }
 
   .stat-number {
-    font-family: 'Coolvetica', sans-serif;
-    font-size: clamp(3rem, 6vw, 5rem);
+    font-family: $font-display;
+    font-size: $fs-stat;
     color: $a-text;
     font-weight: 400;
     line-height: 1;
@@ -74,10 +64,10 @@ $a-transition: 0.2s ease;
   }
 
   .stat-label {
-    font-family: 'Helvetica Neue', sans-serif;
-    font-size: 0.8rem;
+    font-family: $font-body;
+    font-size: $fs-sm;
     color: $a-muted;
-    margin-top: 6px;
+    margin-top: $space-2;
     display: block;
   }
 }
@@ -86,14 +76,14 @@ $a-transition: 0.2s ease;
 // SECTIONS
 // ===========================
 .dashboard-section {
-  margin-bottom: 40px;
+  margin-bottom: $space-7;
 
   .section-title {
-    font-family: 'Coolvetica', sans-serif;
-    font-size: 1.4rem;
+    font-family: $font-display;
+    font-size: $fs-h3;
     font-weight: 400;
     color: $a-text;
-    margin: 0 0 20px;
+    margin: 0 0 $space-5;
     letter-spacing: 0.5px;
   }
 }
@@ -102,14 +92,14 @@ $a-transition: 0.2s ease;
 // EMPTY STATE
 // ===========================
 .dashboard-empty {
-  padding: 40px 0;
+  padding: $space-7 0;
   border-bottom: 1px solid $a-border;
 
   p {
-    font-family: 'Helvetica Neue', sans-serif;
-    font-size: 0.85rem;
+    font-family: $font-body;
+    font-size: $fs-small;
     color: $a-muted;
-    margin: 0 0 16px;
+    margin: 0 0 $space-4;
   }
 }
 
@@ -124,8 +114,8 @@ $a-transition: 0.2s ease;
   display: grid;
   grid-template-columns: 48px 1fr auto;
   align-items: center;
-  gap: 20px;
-  padding: 18px 0;
+  gap: $space-5;
+  padding: $space-4 0;
   border-bottom: 1px solid $a-border;
   transition: background $a-transition;
 
@@ -136,7 +126,7 @@ $a-transition: 0.2s ease;
   .recent-thumb {
     width: 48px;
     height: 36px;
-    border-radius: 4px;
+    border-radius: $radius-sm;
     overflow: hidden;
     background: $a-surface2;
     flex-shrink: 0;
@@ -155,13 +145,13 @@ $a-transition: 0.2s ease;
       align-items: center;
       justify-content: center;
       color: $a-muted;
-      font-size: 0.9rem;
+      font-size: $fs-small;
     }
   }
 
   .recent-name {
-    font-family: 'Coolvetica', sans-serif;
-    font-size: 1.2rem;
+    font-family: $font-display;
+    font-size: $fs-lg;
     color: $a-text;
     font-weight: 400;
     white-space: nowrap;
@@ -171,7 +161,7 @@ $a-transition: 0.2s ease;
 
   .recent-link {
     color: $a-muted;
-    font-size: 0.8rem;
+    font-size: $fs-sm;
     transition: color $a-transition;
     display: flex;
     align-items: center;
@@ -186,14 +176,14 @@ $a-transition: 0.2s ease;
 .qa-btn {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 16px 0;
+  gap: $space-3;
+  padding: $space-4 0;
   background: none;
   border: none;
   border-bottom: 1px solid $a-border;
   color: $a-text;
-  font-family: 'Helvetica Neue', sans-serif;
-  font-size: 0.85rem;
+  font-family: $font-body;
+  font-size: $fs-small;
   letter-spacing: 1px;
   text-transform: uppercase;
   cursor: pointer;
@@ -207,7 +197,7 @@ $a-transition: 0.2s ease;
 // ===========================
 // RESPONSIVE
 // ===========================
-@media (max-width: 768px) {
+@media (max-width: #{$bp-md}) {
   .stats-row {
     grid-template-columns: 1fr;
   }
@@ -217,12 +207,12 @@ $a-transition: 0.2s ease;
       border-right: none;
       border-bottom: 1px solid $a-border;
       padding-right: 0;
-      padding-bottom: 24px;
+      padding-bottom: $space-5;
     }
 
     &:last-child {
       padding-left: 0;
-      padding-top: 24px;
+      padding-top: $space-5;
     }
   }
 }

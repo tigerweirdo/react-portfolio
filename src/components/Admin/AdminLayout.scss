@@ -1,14 +1,4 @@
-$a-bg:        #0d0d0d;
-$a-surface:   #161616;
-$a-surface2:  #1f1f1f;
-$a-border:    rgba(240, 237, 232, 0.08);
-$a-border2:   rgba(240, 237, 232, 0.14);
-$a-text:      #f0ede8;
-$a-muted:     rgba(240, 237, 232, 0.40);
-$a-accent:    #f0ede8;
-$a-danger:    #e05c5c;
-$a-radius:    6px;
-$a-transition: 0.2s ease;
+@use '../../variables' as *;
 
 // ===========================
 // LAYOUT
@@ -38,15 +28,15 @@ $a-transition: 0.2s ease;
 }
 
 .topbar-eyebrow {
-  font-family: 'Courier New', monospace;
-  font-size: 0.65rem;
+  font-family: $font-mono;
+  font-size: $fs-label;
   color: $a-muted;
   letter-spacing: 3px;
 }
 
 .topbar-logo {
-  font-family: 'Coolvetica', sans-serif;
-  font-size: 1.6rem;
+  font-family: $font-display;
+  font-size: $fs-h3;
   color: $a-text;
   font-weight: 400;
   position: absolute;
@@ -57,11 +47,11 @@ $a-transition: 0.2s ease;
 .topbar-nav {
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: $space-5;
 
   a, button {
-    font-family: 'Helvetica Neue', sans-serif;
-    font-size: 0.8rem;
+    font-family: $font-body;
+    font-size: $fs-sm;
     color: $a-muted;
     text-decoration: none;
     letter-spacing: 1px;
@@ -77,7 +67,7 @@ $a-transition: 0.2s ease;
 
   .logout-btn {
     color: $a-danger;
-    &:hover { color: #e87878; }
+    &:hover { color: $a-danger-hover; }
   }
 }
 
@@ -86,16 +76,16 @@ $a-transition: 0.2s ease;
   background: none;
   border: none;
   color: $a-text;
-  font-size: 1.2rem;
+  font-size: $fs-lg;
   cursor: pointer;
-  padding: 4px;
+  padding: $space-1;
 }
 
 // ===========================
 // CONTENT
 // ===========================
 .admin-content {
-  padding: 48px 5%;
+  padding: $space-7 5%;
   max-width: 1200px;
   margin: 0 auto;
 }
@@ -104,13 +94,13 @@ $a-transition: 0.2s ease;
 // PAGE HEADER — shared by all admin pages
 // ===========================
 .admin-page-header {
-  margin-bottom: 40px;
+  margin-bottom: $space-7;
   border-bottom: 1px solid $a-border;
-  padding-bottom: 32px;
+  padding-bottom: $space-6;
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  gap: 16px;
+  gap: $space-4;
 
   .page-header-left {
     flex: 1;
@@ -118,16 +108,16 @@ $a-transition: 0.2s ease;
 
   .page-eyebrow {
     display: block;
-    font-family: 'Courier New', monospace;
-    font-size: 0.65rem;
+    font-family: $font-mono;
+    font-size: $fs-label;
     color: $a-muted;
     letter-spacing: 3px;
-    margin-bottom: 10px;
+    margin-bottom: $space-3;
   }
 
   .page-title {
-    font-family: 'Coolvetica', sans-serif;
-    font-size: clamp(3rem, 6vw, 5rem);
+    font-family: $font-display;
+    font-size: $fs-stat;
     font-weight: 400;
     color: $a-text;
     margin: 0;
@@ -151,8 +141,8 @@ $a-transition: 0.2s ease;
   height: 20px;
   border: 2px solid $a-border2;
   border-top-color: $a-text;
-  border-radius: 50%;
-  animation: adminSpin 0.7s linear infinite;
+  border-radius: $radius-full;
+  animation: adminSpin $dur-medium linear infinite;
 }
 
 @keyframes adminSpin { to { transform: rotate(360deg); } }
@@ -160,7 +150,7 @@ $a-transition: 0.2s ease;
 // ===========================
 // RESPONSIVE — Mobile
 // ===========================
-@media (max-width: 768px) {
+@media (max-width: #{$bp-md}) {
   .topbar-hamburger {
     display: flex;
     align-items: center;
@@ -175,8 +165,8 @@ $a-transition: 0.2s ease;
     background: $a-surface;
     border-bottom: 1px solid $a-border;
     flex-direction: column;
-    padding: 16px 5%;
-    gap: 16px;
+    padding: $space-4 5%;
+    gap: $space-4;
     align-items: flex-start;
 
     &.mobile-open {
@@ -185,7 +175,7 @@ $a-transition: 0.2s ease;
   }
 
   .admin-content {
-    padding: 32px 5%;
+    padding: $space-6 5%;
   }
 
   .admin-page-header {
@@ -193,7 +183,7 @@ $a-transition: 0.2s ease;
     align-items: flex-start;
 
     .page-title {
-      font-size: clamp(2.2rem, 8vw, 3.5rem);
+      font-size: $fs-hero-sm;
     }
   }
 }

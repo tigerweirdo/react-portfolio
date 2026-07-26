@@ -49,13 +49,37 @@ const App = () => {
   const pathname = window.location.pathname;
   const isAdminRoute = pathname.startsWith(`/${ADMIN_SLUG}`);
 
+  // Oturum durumu Firebase Auth'tan gelir. Eskiden yalnızca
+  // localStorage['isAdminAuthenticated'] bayrağına bakılıyordu; bu bayrağı
+  // tarayıcı konsolundan herkes set edebildiği için gerçek bir koruma değildi.
+  // firebase/auth SDK'sı yalnızca admin yolunda, dinamik import ile yüklenir —
+  // public sayfanın paketi bundan etkilenmez.
   useEffect(() => {
-    const storedAuth = localStorage.getItem('isAdminAuthenticated');
-    if (storedAuth === 'true') {
-      setIsAuthenticated(true);
-    }
-    setAuthChecked(true);
-  }, []);
+    if (!isAdminRoute) return undefined;
+
+    let cancelled = false;
+    let unsubscribe = () => {};
+
+    import('./firebase-auth')
+      .then(({ subscribeToAuth }) => {
+        if (cancelled) return;
+        unsubscribe = subscribeToAuth((user) => {
+          setIsAuthenticated(Boolean(user));
+          setAuthChecked(true);
+        });
+      })
+      .catch((error) => {
+        console.error('[Admin] Kimlik doğrulama modülü yüklenemedi:', error);
+        if (cancelled) return;
+        setIsAuthenticated(false);
+        setAuthChecked(true);
+      });
+
+    return () => {
+      cancelled = true;
+      unsubscribe();
+    };
+  }, [isAdminRoute]);
 
   useEffect(() => {
     if (isAdminRoute) {
@@ -190,16 +214,14 @@ const App = () => {
     };
   }, [isAdminRoute]);
 
-  const handleLoginSuccess = useCallback(() => {
-    setIsAuthenticated(true);
-    localStorage.setItem('isAdminAuthenticated', 'true');
-    window.location.href = `/${ADMIN_SLUG}/dashboard`;
-  }, []);
-
-  const handleLogout = useCallback(() => {
-    setIsAuthenticated(false);
-    localStorage.removeItem('isAdminAuthenticated');
-    window.location.href = '/';
+  const handleLogout = useCallback(async () => {
+    try {
+      const { signOutAdmin } = await import('./firebase-auth');
+      await signOutAdmin();
+      // onAuthStateChanged tetiklenir → aşağıdaki Routes login ekranına düşer.
+    } catch (error) {
+      console.error('[Admin] Çıkış yapılamadı:', error);
+    }
   }, []);
 
   const scrollToSection = useCallback((sectionId) => {
@@ -209,51 +231,41 @@ const App = () => {
     }
   }, []);
 
-  if (!authChecked) {
-    return (
-      <div className="loading-auth">
-        Kimlik doğrulama durumu kontrol ediliyor...
-      </div>
-    );
-  }
-
-  // Admin routes - React Router kullanmadan, doğrudan render
+  // Admin bölümü. Yalnızca burada oturum beklenir; public sayfa artık
+  // "kimlik doğrulanıyor" ekranında bekletilmiyor.
   if (isAdminRoute) {
-    // Exact match: /p-x7k9 → Login sayfası
-    if (pathname === `/${ADMIN_SLUG}`) {
-      if (isAuthenticated) {
-        window.location.href = `/${ADMIN_SLUG}/dashboard`;
-        return null;
-      }
+    if (!authChecked) {
       return (
-        <>
-          <ToastContainer position="top-right" autoClose={5000} theme="colored" />
-          <Suspense fallback={<div className="loading-auth">Yükleniyor...</div>}>
-            <Login onLoginSuccess={handleLoginSuccess} />
-          </Suspense>
-        </>
+        <div className="loading-auth">
+          Kimlik doğrulama durumu kontrol ediliyor...
+        </div>
       );
     }
 
-    // Admin panel sayfaları: /p-x7k9/dashboard, /p-x7k9/portfolio
-    if (!isAuthenticated) {
-      window.location.href = `/${ADMIN_SLUG}`;
-      return null;
-    }
-
-    const adminSubPath = pathname.replace(`/${ADMIN_SLUG}`, '').replace(/^\//, '');
-
+    // Admin sayfaları gerçek iç içe route'lar olarak tanımlanır. Eskiden
+    // pathname string'i elle parçalanıyor ve hiç <Routes> render edilmiyordu;
+    // bu yüzden Dashboard içindeki navigate('../portfolio') çağrıları
+    // /portfolio adresine düşüyor ve panelde hiçbir şey olmuyordu.
     return (
       <Router>
         <ToastContainer position="top-right" autoClose={5000} theme="colored" />
         <Suspense fallback={<div className="loading-auth">Yükleniyor...</div>}>
-          <AdminLayout onLogout={handleLogout}>
-            <Suspense fallback={<div className="admin-page-loading"><div className="admin-spinner" /></div>}>
-              {adminSubPath === 'dashboard' && <Dashboard />}
-              {adminSubPath === 'portfolio' && <PortfolioManager />}
-              {!adminSubPath && <Dashboard />}
-            </Suspense>
-          </AdminLayout>
+          {isAuthenticated ? (
+            <Routes>
+              <Route path={`/${ADMIN_SLUG}`} element={<AdminLayout onLogout={handleLogout} />}>
+                <Route index element={<Navigate to="dashboard" replace />} />
+                <Route path="dashboard" element={<Dashboard />} />
+                <Route path="portfolio" element={<PortfolioManager />} />
+                <Route path="*" element={<Navigate to="dashboard" replace />} />
+              </Route>
+              <Route path="*" element={<Navigate to={`/${ADMIN_SLUG}/dashboard`} replace />} />
+            </Routes>
+          ) : (
+            <Routes>
+              <Route path={`/${ADMIN_SLUG}`} element={<Login />} />
+              <Route path="*" element={<Navigate to={`/${ADMIN_SLUG}`} replace />} />
+            </Routes>
+          )}
         </Suspense>
       </Router>
     );

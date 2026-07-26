@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { collection, getDocs } from 'firebase/firestore';
-import { db, ensureAuth } from '../../firebase';
+import { db } from '../../firebase';
+import { requireAdmin } from '../../firebase-auth';
 import { FaExternalLinkAlt, FaImage } from 'react-icons/fa';
 import './Dashboard.scss';
 
@@ -13,7 +14,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        await ensureAuth();
+        requireAdmin();
         const snapshot = await getDocs(collection(db, 'portfolio'));
         const items = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         const withCover = items.filter(item => item.cover && item.cover !== item.image).length;

@@ -1,10 +1,10 @@
-@import '../../variables';
+@use '../../variables' as *;
 
 // ===========================
 // PORTFOLIO — Premium grid (ana site tipografi & renkleriyle)
 // ===========================
 
-$ease-premium: cubic-bezier(0.16, 1, 0.3, 1);
+$ease-premium: $ease-emphasized;   // token'a bağlandı
 $card-chrome: $primary-color;
 $overlay-scrim: rgba($primary-color, 0.72);
 
@@ -18,7 +18,7 @@ $overlay-scrim: rgba($primary-color, 0.72);
   position: relative;
   box-sizing: border-box;
   -webkit-font-smoothing: antialiased;
-  font-family: 'Helvetica Neue', sans-serif;
+  font-family: $font-body;
   cursor: default;
 }
 
@@ -36,11 +36,11 @@ $overlay-scrim: rgba($primary-color, 0.72);
 
   .header-title {
     color: $primary-color;
-    font-size: clamp(2.5rem, 6vw, 60px);
-    font-family: 'Coolvetica', 'Helvetica Neue', sans-serif;
-    font-weight: 400;
+    font-size: $fs-h1;
+    font-family: $font-display;
+    font-weight: $fw-regular;
     margin: 0;
-    line-height: 1.1;
+    line-height: $lh-tight;
   }
 }
 
@@ -56,10 +56,10 @@ $overlay-scrim: rgba($primary-color, 0.72);
   box-sizing: border-box;
 }
 
-@media screen and (min-width: 768px) {
+@media screen and (min-width: #{$bp-md}) {
   .premium-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 2px;
+    gap: $space-05;
   }
 }
 
@@ -76,7 +76,7 @@ $overlay-scrim: rgba($primary-color, 0.72);
   cursor: pointer;
   outline: none;
 
-  @media screen and (min-width: 768px) {
+  @media screen and (min-width: #{$bp-md}) {
     height: 100svh;
     min-height: 420px;
   }
@@ -93,13 +93,13 @@ $overlay-scrim: rgba($primary-color, 0.72);
   height: 100%;
   object-fit: cover;
   transform: scale(1);
-  transition: transform 1.5s $ease-premium;
+  transition: transform $dur-slower $ease-premium;
   pointer-events: none;
 }
 
 .premium-card__bg--video {
   object-fit: cover;
-  background: #000;
+  background: $media-bg;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -112,7 +112,7 @@ $overlay-scrim: rgba($primary-color, 0.72);
   position: absolute;
   inset: 0;
   z-index: 10;
-  transition: opacity 0.5s $ease-premium;
+  transition: opacity $dur-medium $ease-premium;
 }
 
 .premium-card__inner-wrap {
@@ -125,12 +125,12 @@ $overlay-scrim: rgba($primary-color, 0.72);
   opacity: 0;
   transform: scale(0.95);
   transition:
-    opacity 1.2s $ease-premium,
-    transform 1.2s $ease-premium;
+    opacity $dur-slow $ease-premium,
+    transform $dur-slow $ease-premium;
 }
 
 @media (hover: hover) and (pointer: fine) {
-  @media screen and (min-width: 768px) {
+  @media screen and (min-width: #{$bp-md}) {
     .premium-card.group:hover .premium-card__inner-wrap {
       opacity: 1;
       transform: scale(1);
@@ -143,10 +143,10 @@ $overlay-scrim: rgba($primary-color, 0.72);
   max-width: 420px;
   aspect-ratio: 1;
   object-fit: cover;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+  box-shadow: $shadow-lg;
 }
 
-@media screen and (min-width: 768px) {
+@media screen and (min-width: #{$bp-md}) {
   .premium-card__inner-img {
     width: 35%;
   }
@@ -154,7 +154,7 @@ $overlay-scrim: rgba($primary-color, 0.72);
 
 .premium-card__inner-video {
   pointer-events: none;
-  background: #000;
+  background: $media-bg;
 }
 
 .premium-card__label {
@@ -164,22 +164,22 @@ $overlay-scrim: rgba($primary-color, 0.72);
   background: $background-color;
   color: $primary-color;
   border: 1px solid $btn-border-color;
-  padding: 8px 10px;
+  padding: $space-2 $space-3;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Courier New', monospace;
-  font-size: 9px;
+  font-family: $font-mono;
+  font-size: $fs-label-sm;
   font-weight: 700;
-  letter-spacing: 0.2em;
+  letter-spacing: $tracking-wide;
   text-transform: uppercase;
   white-space: nowrap;
   pointer-events: none;
-  box-shadow: 0 6px 20px rgba($primary-color, 0.12);
+  box-shadow: $shadow-md;
 
-  @media screen and (min-width: 768px) {
-    font-size: 10px;
-    padding: 10px 12px;
+  @media screen and (min-width: #{$bp-md}) {
+    font-size: $fs-label;
+    padding: $space-3 $space-3;
     box-shadow: 0 4px 14px rgba($primary-color, 0.08);
   }
 }
@@ -190,12 +190,12 @@ $overlay-scrim: rgba($primary-color, 0.72);
   opacity: 0.98;
   transform: translateY(-50%) translateX(0);
 
-  @media screen and (min-width: 768px) {
+  @media screen and (min-width: #{$bp-md}) {
     opacity: 0;
     transform: translateY(-50%) translateX(-100%);
     transition:
-      opacity 0.8s $ease-premium,
-      transform 0.8s $ease-premium;
+      opacity $dur-slow $ease-premium,
+      transform $dur-slow $ease-premium;
   }
 }
 
@@ -205,17 +205,17 @@ $overlay-scrim: rgba($primary-color, 0.72);
   opacity: 0.98;
   transform: translateY(-50%) translateX(0);
 
-  @media screen and (min-width: 768px) {
+  @media screen and (min-width: #{$bp-md}) {
     opacity: 0;
     transform: translateY(-50%) translateX(100%);
     transition:
-      opacity 0.8s $ease-premium,
-      transform 0.8s $ease-premium;
+      opacity $dur-slow $ease-premium,
+      transform $dur-slow $ease-premium;
   }
 }
 
 @media (hover: hover) and (pointer: fine) {
-  @media screen and (min-width: 768px) {
+  @media screen and (min-width: #{$bp-md}) {
     .premium-card.group:hover .premium-card__label--left {
       opacity: 0.98;
       transform: translateY(-50%) translateX(0);
@@ -253,7 +253,7 @@ $overlay-scrim: rgba($primary-color, 0.72);
 .text-reveal {
   display: inline-block;
   transform: translateY(110%);
-  transition: transform 1s $ease-premium;
+  transition: transform $dur-slow $ease-premium;
 }
 
 .premium-card__detail {
@@ -263,17 +263,17 @@ $overlay-scrim: rgba($primary-color, 0.72);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 32px;
+  padding: $space-6;
   background: $overlay-scrim;
   /* Ağır tam ekran blur GPU yükünü azaltmak için ~12px; yeterli derinlik korunur */
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.7s $ease-premium;
+  transition: opacity $dur-medium $ease-premium;
 
-  @media screen and (min-width: 768px) {
-    padding: 64px;
+  @media screen and (min-width: #{$bp-md}) {
+    padding: $space-8;
   }
 }
 
@@ -291,12 +291,12 @@ $overlay-scrim: rgba($primary-color, 0.72);
   color: rgba($background-color, 0.85);
   background: rgba($background-color, 0.12);
   border: 1px solid rgba($background-color, 0.22);
-  border-radius: 50%;
+  border-radius: $radius-full;
   cursor: pointer;
   opacity: 0;
-  transition: opacity 0.4s ease, transform 0.2s ease;
+  transition: opacity $dur-base ease, transform $dur-fast ease;
 
-  @media screen and (min-width: 768px) {
+  @media screen and (min-width: #{$bp-md}) {
     top: 28px;
     right: 28px;
   }
@@ -333,46 +333,46 @@ $overlay-scrim: rgba($primary-color, 0.72);
 .premium-card__title-mask {
   margin-bottom: 1rem;
 
-  @media screen and (min-width: 768px) {
+  @media screen and (min-width: #{$bp-md}) {
     margin-bottom: 1.5rem;
   }
 }
 
 .premium-card__detail-title {
-  font-family: 'Courier New', monospace;
-  font-size: 9px;
+  font-family: $font-mono;
+  font-size: $fs-label-sm;
   color: rgba($background-color, 0.45);
   text-transform: uppercase;
-  letter-spacing: 0.4em;
+  letter-spacing: $tracking-wider;
 
-  @media screen and (min-width: 768px) {
-    font-size: 10px;
+  @media screen and (min-width: #{$bp-md}) {
+    font-size: $fs-label;
   }
 }
 
 .premium-card__detail-desc {
-  font-family: 'Helvetica Neue', sans-serif;
-  font-size: 0.875rem;
+  font-family: $font-body;
+  font-size: $fs-small;
   font-weight: 400;
   line-height: 1.65;
   letter-spacing: 0.01em;
   color: rgba($background-color, 0.92);
 
-  @media screen and (min-width: 768px) {
-    font-size: 1rem;
+  @media screen and (min-width: #{$bp-md}) {
+    font-size: $fs-base;
     line-height: 1.75;
   }
 
-  @media screen and (min-width: 1024px) {
-    font-size: 1.05rem;
+  @media screen and (min-width: #{$bp-lg}) {
+    font-size: $fs-base;
   }
 }
 
 .premium-card__detail-link {
   margin-top: 1.75rem;
-  font-family: 'Courier New', monospace;
-  font-size: 9px;
-  letter-spacing: 0.2em;
+  font-family: $font-mono;
+  font-size: $fs-label-sm;
+  letter-spacing: $tracking-wide;
   text-transform: uppercase;
   color: rgba($background-color, 0.6);
   text-decoration: none;
@@ -381,8 +381,8 @@ $overlay-scrim: rgba($primary-color, 0.72);
     color: $background-color;
   }
 
-  @media screen and (min-width: 768px) {
-    font-size: 10px;
+  @media screen and (min-width: #{$bp-md}) {
+    font-size: $fs-label;
   }
 }
 
@@ -394,17 +394,17 @@ $overlay-scrim: rgba($primary-color, 0.72);
 
   .title-reveal {
     transform: translateY(0);
-    transition-delay: 0.2s;
+    transition-delay: $dur-fast;
   }
 
   .desc-reveal {
     transform: translateY(0);
-    transition-delay: 0.3s;
+    transition-delay: $dur-base;
   }
 
   .premium-card__close {
     opacity: 1;
-    transition-delay: 0.25s;
+    transition-delay: $dur-fast;
   }
 
   .premium-card__hover-layer {
@@ -418,9 +418,9 @@ $overlay-scrim: rgba($primary-color, 0.72);
 // ===========================
 .portfolio-empty {
   text-align: center;
-  padding: 80px 20px;
+  padding: $space-8 $space-5;
   color: $secondary-text-color;
-  font-size: 1rem;
+  font-size: $fs-base;
 }
 
 // ===========================
@@ -441,7 +441,7 @@ $overlay-scrim: rgba($primary-color, 0.72);
     rgba($primary-color, 0.06) 45%,
     transparent 90%
   );
-  animation: premium-shimmer 1.8s ease-in-out infinite;
+  animation: premium-shimmer $dur-slower ease-in-out infinite;
 }
 
 @keyframes premium-shimmer {
@@ -456,28 +456,28 @@ $overlay-scrim: rgba($primary-color, 0.72);
 // ===========================
 // RESPONSIVE — HEADER (About h1 kırılımlarıyla uyumlu)
 // ===========================
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: #{$bp-lg}) {
   .portfolio-header {
     padding: 2rem 5% 1.25rem;
 
     .header-title {
-      font-size: clamp(2rem, 8vw, 48px);
+      font-size: $fs-h1-md;
     }
   }
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: #{$bp-md}) {
   .portfolio-header {
     padding: 1.5rem 1.5rem 1rem;
     padding-top: 3rem;
 
     .header-title {
-      font-size: clamp(1.8rem, 10vw, 36px);
+      font-size: $fs-h1-sm;
     }
   }
 }
 
-@media screen and (max-width: 480px) {
+@media screen and (max-width: #{$bp-sm}) {
   .portfolio-header {
     padding: 1rem 1rem 0.85rem;
     padding-top: 2rem;
@@ -504,7 +504,7 @@ $overlay-scrim: rgba($primary-color, 0.72);
   }
 
   .premium-card__detail {
-    transition: opacity 0.2s ease;
+    transition: opacity $dur-fast ease;
   }
 
   .skeleton-shine {

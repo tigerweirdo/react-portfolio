@@ -1,13 +1,48 @@
 rules_version = '2';
+
+// Görseller/videolar herkese açık okunur; yükleme ve silme yalnızca
+// e-posta/şifre ile giriş yapmış admin'e aittir.
+//
+// NOT: portfolio_videos/ yolu daha önce hiç tanımlı değildi; bu yüzden
+// kapak videosu ve "peek" videosu yüklemeleri Storage tarafından
+// sessizce reddediliyordu (varsayılan: deny).
+
 service firebase.storage {
   match /b/{bucket}/o {
+
+    function isAdmin() {
+      return request.auth != null
+        && request.auth.token.firebase.sign_in_provider == 'password';
+    }
+
+    function isImage() {
+      return request.resource.contentType.matches('image/.*')
+        && request.resource.size < 10 * 1024 * 1024;
+    }
+
+    function isVideo() {
+      return request.resource.contentType.matches('video/.*')
+        && request.resource.size < 80 * 1024 * 1024;
+    }
+
     match /portfolio_images/{allPaths=**} {
       allow read: if true;
-      allow write: if request.auth != null;
+      allow write: if isAdmin() && (request.resource == null || isImage());
     }
+
     match /portfolio_covers/{allPaths=**} {
       allow read: if true;
-      allow write: if request.auth != null;
+      allow write: if isAdmin() && (request.resource == null || isImage());
+    }
+
+    match /portfolio_videos/{allPaths=**} {
+      allow read: if true;
+      allow write: if isAdmin() && (request.resource == null || isVideo());
+    }
+
+    // Açıkça izin verilmeyen her yol kapalı.
+    match /{allPaths=**} {
+      allow read, write: if false;
     }
   }
 }

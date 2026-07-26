@@ -10,7 +10,7 @@ import PeekInner from "./PeekInner";
 import CardBackground from "./CardBackground";
 import "./index.scss";
 import { getDocs, collection } from "firebase/firestore";
-import { db, ensureAuth, firebaseEnabled } from "../../firebase";
+import { db, firebaseEnabled } from "../../firebase";
 
 const SKELETON_COUNT = 4;
 
@@ -238,7 +238,9 @@ const Portfolio = memo(() => {
         return;
       }
       try {
-        await ensureAuth();
+        // Portfolyo herkese açık okunur (firestore.rules). Eskiden burada
+        // anonim oturum açılıyordu; bu hem her ziyaretçiye yazma yetkisi
+        // veriyordu hem de gereksiz bir ağ turu ekliyordu.
         const snap = await getDocs(collection(db, "portfolio"));
         const data = snap.docs.map((doc, index) => ({
           ...doc.data(),

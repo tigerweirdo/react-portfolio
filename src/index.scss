@@ -1,16 +1,28 @@
-@import './variables';
+@use './variables' as *;
+
+// ============================================================
+// GLOBAL TABAN
+//
+// NOT: `body` daha önce hem burada hem App.scss'te tanımlıydı ve
+// font/renk özellikleri çakışıyordu. Artık tek yer burasıdır;
+// App.scss yalnızca layout (overflow, admin-page) ile ilgilenir.
+// ============================================================
 
 body {
   margin: 0;
-  font: 300 14px/1.5 'Helvetica Neue', sans-serif;
-  color: $secondary-text-color;
+  padding: 0;
+  font-family: $font-body;
+  font-size: $fs-small;
+  font-weight: $fw-light;
+  line-height: $lh-normal;
+  color: $text-color;
+  background: $background-color;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: $background-color;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
 
-  // Optimized scrollbar styles
+  // Scrollbar
   &::-webkit-scrollbar {
     width: 8px;
     height: 8px;
@@ -18,114 +30,59 @@ body {
 
   &::-webkit-scrollbar-track {
     background: rgba($accent-color-3, 0.3);
-    border-radius: 4px;
+    border-radius: $radius-sm;
   }
 
   &::-webkit-scrollbar-thumb {
     background-color: rgba($accent-color-1, 0.4);
-    border-radius: 4px;
+    border-radius: $radius-sm;
     border: 2px solid transparent;
 
-    &:hover {
-      background-color: rgba($accent-color-1, 0.7);
-    }
-
-    &:active {
-      background-color: rgba($accent-color-1, 0.9);
-    }
+    &:hover  { background-color: rgba($accent-color-1, 0.7); }
+    &:active { background-color: rgba($accent-color-1, 0.9); }
   }
 
-  // Firefox için optimize
   scrollbar-width: thin;
   scrollbar-color: rgba($accent-color-1, 0.4) transparent;
 }
 
-// Global focus styles for accessibility
+// ------------------------------------------------------------
+// Erişilebilirlik: görünür odak halkası.
+// Hiçbir bileşen bunu `outline: none` ile iptal etmemelidir.
+// ------------------------------------------------------------
 *:focus-visible {
   outline: 2px solid $accent-color-1;
   outline-offset: 2px;
-  border-radius: 2px;
+  border-radius: $radius-sm;
 }
 
-// Smooth selection
 ::selection {
   background-color: rgba($accent-color-1, 0.2);
   color: $primary-color;
 }
 
-.dashboard {
-  margin-top: 200px;
-  margin-left: 50px;
-}
-
-@media (max-width: 768px) {
-  .dashboard {
-    margin-top: 100px;
-    margin-left: 20px;
-    margin-right: 20px;
-  }
-}
-
-// Optimize edilmiş scroll animasyonları
-.scroll-animate {
-  opacity: 0;
-  transform: translate3d(0, 20px, 0);
-  transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-    transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  will-change: transform, opacity;
-  backface-visibility: hidden;
-
-  &.is-visible {
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
-  }
-}
-
-// Yön bazlı animasyonlar - optimize
-.scroll-animate-from-left {
-  opacity: 0;
-  transform: translate3d(-30px, 0, 0);
-  transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-    transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  will-change: transform, opacity;
-  backface-visibility: hidden;
-
-  &.is-visible {
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
-  }
-}
-
-.scroll-animate-from-right {
-  opacity: 0;
-  transform: translate3d(30px, 0, 0);
-  transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-    transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  will-change: transform, opacity;
-  backface-visibility: hidden;
-
-  &.is-visible {
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
-  }
-}
-
-// Reduced motion support
+// ------------------------------------------------------------
+// Hareket azaltma — site geneli tek politika.
+//
+// Daha önce public bölümlerde tek tek ele alınıyor, admin panelinde
+// ise hiç ele alınmıyordu. Bu blok her ikisini de kapsar.
+// ------------------------------------------------------------
 @media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 
-  .scroll-animate,
-  .scroll-animate-from-left,
-  .scroll-animate-from-right {
-    transition: none;
-    transform: none;
-    opacity: 1;
-
-    &.is-visible {
-      transform: none;
-    }
+  // İstisna: donmuş bir spinner "takıldı" izlenimi verir; yükleme
+  // göstergeleri dönmeye devam eder, sadece daha yavaş.
+  .admin-spinner,
+  .login-spinner,
+  .btn-spinner {
+    animation-duration: $dur-slow !important;
+    animation-iteration-count: infinite !important;
   }
 }
-
-// Portfolyo öğeleri için de bu genel animasyonu kullanabiliriz.
-// Eğer portfolyo öğelerinin özel bir translateX animasyonu varsa, onu burada ezeriz.
-// Ya da portfolyo için farklı bir animasyon sınıfı tanımlayabiliriz.

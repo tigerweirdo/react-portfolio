@@ -1,4 +1,4 @@
-import { useEffect, useRef, memo } from 'react'
+import { useEffect, useRef, useState, memo } from 'react'
 import { motion, useInView, useAnimation, useScroll, useTransform, useReducedMotion } from 'framer-motion'
 import './index.scss';
 
@@ -33,7 +33,13 @@ const robotVariants = {
 const About = memo(() => {
   const controls = useAnimation();
   const ref = useRef(null);
+  // İki ayrı sinyal:
+  //  - isInView (canlı): robot/göz animasyonlarını ekran dışındayken duraklatır.
+  //  - hasEntered (tek sefer): giriş animasyonunu yalnızca ilk görüşte oynatır.
+  // Eskiden ikisi de `isInView`e bağlıydı ve `once: false` olduğu için
+  // bölümden her çıkıp girişte metinler baştan fade-in yapıyordu.
   const isInView = useInView(ref, { once: false, amount: 0.3 });
+  const [hasEntered, setHasEntered] = useState(false);
   const reduceMotion = useReducedMotion();
 
   const { scrollYProgress } = useScroll({
@@ -45,10 +51,11 @@ const About = memo(() => {
   const opacity = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0, 1, 1, 0]);
 
   useEffect(() => {
-    if (isInView) {
+    if (isInView && !hasEntered) {
+      setHasEntered(true);
       controls.start("visible");
     }
-  }, [controls, isInView]);
+  }, [controls, isInView, hasEntered]);
 
   const pageStyle = reduceMotion ? { opacity: 1 } : { opacity };
   const robotStyle = reduceMotion ? { y: 0 } : { y };
@@ -175,7 +182,7 @@ const About = memo(() => {
         variants={containerVariants}
       >
         <motion.h1 variants={textVariants}>
-          ABOUT ME
+          About me
         </motion.h1>
         <motion.p variants={textVariants}>
           I'm a full-stack developer, but I don't just write code. I enjoy exploring new technologies and trying out different approaches. That's why I use my personal website as a testing ground. Whenever I learn something new, I try it out here — sometimes it works, sometimes I start over — but I always learn something.

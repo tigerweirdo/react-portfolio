@@ -1,4 +1,4 @@
-@import '../../variables';
+@use '../../variables' as *;
 
 .contact-page {
   width: 100%;
@@ -18,24 +18,23 @@
     width: 100%;
     position: relative;
     z-index: 2;
-    margin-bottom: 120px;
+    margin-bottom: $space-10;
 
     h1 {
       color: $primary-color;
-      font-size: clamp(2rem, 5vw, 48px);
-      font-family: 'Coolvetica';
-      font-weight: 400;
-      margin: 0 0 24px 0;
+      font-size: $fs-h1;
+      font-family: $font-display;
+      font-weight: $fw-regular;
+      margin: 0 0 $space-5 0;
       text-align: center;
-      text-transform: uppercase;
-      letter-spacing: 2px;
+      line-height: $lh-tight;
     }
 
     p {
       color: $text-color;
-      font-size: clamp(14px, 1.6vw, 16px);
-      line-height: 1.6;
-      margin-bottom: 24px;
+      font-size: $fs-body-lg;
+      line-height: $lh-normal;
+      margin-bottom: $space-5;
       text-align: center;
       opacity: 0.9;
     }
@@ -49,7 +48,7 @@
   display: flex;
   align-items: center;
   background: transparent;
-  border-radius: 16px;
+  border-radius: $radius-lg;
   overflow: hidden;
   box-shadow:
     0 4px 8px rgba(0, 0, 0, 0.06),
@@ -98,6 +97,16 @@
   width: 100%;
 }
 
+// Erişilebilirlik: girdilerin kendi `outline`ı iki nedenle işe yaramıyor —
+// (1) taban kuralda `outline: none` var ve özgüllüğü global
+// `*:focus-visible` kuralından yüksek, (2) `.glass-wrap` `overflow: hidden`
+// olduğu için input'un halkası zaten kırpılırdı.
+// Bu yüzden odak halkası sarmalayıcıya veriliyor.
+.glass-wrap:has(:focus-visible) {
+  outline: 2px solid $accent-color-1;
+  outline-offset: 2px;
+}
+
 .glass-wrap:focus-within .glass-overlay {
   background: rgba(255, 255, 255, 0.35);
 }
@@ -135,24 +144,24 @@
 .contact-form {
   width: 100%;
   max-width: 600px;
-  margin-top: 16px;
+  margin-top: $space-4;
 
   ul {
     padding: 0;
     margin: 0;
     display: flex;
     flex-wrap: wrap;
-    gap: 12px;
+    gap: $space-3;
 
     li {
-      padding: 2px;
+      padding: $space-05;
       margin: 0;
       list-style: none;
       opacity: 0;
       overflow: visible;
       display: block;
       position: relative;
-      animation: fadeInUp 2s 2s;
+      animation: fadeInUp $dur-slower $dur-slower;
       animation-fill-mode: forwards;
       animation-play-state: paused;
       width: 100%;
@@ -167,9 +176,9 @@
   input[type='email'] {
     width: 100%;
     height: 50px;
-    font-size: 16px;
+    font-size: $fs-base;
     color: $text-color;
-    padding: 0 16px;
+    padding: 0 $space-4;
     box-sizing: border-box;
     background: transparent;
     border: none;
@@ -179,15 +188,15 @@
 
     &::placeholder {
       color: $secondary-text-color;
-      opacity: 0.55;
+      opacity: 0.88;   // 0.55 çok soluktu (2.36:1) — AA için yükseltildi
     }
   }
 
   textarea {
     width: 100%;
-    font-size: 16px;
+    font-size: $fs-base;
     color: $text-color;
-    padding: 14px 16px;
+    padding: $space-4 $space-4;
     box-sizing: border-box;
     min-height: 130px;
     line-height: 1.5;
@@ -200,7 +209,7 @@
 
     &::placeholder {
       color: $secondary-text-color;
-      opacity: 0.55;
+      opacity: 0.88;   // 0.55 çok soluktu (2.36:1) — AA için yükseltildi
     }
   }
 }
@@ -216,38 +225,43 @@
   }
 }
 
-.flat-button {
+// ÖNEMLİ: bu kural eskiden global `.flat-button` idi ve Home'daki aynı
+// isimli butonla çakışıyordu (hangi chunk sonra yüklenirse o kazanıyordu).
+// Artık `.contact-page` altında kapsanmış durumda.
+.contact-page .flat-button {
   position: relative;
   color: $primary-color;
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 4px;
-  font-family: 'Arial Black', sans-serif;
+  font-size: $fs-sm;
+  font-weight: $fw-bold;
+  letter-spacing: $tracking-wide;
+  font-family: $font-mono;
   text-decoration: none;
-  padding: 14px 28px;
+  padding: $space-3 $space-6;
   margin: 0;
-  outline: none;
   cursor: pointer;
   text-transform: uppercase;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: $space-2;
   background: transparent;
   border: none;
-  transition: opacity 0.2s ease;
+  transition: opacity $dur-fast $ease-standard;
 
   &:active {
     opacity: 0.85;
   }
 
+  // Eskiden burada `outline: none` vardı ve global odak halkasını
+  // iptal ediyordu — klavyeyle gezen kullanıcı butonu göremiyordu.
   &:focus-visible {
-    outline: none;
+    outline: 2px solid $accent-color-1;
+    outline-offset: 2px;
   }
-}
 
-.flat-button[disabled] {
-  cursor: wait;
-  color: $secondary-text-color;
+  &[disabled] {
+    cursor: wait;
+    color: $secondary-text-color;
+  }
 }
 
 .btn-text {
@@ -259,8 +273,8 @@
   height: 16px;
   border: 2px solid rgba(0, 122, 255, 0.4);
   border-top-color: transparent;
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
+  border-radius: $radius-full;
+  animation: spin $dur-slow linear infinite;
   flex-shrink: 0;
 }
 
@@ -272,8 +286,8 @@
 // ── Status ──
 
 .status-message {
-  padding: 14px 18px;
-  font-size: 0.95rem;
+  padding: $space-4 $space-4;
+  font-size: $fs-small;
   font-weight: 500;
   display: flex;
   align-items: center;
@@ -282,36 +296,36 @@
   margin: 0;
   box-sizing: border-box;
   height: 100%;
-  border-radius: 14px;
+  border-radius: $radius-lg;
 
   &::before {
-    margin-right: 12px;
-    font-size: 1.3rem;
-    animation: iconPopIn 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55) 0.3s forwards;
+    margin-right: $space-3;
+    font-size: $fs-xl;
+    animation: iconPopIn $dur-base $ease-emphasized $dur-base forwards;
     transform: scale(0);
     display: inline-block;
     flex-shrink: 0;
   }
 
   &.success {
-    background: rgba(52, 199, 89, 0.08);
-    color: #34c759;
-    border: 0.5px solid rgba(52, 199, 89, 0.2);
-    &::before { content: '✓'; color: #34c759; }
+    background: rgba($color-success, 0.08);
+    color: $color-success;
+    border: 1px solid rgba($color-success, 0.25);
+    &::before { content: '✓'; color: $color-success; }
   }
 
   &.error {
-    background: rgba(255, 59, 48, 0.08);
-    color: #ff3b30;
-    border: 0.5px solid rgba(255, 59, 48, 0.2);
-    &::before { content: '✗'; color: #ff3b30; }
+    background: rgba($color-error, 0.08);
+    color: $color-error;
+    border: 1px solid rgba($color-error, 0.25);
+    &::before { content: '✗'; color: $color-error; }
   }
 }
 
 .submit-row {
   display: flex !important;
   align-items: center;
-  gap: 16px;
+  gap: $space-4;
   clear: both;
   flex-wrap: wrap;
 
@@ -334,23 +348,23 @@
 
 // ── Responsive - Tablet ──
 
-@media (max-width: 1200px) {
+@media (max-width: #{$bp-lg}) {
   .contact-page {
     padding: 2rem 2rem 0;
     height: auto;
     min-height: 100%;
 
     .text-zone {
-      margin-bottom: 120px;
-      h1 { font-size: clamp(1.8rem, 5vw, 40px); }
-      p { font-size: 15px; }
+      margin-bottom: $space-10;
+      h1 { font-size: $fs-h1-md; }
+      p { font-size: $fs-body; }
     }
   }
 }
 
 // ── Responsive - Mobil ──
 
-@media (max-width: 768px) {
+@media (max-width: #{$bp-md}) {
   .contact-page {
     padding: 1.5rem 1.5rem 0;
     justify-content: flex-start;
@@ -359,14 +373,14 @@
     overflow-x: hidden;
 
     .text-zone {
-      margin-bottom: 80px;
+      margin-bottom: $space-8;
       h1 {
-        font-size: clamp(1.6rem, 7vw, 32px);
-        margin-bottom: 16px;
+        font-size: $fs-h1-sm;
+        margin-bottom: $space-4;
       }
       p {
-        font-size: 14px;
-        margin-bottom: 16px;
+        font-size: $fs-small;
+        margin-bottom: $space-4;
         line-height: 1.5;
       }
     }
@@ -374,11 +388,11 @@
 
   .contact-form {
     width: 100%;
-    margin-top: 16px;
+    margin-top: $space-4;
     padding: 0;
 
     ul {
-      gap: 10px;
+      gap: $space-3;
 
       li.half {
         width: 100%;
@@ -393,7 +407,7 @@
   .submit-row {
     flex-direction: column;
     align-items: flex-start !important;
-    gap: 12px !important;
+    gap: $space-3 !important;
 
     .status-message {
       min-width: auto !important;
@@ -404,22 +418,22 @@
 
 // ── Responsive - Küçük mobil ──
 
-@media (max-width: 480px) {
+@media (max-width: #{$bp-sm}) {
   .contact-page {
     padding: 1rem 1rem 0;
     padding-top: 2rem;
 
     .text-zone {
-      margin-bottom: 60px;
+      margin-bottom: $space-8;
       h1 { letter-spacing: 1px; }
-      p { font-size: 13px; }
+      p { font-size: $fs-sm; }
     }
   }
 
   .flat-button {
-    font-size: 12px;
+    font-size: $fs-xs;
     letter-spacing: 2px;
-    padding: 12px 22px;
+    padding: $space-3 $space-5;
   }
 
   .submit-row {
