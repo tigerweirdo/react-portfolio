@@ -3,37 +3,55 @@ import { motion } from 'framer-motion';
 import Logo from './Logo';
 import './index.scss';
 
-const Home = memo(({ scrollToSection }) => {
+const Home = memo(({ scrollToSection, heroOnly = false }) => {
   const line1Text = "Hey,";
-  const line2Text = "I build"; 
+  const line2Text = "I build";
   const line3Text = "digital things.";
 
   return (
-    <div className="container home-page"> 
+    <div className="container home-page">
       <div className="text-zone">
-        <motion.h1 
+        <motion.h1
           className="main-headline"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
-        > 
+        >
           {line1Text}
           <br />
           {line2Text}
           <br />
           {line3Text}
         </motion.h1>
-        <motion.button 
-          onClick={() => scrollToSection('contact')} 
-          className="flat-button"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-        > 
-          CONTACT ME
-        </motion.button>
+
+        {/* heroOnly modunda CONTACT ME butonu gizlenir — kaydırılacak
+            bir Contact bölümü yok, buton hiçbir yere götürmezdi. */}
+        {heroOnly ? (
+          <motion.div
+            className="hero-notice"
+            role="status"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            <span className="hero-notice__label">Work in progress</span>
+            <p className="hero-notice__text">
+              This site is being rebuilt. New work coming soon.
+            </p>
+          </motion.div>
+        ) : (
+          <motion.button
+            onClick={() => scrollToSection('contact')}
+            className="flat-button"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            CONTACT ME
+          </motion.button>
+        )}
       </div>
       <motion.div 
         className="logo-container"

@@ -25,6 +25,15 @@ const PortfolioManager = lazy(() => import('./components/Admin/PortfolioManager'
 // Gizli admin slug - .env'den okunuyor
 const ADMIN_SLUG = process.env.REACT_APP_ADMIN_SLUG || 'p-x7k9';
 
+/**
+ * GEÇİCİ: yalnızca hero bölümü yayında; About / Work / Contact gizli.
+ *
+ * Geri açmak için tek yapman gereken bunu `false` yapıp yeniden build almak —
+ * hiçbir bölüm silinmedi, bileşenler ve stilleri yerinde duruyor.
+ * Admin paneli bu bayraktan etkilenmez, her durumda çalışır.
+ */
+const HERO_ONLY = true;
+
 const SECTION_IDS = ['home', 'about', 'portfolio', 'contact'];
 
 const App = () => {
@@ -106,7 +115,7 @@ const App = () => {
 
   // Work bölümü görünüme yaklaşınca (scroll) Portfolio lazy chunk'ını tetikle
   useEffect(() => {
-    if (isAdminRoute || loadPortfolio) return undefined;
+    if (isAdminRoute || HERO_ONLY || loadPortfolio) return undefined;
 
     const timer = setTimeout(() => {
       const el = portfolioSectionRef.current;
@@ -138,7 +147,7 @@ const App = () => {
 
   // Contact bölümü görünüme yaklaşınca Contact lazy chunk'ını tetikle
   useEffect(() => {
-    if (isAdminRoute || loadContact) return undefined;
+    if (isAdminRoute || HERO_ONLY || loadContact) return undefined;
 
     const timer = setTimeout(() => {
       const el = contactSectionRef.current;
@@ -170,7 +179,8 @@ const App = () => {
 
   // Intersection Observer for active section tracking
   useEffect(() => {
-    if (isAdminRoute) return;
+    // Hero-only modda izlenecek başka bölüm yok.
+    if (isAdminRoute || HERO_ONLY) return;
 
     const observerOptions = {
       root: appContainerRef.current,
@@ -299,9 +309,11 @@ const App = () => {
                   id="home"
                   className={`page-section ${activeSection === 'home' ? 'active' : ''}`}
                 >
-                  <Home scrollToSection={scrollToSection} />
+                  <Home scrollToSection={scrollToSection} heroOnly={HERO_ONLY} />
                 </section>
 
+                {HERO_ONLY ? null : (
+                <>
                 <section
                   id="about"
                   className={`page-section ${activeSection === 'about' ? 'active' : ''}`}
@@ -368,6 +380,8 @@ const App = () => {
                     </Suspense>
                   )}
                 </section>
+                </>
+                )}
               </div>
             </div>
           )}

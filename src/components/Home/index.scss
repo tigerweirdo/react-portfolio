@@ -38,6 +38,36 @@
       }
     }
 
+    // GEÇİCİ: hero-only modda CONTACT ME yerine görünen "yenileniyor" notu.
+    // Etiket, Work bölümündeki mono etiketlerle aynı dili konuşur.
+    .hero-notice {
+      margin-top: $space-5;
+      display: flex;
+      flex-direction: column;
+      gap: $space-2;
+      max-width: 34ch;
+    }
+
+    .hero-notice__label {
+      font-family: $font-mono;
+      font-size: $fs-label;
+      font-weight: $fw-bold;
+      letter-spacing: $tracking-wide;
+      text-transform: uppercase;
+      color: $primary-color;
+      border: 1px solid $btn-border-color;
+      padding: $space-2 $space-3;
+      align-self: flex-start;
+    }
+
+    .hero-notice__text {
+      font-family: $font-body;
+      font-size: $fs-body-lg;
+      line-height: $lh-normal;
+      color: $secondary-text-color;
+      margin: 0;
+    }
+
     .flat-button {
       color: $primary-color;
       font-size: $fs-sm;
@@ -166,6 +196,18 @@
         margin: $space-6 auto 0;
         display: block;
         width: fit-content;
+      }
+
+      // Mobilde metin zaten ortalı akıyor; not da ortalansın.
+      .hero-notice {
+        margin-left: auto;
+        margin-right: auto;
+        align-items: center;
+        text-align: center;
+      }
+
+      .hero-notice__label {
+        align-self: center;
       }
     }
 
